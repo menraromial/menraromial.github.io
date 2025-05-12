@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://menraromial.github.io/mwr/sitemap.xml
+Sitemap: https://menraromial.github.io/sitemap.xml
