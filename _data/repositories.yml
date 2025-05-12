@@ -1,13 +1,13 @@
 github_users:
   - menraromial
-  - Edah-dev
 
 repo_description_lines_max: 2
 
 github_repos:
-  - menraromial/scheduler-plugins
+  - menraromial/menraromial.github.io
   - menraromial/powercap
   - menraromial/HiveUpdate
   - menraromial/EnergyProfiler
   - menraromial/rapl-energy-meter
+
 
