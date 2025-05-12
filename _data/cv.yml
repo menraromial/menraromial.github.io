@@ -2,96 +2,147 @@
   type: map
   contents:
     - name: Full Name
-      value: Albert Einstein
+      value: Menra Wedwang Romial
     - name: Date of Birth
-      value: 14th March 1879
+      value: 06 June 2002
     - name: Languages
-      value: English, German
+      value: French, English
 
-- title: Education
-  type: time_table
+- title: About Me
+  type: list
   contents:
-    - title: PhD
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1905
-      description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
-      description:
-        - Description 1.
-        - Description 2.
+    - 💻 Enthusiastic and adaptable computer engineer, passionate about solving innovative problems and with solid experience in full-stack development.
+    - ⚙️ Proficient in various programming languages and frameworks.
+    - 🚀 Eager to leverage my skills in software architecture, Cloud, data-driven knowledge, and continuous learning to achieve impactful results in a technology-focused, dynamic environment.
 
 - title: Experience
   type: time_table
   contents:
-    - title: Professor of Theoretical Physics
-      institution: Institute for Advanced Study, Princeton University
-      year: 1933 - 1955
+    - title: PhD Candidate
+      institution: Inria
+      year: November 2024 - Present
+      description: []
+    - title: Intern
+      institution: IMT Atlantique
+      year: April 2024 - August 2024
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Visiting Professor
-      institution: California Institute of Technology, Pasadena, California, US
-      year: 1933
+        - Power limitation of servers using Intel RAPL
+        - Experimentation on the Grid'5000 platform
+        - Development of a Kubernetes scheduler considering energy constraints
+        - Setup of a Kubernetes cluster with k3s
+        - Building program images with Docker
+        - Deploying applications within a cluster
+    - title: Developer
+      institution: Forall Founders (Cameroon)
+      year: May 2022 - March 2024
       description:
-        - Description 1.
-        - Description 2.
+        - Design of an e-Learning website
+        - Design and development of a school management application
+        - Backend development using Django, Node.js
+        - Frontend development using HTML, CSS, React.js, Next.js, Vue.js
+        - Development of desktop applications with PyQT/PySide
+        - Managed a team of 10 people to execute and deliver projects on time and within budget.
+        - Project Manager for a mobile e-Learning application
 
-    - title: Director
-      institution: Kaiser Wilhelm Institute for Physics, Berlin, Germany.
-      year: 1917-1933
-
-    - title: Professor of Theoretical Physics
-      institution: Karl-Ferdinand University, Prague, Czechoslovakia
-      year: 1911 - 1917
-      description:
-
-    - title: Associate Professor of Theoretical Physics
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1909 - 1911
-
-- title: Open Source Projects
+- title: Projects
   type: time_table
   contents:
-    - title: <a href="https://github.com/alshedivat/al-folio">al-folio</a>
-      year: 2015-now
-      description: A beautiful, simple, clean, and responsive Jekyll theme for academics.
+    - title: <a href="https://github.com/menraromial/FasmaPayrollApp.git">For All School Management</a>
+      description:
+        - Development and implementation of an advanced attendance management module in the school management software, using PyQT, Raspberry Pi, and Arduino.
+        - Optimization of attendance control and management by administrators, reducing issues related to teacher absenteeism.
+        - Improved efficiency through automation of attendance tracking, reducing the time spent on this task by administrators by 20%.
+        - Increased teacher punctuality by 15% in pilot schools adopting the module.
+    - title: <a href="https://tefaafrik.com/">Target Education For All African</a>
+      description:
+        - Backend development with Django and Python.
+        - Designed a robust database capable of managing over 15,000 students.
+        - Optimized user experience by reducing page load times from 5 seconds to 1.2 seconds.
+        - Implemented secure registration and login systems, along with an automated subscription payment system.
+        - Managed and secured cloud infrastructure (Linode), focusing on performance and security optimization.
+        - Data analysis and conducting campaigns to improve student engagement on the platform.
+    - title: <a href="https://letsgo.yowyob.com/">Letsgo</a>
+      description:
+        - Front-end development of a carpooling application using <strong>Next.js</strong> for the web and <strong>React Native</strong> for mobile, ensuring a consistent user experience.
+        - Implemented key features to improve the interface and user experience, receiving positive feedback for its intuitive design.
+        - Collaborated closely with the team for seamless front-end and back-end integration.
+        - Played a key role in creating a user-friendly and attractive interface, praised for its aesthetics and ease of use.
+    - title: <a href="https://github.com/menraromial/lecafe.git">Le Café (cafeteria management system)</a>
+      description:
+        - Developed a user-friendly and responsive interface using HTML, CSS, and jQuery.
+        - Created and managed distinct views for the administrator, server, and chef, each with specific functionalities.
+        - Integrated Stripe and PayPal for secure payments.
+        - Implemented an ordering system with automatic invoice generation, ensuring transaction transparency.
+        - Added a coupon system for users to easily benefit from discounts.
+    - title: <a href="https://github.com/The-Professor-Alfred-Hetsron/SRVEDCA-Projet-Electronique.git">Fingerprint Access Control System</a>
+      description:
+        - Major contribution to a fingerprint-based access control system project, specializing in web application development for real-time user data storage.
+        - Programmed the ESP32 module as a server, optimizing communication between Arduino devices and the web application.
+        - Set up a real-time data capture and storage system for user access control via fingerprint technology.
+        - Worked closely with hardware and software teams to integrate and synchronize features, ensuring an efficient access control system.
+        - Managed a team of 6 people.
+    - title: <a href="https://github.com/menraromial/ParseurXML.git">XCSM PARSER</a>
+      description:
+        - Developed a project for seamless conversion of PDF or Word files to XML format, preserving both content and original formatting.
+        - Implemented robust error detection mechanisms to identify and handle malformed files, ensuring high-quality results with no data loss during the transformation process.
 
-- title: Honors and Awards
+- title: Education
   type: time_table
   contents:
-    - year: 1921
-      items:
-        - Nobel Prize in Physics
-        - Matteucci Medal
-    - year: 2029
-      items:
-        - Max Planck Medal
+    - title: Master of Engineering
+      institution: ENSPY, Cameroon
+      year: 2021-2024
+      description:
+        - Specialization: Computer Science.
+    - title: Preparatory Class
+      institution: ENSPY, Cameroon
+      year: 2019-2021
+      description:
+        - Mathematics and Physics.
+    - title: High School Baccalaureate
+      institution: Cameroon
+      year: 2018
+      description:
+        - Mathematics, Physics and Computer Science.
 
-- title: Academic Interests
+- title: Certifications
+  type: time_table
+  contents:
+    - year: 2023
+      items:
+        - 🎓 <a href="https://www.coursera.org/verify/GCA85RF4YX9P">Introduction to Agile Development and Scrum (IBM – Coursera – March 2023)</a>
+        - 🎓 <a href="https://www.coursera.org/verify/XKSLSMT52CQE">Technical Support Fundamentals (Google – Coursera – February 2023)</a>
+        - 🎓 <a href="https://www.coursera.org/verify/EGQKNQKBN8LR">Applied Data Science Capstone (IBM – Coursera – February 2023)</a>
+        - 🎓 <a href="https://www.coursera.org/verify/BZHX2FCMZLL2">Data Visualization with Python (IBM – Coursera – February 2023)</a>
+        - 🎓 <a href="https://www.coursera.org/verify/YBDN8DQALXEF">Databases and SQL for Data Science with Python (IBM – Coursera – February 2023)</a>
+        - 🎓 <a href="https://www.coursera.org/verify/53Q5V97ZKQSY">Foundations: Data, Data, Everywhere (Google – Coursera – February 2023)</a>
+        - 🎓 <a href="https://www.coursera.org/verify/F6EKLERS2AUA">Machine Learning with Python (IBM – Coursera – February 2023)</a>
+    - year: 2021
+      items:
+        - 🎓 <a href="https://www.coursera.org/verify/7ADEA8JZL794">Introduction to Object-Oriented Programming (in Java) (EPFL – Coursera – December 2021)</a>
+        - 🎓 <a href="https://www.coursera.org/verify/RTB9KXCH8QVM">Introduction to Programming (in Java) (EPFL – Coursera – November 2021)</a>
+
+- title: Skills
   type: nested_list
   contents:
-    - title: Topic 1.
+    - title: Languages
       items:
-        - Description 1.
-        - Description 2.
-    - title: Topic 2.
+        - Python
+        - Java
+        - JavaScript
+        - C
+        - Go
+    - title: Frameworks/Libraries
       items:
-        - Description 1.
-        - Description 2.
-
-- title: Other Interests
-  type: list
-  contents:
-    - <u>Hobbies:</u> Hobby 1, Hobby 2, etc.
+        - Django
+        - Node.js
+        - React
+        - Spring Boot
+        - Next.js
+    - title: Cloud/DevOps Tools
+      items:
+        - Git
+        - Docker
+        - Kubernetes
+        - Grafana
+        - Google Cloud Platform

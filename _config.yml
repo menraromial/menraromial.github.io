@@ -29,7 +29,7 @@ back_to_top: true # set to false to disable the back to top button
 # -----------------------------------------------------------------------------
 
 # repo color theme
-repo_theme_light: default # https://github.com/anuraghazra/github-readme-stats/blob/master/themes/README.md
+repo_theme_light: catppuccin_latte # https://github.com/anuraghazra/github-readme-stats/blob/master/themes/README.md
 repo_theme_dark: dark # https://github.com/anuraghazra/github-readme-stats/blob/master/themes/README.md
 repo_trophies:
   enabled: true
@@ -88,8 +88,8 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: mwr # blog_name will be displayed in your blog page
-blog_description: a simple whitespace theme for academics
+blog_name: MWR # blog_name will be displayed in your blog page
+blog_description: Exploring the intersection of cloud computing, edge technologies, and IoT, sharing insights and advancements in research and innovation.
 permalink: /blog/:year/:title/
 lsi: false # produce an index for related posts
 
@@ -117,7 +117,7 @@ giscus:
   lang: en
 
 # Disqus comments (DEPRECATED)
-disqus_shortname: al-folio # put your disqus shortname
+disqus_shortname: mwr # put your disqus shortname
 # https://help.disqus.com/en/articles/1717111-what-s-a-shortname
 
 # External sources.
@@ -125,11 +125,11 @@ disqus_shortname: al-folio # put your disqus shortname
 # you can display them in your blog by adding a link to the RSS feed.
 external_sources:
   - name: medium.com
-    rss_url: https://medium.com/@al-folio/feed
-  - name: Google Blog
+    rss_url: https://medium.com/@menraromial/feed
+  - name: Dev Community
     posts:
-      - url: https://blog.google/technology/ai/google-gemini-update-flash-ai-assistant-io-2024/
-        published_date: 2024-05-14
+      - url: https://dev.to/menraromial/kubernetes-tutorial-setting-up-a-k3s-cluster-with-a-hello-world-deployment-1753
+        published_date: 2024-07-07
 
 # -----------------------------------------------------------------------------
 # Newsletter
@@ -265,8 +265,8 @@ display_categories: ["external-services"] # these categories will be displayed o
 # -----------------------------------------------------------------------------
 
 scholar:
-  last_name: [Einstein]
-  first_name: [Albert, A.]
+  last_name: [Menra]
+  first_name: [Wedwang, Romial]
 
   style: apa
   locale: en

@@ -1,14 +1,13 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - menraromial
+  - Edah-dev
 
 repo_description_lines_max: 2
 
 github_repos:
-  - alshedivat/al-folio
-  - jekyll/jekyll
-  - twbs/bootstrap
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - mathjax/MathJax
-  - jpswalsh/academicons
+  - menraromial/scheduler-plugins
+  - menraromial/powercap
+  - menraromial/HiveUpdate
+  - menraromial/EnergyProfiler
+  - menraromial/rapl-energy-meter
+
