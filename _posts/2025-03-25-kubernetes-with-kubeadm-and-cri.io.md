@@ -3,7 +3,7 @@ layout: post
 title: Setting Up a Kubernetes Cluster with Kubeadm and CRI-O
 date: 2025-03-25 16:40:16
 description : Learn how to set up a production-ready Kubernetes cluster using Kubeadm and CRI-O. This step-by-step guide covers prerequisites, installation, configuration, and best practices for deploying and managing your cluster effectively.
-tags: Kubernetes kubeadm cri.io beginners tutorial
+tags: Kubernetes kubeadm cri.io beginners
 categories: tutorial
 ---
 
