@@ -44,8 +44,6 @@ This **comprehensive guide** walks you through your Kubernetes learning journey,
 
 Get ready to become a Kubernetes expert! This course is your roadmap to confidently navigating the world of cloud native.
 
-**(Optional: Add a few specific highlights or a table of contents overview here if space allows)**
-
 *   Chapter 1: Kubernetes Architecture
 *   Chapter 2: Core Objects
 *   ...
