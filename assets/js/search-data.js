@@ -9,7 +9,14 @@ ninja.data = [{
     handler: () => {
       window.location.href = "/";
     },
-  },{id: "nav-talks",
+  },{id: "nav-bookshelf",
+          title: "bookshelf",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/books/";
+          },
+        },{id: "nav-talks",
           title: "Talks",
           description: "",
           section: "Navigation",
@@ -77,7 +84,12 @@ ninja.data = [{
             window.open("https://medium.com/@menraromial/d%C3%A9couvrez-la-puissance-de-la-commande-linux-screen-pour-une-gestion-efficace-des-sessions-ae025a0eef82?source=rss-32dc2be07b37------2", "_blank");
           
         },
-      },{
+      },{id: "books-kubernetes-masterclass-from-beginner-to-expert",
+          title: 'Kubernetes Masterclass: From Beginner to Expert',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/books/kuberenetes_masterclass/";
+            },},{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
