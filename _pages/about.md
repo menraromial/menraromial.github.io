@@ -8,10 +8,10 @@ profile:
   align: right
   image: profile.jpg
   image_circular: false # crops the image to make it circular
-  more_info: >
-    <p>B210 DAPI</p>
-    <p>4 Rue Alfred Kastler </p>
-    <p>44300 Nantes</p>
+  # more_info: >
+  #   <p>B210 DAPI</p>
+  #   <p>4 Rue Alfred Kastler </p>
+  #   <p>44300 Nantes</p>
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
