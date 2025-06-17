@@ -54,12 +54,7 @@ Get ready to become a Kubernetes expert! This course is your roadmap to confiden
 
 ### About the Author
 
-**Let's Connect:**
-
-*   **Website / Blog:** [menraromial.com](https://menraromial.com)
-*   **LinkedIn:** [My LinkedIn Profile](https://www.linkedin.com/in/menraromial/)
-*   **GitHub:** [My Projects on GitHub](https://github.com/menraromial/)
-*   **Email for feedback or questions:** `itsme [at] menraromial.com` (to reduce bot scraping) or [Contact Me](mailto:itsme@menraromial.com)
+{% include contact.liquid %}
 
 
 **Download your copy now!**
