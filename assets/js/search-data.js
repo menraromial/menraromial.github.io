@@ -89,6 +89,11 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/kuberenetes_masterclass/";
+            },},{id: "books-linux-scheduling-mastery-from-core-concepts-to-real-time-amp-distributed-systems",
+          title: 'Linux Scheduling Mastery: From Core Concepts to Real-Time &amp;amp; Distributed Systems',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/books/scheduling-linux-/";
             },},{
         id: 'social-email',
         title: 'email',
