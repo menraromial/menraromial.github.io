@@ -51,7 +51,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-setting-up-a-kubernetes-cluster-with-kubeadm-and-cri-o",
+        },{id: "post-master-the-ci-cd-pipeline-locally",
+        
+          title: "Master the CI/CD Pipeline Locally",
+        
+        description: "Welcome to this comprehensive course on DevOps culture and tooling. The goal is to guide you, step-by-step, from theory to practice, empowering you to build, secure, and automate a full Continuous Integration and Continuous Deployment (CI/CD) pipeline.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/master-ci-ci-pipeline-locally/";
+          
+        },
+      },{id: "post-setting-up-a-kubernetes-cluster-with-kubeadm-and-cri-o",
         
           title: "Setting Up a Kubernetes Cluster with Kubeadm and CRI-O",
         
