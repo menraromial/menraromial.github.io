@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-22T07:35:24+00:00</updated><id>https://menraromial.github.io/feed.xml</id><title type="html">blank</title><subtitle>A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-22T07:59:58+00:00</updated><id>https://menraromial.github.io/feed.xml</id><title type="html">blank</title><subtitle>A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
 </subtitle><entry><title type="html">Master the CI/CD Pipeline Locally</title><link href="https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally/" rel="alternate" type="text/html" title="Master the CI/CD Pipeline Locally" /><published>2025-08-20T10:30:00+00:00</published><updated>2025-08-20T10:30:00+00:00</updated><id>https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally</id><content type="html" xml:base="https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally/"><![CDATA[<p>Welcome to this comprehensive course on DevOps culture and tooling. The goal is to guide you, step-by-step, from theory to practice, empowering you to build, secure, and automate a full Continuous Integration and Continuous Deployment (CI/CD) pipeline.</p>
 
 <p><strong>Course Philosophy:</strong>
@@ -1508,46 +1508,40 @@ helm <span class="nb">install </span>loki grafana/loki-stack <span class="nt">--
 
 <ol>
   <li><strong>Update your <code class="language-plaintext highlighter-rouge">k8s/service.yaml</code></strong> to add a name to the port, which is required by the <code class="language-plaintext highlighter-rouge">ServiceMonitor</code>.
-```yaml
-    <h1 id="k8sserviceyaml">k8s/service.yaml</h1>
-    <p>apiVersion: v1
-kind: Service
-metadata:
-  name: hello-devops-service
-  labels:
-    app: hello-devops # Important label for discovery
-spec:
-  selector:
-    app: hello-devops
-  ports:</p>
-    <ul>
-      <li>name: http # Name the port
-protocol: TCP
-port: 80
-targetPort: 5000
-```</li>
-    </ul>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1"># k8s/service.yaml</span>
+    <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+    <span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">hello-devops-service</span>
+    <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">hello-devops</span> <span class="c1"># Important label for discovery</span>
+    <span class="na">spec</span><span class="pi">:</span>
+    <span class="na">selector</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">hello-devops</span>
+    <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">http</span> <span class="c1"># Name the port</span>
+        <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+        <span class="na">port</span><span class="pi">:</span> <span class="m">80</span>
+        <span class="na">targetPort</span><span class="pi">:</span> <span class="m">5000</span>
+</code></pre></div>    </div>
   </li>
   <li><strong>Create a <code class="language-plaintext highlighter-rouge">k8s/servicemonitor.yaml</code> manifest:</strong>
-```yaml
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: hello-devops-monitor
-  namespace: default # Make sure it’s in the same namespace as your service
-  labels:
-    release: prometheus # This label is crucial for Prometheus to find it
-spec:
-  selector:
-    matchLabels:
-      app: hello-devops # Target services with this label
-  endpoints:
-    <ul>
-      <li>port: http # Scrape the port named ‘http’
-path: /metrics # On this path
-interval: 15s # Every 15 seconds
-```</li>
-    </ul>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
+    <span class="na">kind</span><span class="pi">:</span> <span class="s">ServiceMonitor</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">hello-devops-monitor</span>
+    <span class="na">namespace</span><span class="pi">:</span> <span class="s">default</span> <span class="c1"># Make sure it's in the same namespace as your service</span>
+    <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">release</span><span class="pi">:</span> <span class="s">prometheus</span> <span class="c1"># This label is crucial for Prometheus to find it</span>
+    <span class="na">spec</span><span class="pi">:</span>
+    <span class="na">selector</span><span class="pi">:</span>
+        <span class="na">matchLabels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">hello-devops</span> <span class="c1"># Target services with this label</span>
+    <span class="na">endpoints</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="s">http</span> <span class="c1"># Scrape the port named 'http'</span>
+        <span class="na">path</span><span class="pi">:</span> <span class="s">/metrics</span> <span class="c1"># On this path</span>
+        <span class="na">interval</span><span class="pi">:</span> <span class="s">15s</span> <span class="c1"># Every 15 seconds</span>
+</code></pre></div>    </div>
   </li>
 </ol>
 
