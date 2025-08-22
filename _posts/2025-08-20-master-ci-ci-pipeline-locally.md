@@ -77,60 +77,284 @@ graph TD
 *   Basic knowledge of the Linux command line.
 *   **Kind** and **kubectl** installed for the Kubernetes module.
 
-### Workshop: Launching the Lab
+### Workshop: Launching the Lab with an Automated Script
 
-1.  Create a folder for our project, e.g., `devops-course-lab`.
-2.  Inside, create a `docker-compose.yml` file:
+To make setting up our lab environment as simple as possible, we will use a shell script. This script embodies the DevOps principle of automation. It will perform prerequisite checks, build our custom Jenkins image, start all services, and verify that everything is running correctly, providing a smooth start to the course.
 
-    ```yaml
-    version: '3.8'
+#### Step 1: Create the Project Directory Structure
 
-    services:
-      gitea:
-        image: gitea/gitea:latest
-        container_name: gitea
-        environment:
-          - USER_UID=1000
-          - USER_GID=1000
-        restart: always
-        volumes:
-          - ./gitea:/data
-        ports:
-          - "3000:3000"
-          - "2222:22"
-        networks:
-          - devops-net
+First, create a root folder for our project, for example, `devops-course-lab`. All subsequent files and folders will be created inside this one.
 
-      jenkins:
-        image: jenkins/jenkins:lts-jdk11
-        container_name: jenkins
-        privileged: true # Required for Docker-in-Docker
-        user: root
-        ports:
-          - "8080:8080"
-          - "50000:50000"
-        volumes:
-          - ./jenkins_home:/var/jenkins_home
-          - /var/run/docker.sock:/var/run/docker.sock # Mount the Docker socket
-        networks:
-          - devops-net
+#### Step 2: Create the Custom Jenkins Image Definition
 
-      registry:
-        image: registry:2
-        container_name: registry
-        ports:
-          - "5000:5000"
-        volumes:
-          - ./registry_data:/var/lib/registry
-        restart: always
-        networks:
-          - devops-net
+Our lab requires a Jenkins container that can execute Docker commands. The official Jenkins image doesn't include the Docker CLI, so we must build our own.
 
+*   Inside `devops-course-lab`, create a new folder named `jenkins-image`.
+*   Inside `jenkins-image`, create a file named `Dockerfile`.
+
+**`jenkins-image/Dockerfile`:**
+```dockerfile
+# Start from the official Jenkins image
+FROM jenkins/jenkins:lts
+
+# Switch to the root user to install packages
+USER root
+
+# Install necessary dependencies and the Docker CLI
+RUN apt-get update && apt-get install -y lsb-release curl gpg
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt-get update && apt-get install -y docker-ce-cli
+
+# --- THE FIX IS HERE ---
+# 1. Create the 'docker' group
+#    The installation of docker-ce-cli doesn't create it, so we do it manually.
+RUN groupadd docker
+
+# 2. Add the 'jenkins' user to the 'docker' group
+#    This allows the jenkins user to communicate with the Docker socket.
+RUN usermod -aG docker jenkins
+
+# Switch back to the jenkins user
+USER jenkins
+```
+
+#### Step 3: Define the Lab Services with Docker Compose
+
+At the root of the `devops-course-lab` folder, create your `docker-compose.yml` file. This file defines all the services needed for our course.
+
+**`docker-compose.yml`:**
+
+```yaml
+version: '3.8'
+
+services:
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=sqlite3
+      - GITEA__database__PATH=/data/gitea/gitea.db
+      - GITEA__server__DOMAIN=localhost
+      - GITEA__server__HTTP_PORT=3000
+      - GITEA__server__ROOT_URL=http://localhost:3000/
+      - GITEA__security__INSTALL_LOCK=true
+      - GITEA__security__SECRET_KEY=changeme
+      - GITEA__security__INTERNAL_TOKEN=changeme
+    restart: unless-stopped
+    volumes:
+      - gitea-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "2222:22"
     networks:
-      devops-net:
-        name: devops-net
-        driver: bridge
+      - devops-net
+
+  jenkins:
+    build: ./jenkins-image
+    container_name: jenkins
+    privileged: true # Required for Docker-in-Docker
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock # Mount the Docker socket
+    networks:
+      - devops-net
+
+  registry:
+    image: registry:2
+    container_name: registry2
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./registry_data:/var/lib/registry
+    restart: always
+    networks:
+      - devops-net
+
+volumes:
+  gitea-data:
+  jenkins_home:
+  registry_data:
+  
+networks:
+  devops-net:
+    name: devops-net
+    driver: bridge
+```
+
+#### Step 4: Create the Automated Startup Script
+
+This script is the main entry point for starting, stopping, and managing the lab. Create a new file named `start-lab.sh` at the root of your `devops-course-lab` directory.
+
+**`start-lab.sh`:**
+```bash
+#!/bin/bash
+
+# Startup Script for the DevOps CI/CD Lab
+# This script configures and starts all necessary services for the course.
+
+set -e
+
+echo "🚀 Starting the DevOps CI/CD Lab"
+echo "========================================"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# --- 1. Prerequisite Checks ---
+echo -e "\n${YELLOW}1. Checking prerequisites...${NC}"
+
+if ! command -v docker &> /dev/null; then
+    echo -e "${RED}❌ Docker is not installed or not in your PATH.${NC}"
+    exit 1
+fi
+
+# Function to find and use the correct docker compose command
+compose_cmd() {
+    if command -v docker-compose &> /dev/null; then
+        docker-compose "$@"
+    elif docker compose version &> /dev/null; then
+        docker compose "$@"
+    else
+        echo -e "${RED}❌ Docker Compose is not installed.${NC}"
+        echo -e "Please install the Docker Compose V2 plugin or the standalone docker-compose."
+        exit 1
+    fi
+}
+
+if ! docker info &> /dev/null; then
+    echo -e "${RED}❌ Docker daemon is not running or not accessible.${NC}"
+    exit 1
+fi
+
+echo -e "✅ ${GREEN}Docker and Docker Compose are available.${NC}"
+
+# Allow arguments to be passed to docker-compose, like 'logs' or 'down'
+if [ "$#" -gt 0 ]; then
+    compose_cmd "$@"
+    exit 0
+fi
+
+# --- 2. Clean Up Existing Resources ---
+echo -e "\n${YELLOW}2. Cleaning up existing resources...${NC}"
+
+if [ "$(compose_cmd ps -q)" ]; then
+    echo -e "🧹 Shutting down existing services..."
+    compose_cmd down --remove-orphans
+fi
+echo -e "✅ ${GREEN}Cleanup complete.${NC}"
+
+# --- 3. Build and Start Services ---
+echo -e "\n${YELLOW}3. Building and starting services...${NC}"
+
+echo -e "📦 Building custom Jenkins image (this may take a few minutes on first run)..."
+compose_cmd build --no-cache
+
+echo -e "🚀 Starting services in detached mode..."
+compose_cmd up -d
+
+# --- 4. Verifying Service Health ---
+echo -e "\n${YELLOW}4. Verifying service status...${NC}"
+
+echo -e "⏳ Waiting for services to initialize (this can take up to a minute)..."
+
+check_service() {
+    local service_name="$1"
+    local container_name="$2"
+    local url="$3"
+    local max_attempts=20
+    local attempt=1
+    
+    echo -n -e "🔍 Verifying $service_name..."
+    
+    while [ $attempt -le $max_attempts ]; do
+        http_status=$(curl -s -o /dev/null -L -w "%{http_code}" "$url")
+        if [ "$http_status" = "200" ] || [ "$http_status" = "302" ]; then
+            echo -e " ${GREEN}Online.${NC}"
+            return 0
+        fi
+        echo -n "."
+        sleep 5
+        attempt=$((attempt + 1))
+    done
+    
+    echo -e " ${RED}Offline.${NC}"
+    echo -e "❌ ${RED}$service_name did not become available. Check logs with: ./start-lab.sh logs $container_name${NC}"
+    return 1
+}
+
+# Verify key services
+SERVICES_OK=true
+# Gitea can be slow to start, so we wait a bit before checking
+sleep 15 
+check_service "Gitea" "gitea" "http://localhost:3000" || SERVICES_OK=false
+check_service "Jenkins" "jenkins" "http://localhost:8080/login" || SERVICES_OK=false
+
+# --- 5. Final Status and Information ---
+echo -e "\n${YELLOW}5. Final lab status:${NC}"
+compose_cmd ps
+
+if [ "$SERVICES_OK" = true ]; then
+    echo -e "\n🎉 ${GREEN}Lab started successfully!${NC}"
+    
+    echo -e "\n${BLUE}📋 Access Information:${NC}"
+    echo -e "┌──────────────┬─────────────────────────┬──────────────────────────────────┐"
+    echo -e "│ ${YELLOW}Service${NC}       │ ${YELLOW}URL${NC}                      │ ${YELLOW}Notes${NC}                               │"
+    echo -e "├──────────────┼─────────────────────────┼──────────────────────────────────┤"
+    echo -e "│ Gitea        │ http://localhost:3000   │ Create admin user on first visit │"
+    echo -e "│ Jenkins      │ http://localhost:8080   │ Get initial password from log    │"
+    echo -e "│ Docker Registry │ localhost:5000          │ For image pushes from pipeline   │"
+    echo -e "└──────────────┴─────────────────────────┴──────────────────────────────────┘"
+    
+    echo -e "\n${BLUE}🎯 Next Steps:${NC}"
+    echo -e "1. Open your browser and set up an admin account on Gitea: ${YELLOW}http://localhost:3000${NC}"
+    echo -e "2. Log in to Jenkins: ${YELLOW}http://localhost:8080${NC}"
+    echo -e "   - Get the initial password with: ${YELLOW}docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword${NC}"
+    echo -e "3. Configure Docker to trust the insecure registry (see course notes)."
+    echo -e "4. Begin Module 1: Source Code Management."
+    
+else
+    echo -e "\n❌ ${RED}One or more services failed to start correctly.${NC}"
+    echo -e "Please check the logs for errors."
+fi
+
+echo -e "\n${YELLOW}💡 Useful Commands:${NC}"
+echo -e "- View all logs:      ${YELLOW}./start-lab.sh logs${NC}"
+echo -e "- View specific log:  ${YELLOW}./start-lab.sh logs jenkins${NC}"
+echo -e "- Stop the lab:       ${YELLOW}./start-lab.sh down${NC}"
+
+echo -e "\n========================================"
+echo -e "🎓 ${GREEN}Happy DevOps Learning!${NC}"
+```
+
+#### Step 5: Make the Script Executable and Launch the Lab
+
+Before running the script, you must give it execution permissions.
+
+1.  **Make the script executable:**
+    ```bash
+    chmod +x start-lab.sh
     ```
+
+2.  **Launch the lab:**
+    Now, you can start the entire lab with one simple command:
+    ```bash
+    ./start-lab.sh
+    ```
+    The script will guide you through the process, check for prerequisites, build the Jenkins image, start all containers, and verify their status. If successful, it will provide you with all the URLs and information you need to begin the course.
+
 
 3.  Launch the lab:
     ```bash
@@ -147,6 +371,21 @@ graph TD
     > **Note:** `registry:5000` is necessary so that containers *inside* the Docker network (like Jenkins or Kubernetes/Kind) can access the registry by its service name.
 
     Then restart the Docker service: `sudo systemctl restart docker`.
+
+#### Step 6: Configure Docker for the Local Registry
+
+One final manual step is required. Our local Docker Registry is insecure (HTTP), so you must configure your Docker daemon to trust it.
+
+*   Edit (or create) the Docker daemon configuration file. It is usually located at `/etc/docker/daemon.json` on Linux/Mac.
+*   Add the following content:
+    ```json
+    {
+      "insecure-registries" : ["localhost:5000", "registry:5000"]
+    }
+    ```
+*   Save the file and **restart your Docker daemon**. On most Linux systems, this is done with `sudo systemctl restart docker`.
+
+You are now fully set up and ready to begin the course!
 
 ### Sources & Further Reading
 
@@ -264,6 +503,7 @@ graph TD
     ```
     Flask==2.1.2
     gunicorn==20.1.0
+    Werkzeug==2.3.7
     ```
     > **Note:** We use `gunicorn`, a robust WSGI server, which is more suitable for "production" than Flask's built-in development server.
 
@@ -337,21 +577,14 @@ Continuous Integration (CI) automates the building and testing of code with ever
                 }
             }
 
-            stage('Build Docker Image') {
+            stage('Build & Push Docker Image') {
                 steps {
                     script {
-                        echo "Building image: ${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
-                        docker.build("${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}", ".")
-                    }
-                }
-            }
-
-            stage('Push to Local Registry') {
-                steps {
-                    script {
-                        echo "Pushing image to local registry"
-                        // No credentials needed since our registry is configured as "insecure"
-                        docker.push("${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}")
+                        // 1. Build the image and store the resulting 'Image' object in a variable
+                        def customImage = docker.build("${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}", ".")
+                        
+                        // 2. Call the .push() method on the 'Image' object
+                        customImage.push()
                     }
                 }
             }
@@ -861,25 +1094,25 @@ We will simulate server configuration by using Ansible to create a file inside t
 
     *   **Create a playbook `configure-jenkins.yml`:**
         ```yaml
-        # ansible/configure-jenkins.yml
-        - name: Configure Jenkins Container
-          hosts: jenkins_server
-          become: yes # To execute tasks as root
+            # ansible/configure-jenkins.yml
+            - name: Configure Jenkins Container
+            hosts: jenkins_server
+            become: yes # To execute tasks as root
 
-          tasks:
-            - name: Create a welcome message file
-              copy:
-                content: "This file was created by Ansible on {{ ansible_date_time.iso8601 }}."
-                dest: /var/jenkins_home/ansible_managed.txt
-                owner: jenkins
-                group: jenkins
-                mode: '0644'
+            tasks:
+                - name: Create a welcome message file
+                copy:
+                    content: "This file was created by Ansible on {{ ansible_date_time.iso8601 }}."
+                    dest: /var/jenkins_home/ansible_managed.txt
+                    owner: jenkins
+                    group: jenkins
+                    mode: '0644'
 
-            - name: Ensure a package is installed (example)
-              apt:
-                name: cowsay
-                state: present
-                update_cache: yes
+                - name: Ensure a package is installed (example)
+                apt:
+                    name: cowsay
+                    state: present
+                    update_cache: yes
         ```
 
 3.  **Run the Ansible Playbook:**
@@ -1130,6 +1363,7 @@ Our application needs to expose a `/metrics` endpoint that Prometheus can read.
     Flask==2.1.2
     gunicorn==20.1.0
     prometheus-client==0.14.1
+    Werkzeug==2.3.7
     ```
 
 2.  **Modify `app.py`:**
