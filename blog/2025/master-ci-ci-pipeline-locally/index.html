@@ -20,7 +20,30 @@
         K8sWorker -- Runs --&gt; App
     end
     User[User] -- Access via Browser --&gt; Services
-</code></pre> <h3 id="prerequisites">Prerequisites</h3> <ul> <li> <strong>Docker</strong> and <strong>Docker Compose</strong> installed.</li> <li>A text editor (e.g., VS Code).</li> <li>A terminal.</li> <li>Basic knowledge of the Linux command line.</li> <li> <strong>Kind</strong> and <strong>kubectl</strong> installed for the Kubernetes module.</li> </ul> <h3 id="workshop-launching-the-lab">Workshop: Launching the Lab</h3> <ol> <li>Create a folder for our project, e.g., <code class="language-plaintext highlighter-rouge">devops-course-lab</code>.</li> <li> <p>Inside, create a <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file:</p> <div class="language-yaml highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+</code></pre> <h3 id="prerequisites">Prerequisites</h3> <ul> <li> <strong>Docker</strong> and <strong>Docker Compose</strong> installed.</li> <li>A text editor (e.g., VS Code).</li> <li>A terminal.</li> <li>Basic knowledge of the Linux command line.</li> <li> <strong>Kind</strong> and <strong>kubectl</strong> installed for the Kubernetes module.</li> </ul> <h3 id="workshop-launching-the-lab-with-an-automated-script">Workshop: Launching the Lab with an Automated Script</h3> <p>To make setting up our lab environment as simple as possible, we will use a shell script. This script embodies the DevOps principle of automation. It will perform prerequisite checks, build our custom Jenkins image, start all services, and verify that everything is running correctly, providing a smooth start to the course.</p> <h4 id="step-1-create-the-project-directory-structure">Step 1: Create the Project Directory Structure</h4> <p>First, create a root folder for our project, for example, <code class="language-plaintext highlighter-rouge">devops-course-lab</code>. All subsequent files and folders will be created inside this one.</p> <h4 id="step-2-create-the-custom-jenkins-image-definition">Step 2: Create the Custom Jenkins Image Definition</h4> <p>Our lab requires a Jenkins container that can execute Docker commands. The official Jenkins image doesn’t include the Docker CLI, so we must build our own.</p> <ul> <li>Inside <code class="language-plaintext highlighter-rouge">devops-course-lab</code>, create a new folder named <code class="language-plaintext highlighter-rouge">jenkins-image</code>.</li> <li>Inside <code class="language-plaintext highlighter-rouge">jenkins-image</code>, create a file named <code class="language-plaintext highlighter-rouge">Dockerfile</code>.</li> </ul> <p><strong><code class="language-plaintext highlighter-rouge">jenkins-image/Dockerfile</code>:</strong></p> <div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start from the official Jenkins image</span>
+<span class="k">FROM</span><span class="s"> jenkins/jenkins:lts</span>
+
+<span class="c"># Switch to the root user to install packages</span>
+<span class="k">USER</span><span class="s"> root</span>
+
+<span class="c"># Install necessary dependencies and the Docker CLI</span>
+<span class="k">RUN </span>apt-get update <span class="o">&amp;&amp;</span> apt-get <span class="nb">install</span> <span class="nt">-y</span> lsb-release curl gpg
+<span class="k">RUN </span>curl <span class="nt">-fsSL</span> https://download.docker.com/linux/debian/gpg | gpg <span class="nt">--dearmor</span> <span class="nt">-o</span> /usr/share/keyrings/docker-archive-keyring.gpg
+<span class="k">RUN </span><span class="nb">echo</span> <span class="s2">"deb [arch=</span><span class="si">$(</span>dpkg <span class="nt">--print-architecture</span><span class="si">)</span><span class="s2"> signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian </span><span class="si">$(</span>lsb_release <span class="nt">-cs</span><span class="si">)</span><span class="s2"> stable"</span> | <span class="nb">tee</span> /etc/apt/sources.list.d/docker.list <span class="o">&gt;</span> /dev/null
+<span class="k">RUN </span>apt-get update <span class="o">&amp;&amp;</span> apt-get <span class="nb">install</span> <span class="nt">-y</span> docker-ce-cli
+
+<span class="c"># --- THE FIX IS HERE ---</span>
+<span class="c"># 1. Create the 'docker' group</span>
+<span class="c">#    The installation of docker-ce-cli doesn't create it, so we do it manually.</span>
+<span class="k">RUN </span>groupadd docker
+
+<span class="c"># 2. Add the 'jenkins' user to the 'docker' group</span>
+<span class="c">#    This allows the jenkins user to communicate with the Docker socket.</span>
+<span class="k">RUN </span>usermod <span class="nt">-aG</span> docker jenkins
+
+<span class="c"># Switch back to the jenkins user</span>
+<span class="k">USER</span><span class="s"> jenkins</span>
+</code></pre></div></div> <h4 id="step-3-define-the-lab-services-with-docker-compose">Step 3: Define the Lab Services with Docker Compose</h4> <p>At the root of the <code class="language-plaintext highlighter-rouge">devops-course-lab</code> folder, create your <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file. This file defines all the services needed for our course.</p> <p><strong><code class="language-plaintext highlighter-rouge">docker-compose.yml</code>:</strong></p> <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
 
 <span class="na">services</span><span class="pi">:</span>
   <span class="na">gitea</span><span class="pi">:</span>
@@ -29,9 +52,19 @@
     <span class="na">environment</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s">USER_UID=1000</span>
       <span class="pi">-</span> <span class="s">USER_GID=1000</span>
-    <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+      <span class="pi">-</span> <span class="s">GITEA__database__DB_TYPE=sqlite3</span>
+      <span class="pi">-</span> <span class="s">GITEA__database__PATH=/data/gitea/gitea.db</span>
+      <span class="pi">-</span> <span class="s">GITEA__server__DOMAIN=localhost</span>
+      <span class="pi">-</span> <span class="s">GITEA__server__HTTP_PORT=3000</span>
+      <span class="pi">-</span> <span class="s">GITEA__server__ROOT_URL=http://localhost:3000/</span>
+      <span class="pi">-</span> <span class="s">GITEA__security__INSTALL_LOCK=true</span>
+      <span class="pi">-</span> <span class="s">GITEA__security__SECRET_KEY=changeme</span>
+      <span class="pi">-</span> <span class="s">GITEA__security__INTERNAL_TOKEN=changeme</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
     <span class="na">volumes</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">./gitea:/data</span>
+      <span class="pi">-</span> <span class="s">gitea-data:/data</span>
+      <span class="pi">-</span> <span class="s">/etc/timezone:/etc/timezone:ro</span>
+      <span class="pi">-</span> <span class="s">/etc/localtime:/etc/localtime:ro</span>
     <span class="na">ports</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">2222:22"</span>
@@ -39,7 +72,7 @@
       <span class="pi">-</span> <span class="s">devops-net</span>
 
   <span class="na">jenkins</span><span class="pi">:</span>
-    <span class="na">image</span><span class="pi">:</span> <span class="s">jenkins/jenkins:lts-jdk11</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./jenkins-image</span>
     <span class="na">container_name</span><span class="pi">:</span> <span class="s">jenkins</span>
     <span class="na">privileged</span><span class="pi">:</span> <span class="kc">true</span> <span class="c1"># Required for Docker-in-Docker</span>
     <span class="na">user</span><span class="pi">:</span> <span class="s">root</span>
@@ -54,24 +87,175 @@
 
   <span class="na">registry</span><span class="pi">:</span>
     <span class="na">image</span><span class="pi">:</span> <span class="s">registry:2</span>
-    <span class="na">container_name</span><span class="pi">:</span> <span class="s">registry</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">registry2</span>
     <span class="na">ports</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">5000:5000"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5002:5000"</span>
     <span class="na">volumes</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s">./registry_data:/var/lib/registry</span>
     <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
     <span class="na">networks</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s">devops-net</span>
 
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">gitea-data</span><span class="pi">:</span>
+  <span class="na">jenkins_home</span><span class="pi">:</span>
+  <span class="na">registry_data</span><span class="pi">:</span>
+  
 <span class="na">networks</span><span class="pi">:</span>
   <span class="na">devops-net</span><span class="pi">:</span>
     <span class="na">name</span><span class="pi">:</span> <span class="s">devops-net</span>
     <span class="na">driver</span><span class="pi">:</span> <span class="s">bridge</span>
-</code></pre></div> </div> </li> <li>Launch the lab: <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>docker-compose up <span class="nt">-d</span>
+</code></pre></div></div> <h4 id="step-4-create-the-automated-startup-script">Step 4: Create the Automated Startup Script</h4> <p>This script is the main entry point for starting, stopping, and managing the lab. Create a new file named <code class="language-plaintext highlighter-rouge">start-lab.sh</code> at the root of your <code class="language-plaintext highlighter-rouge">devops-course-lab</code> directory.</p> <p><strong><code class="language-plaintext highlighter-rouge">start-lab.sh</code>:</strong></p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="c"># Startup Script for the DevOps CI/CD Lab</span>
+<span class="c"># This script configures and starts all necessary services for the course.</span>
+
+<span class="nb">set</span> <span class="nt">-e</span>
+
+<span class="nb">echo</span> <span class="s2">"🚀 Starting the DevOps CI/CD Lab"</span>
+<span class="nb">echo</span> <span class="s2">"========================================"</span>
+
+<span class="c"># Colors for output</span>
+<span class="nv">RED</span><span class="o">=</span><span class="s1">'\033[0;31m'</span>
+<span class="nv">GREEN</span><span class="o">=</span><span class="s1">'\033[0;32m'</span>
+<span class="nv">YELLOW</span><span class="o">=</span><span class="s1">'\033[1;33m'</span>
+<span class="nv">BLUE</span><span class="o">=</span><span class="s1">'\033[0;34m'</span>
+<span class="nv">NC</span><span class="o">=</span><span class="s1">'\033[0m'</span> <span class="c"># No Color</span>
+
+<span class="c"># --- 1. Prerequisite Checks ---</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">1. Checking prerequisites...</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="k">if</span> <span class="o">!</span> <span class="nb">command</span> <span class="nt">-v</span> docker &amp;&gt; /dev/null<span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="k">${</span><span class="nv">RED</span><span class="k">}</span><span class="s2">❌ Docker is not installed or not in your PATH.</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">exit </span>1
+<span class="k">fi</span>
+
+<span class="c"># Function to find and use the correct docker compose command</span>
+compose_cmd<span class="o">()</span> <span class="o">{</span>
+    <span class="k">if </span><span class="nb">command</span> <span class="nt">-v</span> docker-compose &amp;&gt; /dev/null<span class="p">;</span> <span class="k">then
+        </span>docker-compose <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span>
+    <span class="k">elif </span>docker compose version &amp;&gt; /dev/null<span class="p">;</span> <span class="k">then
+        </span>docker compose <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span>
+    <span class="k">else
+        </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="k">${</span><span class="nv">RED</span><span class="k">}</span><span class="s2">❌ Docker Compose is not installed.</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+        <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"Please install the Docker Compose V2 plugin or the standalone docker-compose."</span>
+        <span class="nb">exit </span>1
+    <span class="k">fi</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">!</span> docker info &amp;&gt; /dev/null<span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="k">${</span><span class="nv">RED</span><span class="k">}</span><span class="s2">❌ Docker daemon is not running or not accessible.</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">exit </span>1
+<span class="k">fi
+
+</span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"✅ </span><span class="k">${</span><span class="nv">GREEN</span><span class="k">}</span><span class="s2">Docker and Docker Compose are available.</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="c"># Allow arguments to be passed to docker-compose, like 'logs' or 'down'</span>
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"$#"</span> <span class="nt">-gt</span> 0 <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span>compose_cmd <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span>
+    <span class="nb">exit </span>0
+<span class="k">fi</span>
+
+<span class="c"># --- 2. Clean Up Existing Resources ---</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">2. Cleaning up existing resources...</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="si">$(</span>compose_cmd ps <span class="nt">-q</span><span class="si">)</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"🧹 Shutting down existing services..."</span>
+    compose_cmd down <span class="nt">--remove-orphans</span>
+<span class="k">fi
+</span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"✅ </span><span class="k">${</span><span class="nv">GREEN</span><span class="k">}</span><span class="s2">Cleanup complete.</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="c"># --- 3. Build and Start Services ---</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">3. Building and starting services...</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"📦 Building custom Jenkins image (this may take a few minutes on first run)..."</span>
+compose_cmd build <span class="nt">--no-cache</span>
+
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"🚀 Starting services in detached mode..."</span>
+compose_cmd up <span class="nt">-d</span>
+
+<span class="c"># --- 4. Verifying Service Health ---</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">4. Verifying service status...</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"⏳ Waiting for services to initialize (this can take up to a minute)..."</span>
+
+check_service<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">service_name</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+    <span class="nb">local </span><span class="nv">container_name</span><span class="o">=</span><span class="s2">"</span><span class="nv">$2</span><span class="s2">"</span>
+    <span class="nb">local </span><span class="nv">url</span><span class="o">=</span><span class="s2">"</span><span class="nv">$3</span><span class="s2">"</span>
+    <span class="nb">local </span><span class="nv">max_attempts</span><span class="o">=</span>20
+    <span class="nb">local </span><span class="nv">attempt</span><span class="o">=</span>1
+    
+    <span class="nb">echo</span> <span class="nt">-n</span> <span class="nt">-e</span> <span class="s2">"🔍 Verifying </span><span class="nv">$service_name</span><span class="s2">..."</span>
+    
+    <span class="k">while</span> <span class="o">[</span> <span class="nv">$attempt</span> <span class="nt">-le</span> <span class="nv">$max_attempts</span> <span class="o">]</span><span class="p">;</span> <span class="k">do
+        </span><span class="nv">http_status</span><span class="o">=</span><span class="si">$(</span>curl <span class="nt">-s</span> <span class="nt">-o</span> /dev/null <span class="nt">-L</span> <span class="nt">-w</span> <span class="s2">"%{http_code}"</span> <span class="s2">"</span><span class="nv">$url</span><span class="s2">"</span><span class="si">)</span>
+        <span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$http_status</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"200"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$http_status</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"302"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+            </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">" </span><span class="k">${</span><span class="nv">GREEN</span><span class="k">}</span><span class="s2">Online.</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+            <span class="k">return </span>0
+        <span class="k">fi
+        </span><span class="nb">echo</span> <span class="nt">-n</span> <span class="s2">"."</span>
+        <span class="nb">sleep </span>5
+        <span class="nv">attempt</span><span class="o">=</span><span class="k">$((</span>attempt <span class="o">+</span> <span class="m">1</span><span class="k">))</span>
+    <span class="k">done
+    
+    </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">" </span><span class="k">${</span><span class="nv">RED</span><span class="k">}</span><span class="s2">Offline.</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"❌ </span><span class="k">${</span><span class="nv">RED</span><span class="k">}</span><span class="nv">$service_name</span><span class="s2"> did not become available. Check logs with: ./start-lab.sh logs </span><span class="nv">$container_name</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="k">return </span>1
+<span class="o">}</span>
+
+<span class="c"># Verify key services</span>
+<span class="nv">SERVICES_OK</span><span class="o">=</span><span class="nb">true</span>
+<span class="c"># Gitea can be slow to start, so we wait a bit before checking</span>
+<span class="nb">sleep </span>15 
+check_service <span class="s2">"Gitea"</span> <span class="s2">"gitea"</span> <span class="s2">"http://localhost:3000"</span> <span class="o">||</span> <span class="nv">SERVICES_OK</span><span class="o">=</span><span class="nb">false
+</span>check_service <span class="s2">"Jenkins"</span> <span class="s2">"jenkins"</span> <span class="s2">"http://localhost:8080/login"</span> <span class="o">||</span> <span class="nv">SERVICES_OK</span><span class="o">=</span><span class="nb">false</span>
+
+<span class="c"># --- 5. Final Status and Information ---</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">5. Final lab status:</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+compose_cmd ps
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$SERVICES_OK</span><span class="s2">"</span> <span class="o">=</span> <span class="nb">true</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">🎉 </span><span class="k">${</span><span class="nv">GREEN</span><span class="k">}</span><span class="s2">Lab started successfully!</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="k">${</span><span class="nv">BLUE</span><span class="k">}</span><span class="s2">📋 Access Information:</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"┌──────────────┬─────────────────────────┬──────────────────────────────────┐"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"│ </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">Service</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">       │ </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">URL</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">                      │ </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">Notes</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">                               │"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"├──────────────┼─────────────────────────┼──────────────────────────────────┤"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"│ Gitea        │ http://localhost:3000   │ Create admin user on first visit │"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"│ Jenkins      │ http://localhost:8080   │ Get initial password from log    │"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"│ Docker Registry │ localhost:5000          │ For image pushes from pipeline   │"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"└──────────────┴─────────────────────────┴──────────────────────────────────┘"</span>
+    
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="k">${</span><span class="nv">BLUE</span><span class="k">}</span><span class="s2">🎯 Next Steps:</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"1. Open your browser and set up an admin account on Gitea: </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">http://localhost:3000</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"2. Log in to Jenkins: </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">http://localhost:8080</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"   - Get the initial password with: </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"3. Configure Docker to trust the insecure registry (see course notes)."</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"4. Begin Module 1: Source Code Management."</span>
+    
+<span class="k">else
+    </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">❌ </span><span class="k">${</span><span class="nv">RED</span><span class="k">}</span><span class="s2">One or more services failed to start correctly.</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"Please check the logs for errors."</span>
+<span class="k">fi
+
+</span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">💡 Useful Commands:</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"- View all logs:      </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">./start-lab.sh logs</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"- View specific log:  </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">./start-lab.sh logs jenkins</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"- Stop the lab:       </span><span class="k">${</span><span class="nv">YELLOW</span><span class="k">}</span><span class="s2">./start-lab.sh down</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">========================================"</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"🎓 </span><span class="k">${</span><span class="nv">GREEN</span><span class="k">}</span><span class="s2">Happy DevOps Learning!</span><span class="k">${</span><span class="nv">NC</span><span class="k">}</span><span class="s2">"</span>
+</code></pre></div></div> <h4 id="step-5-make-the-script-executable-and-launch-the-lab">Step 5: Make the Script Executable and Launch the Lab</h4> <p>Before running the script, you must give it execution permissions.</p> <ol> <li> <strong>Make the script executable:</strong> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x start-lab.sh
+</code></pre></div> </div> </li> <li> <strong>Launch the lab:</strong> Now, you can start the entire lab with one simple command: <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>./start-lab.sh
+</code></pre></div> </div> <p>The script will guide you through the process, check for prerequisites, build the Jenkins image, start all containers, and verify their status. If successful, it will provide you with all the URLs and information you need to begin the course.</p> </li> <li>Launch the lab: <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>docker-compose up <span class="nt">-d</span>
 </code></pre></div> </div> </li> <li> <strong>Docker Configuration for Local Registry (VERY IMPORTANT)</strong>: Our registry is insecure (HTTP). We need to tell Docker to trust it. Edit (or create) the file <code class="language-plaintext highlighter-rouge">/etc/docker/daemon.json</code> (on Linux/Mac) and add: <div class="language-json highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"insecure-registries"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"localhost:5000"</span><span class="p">,</span><span class="w"> </span><span class="s2">"registry:5000"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div> </div> <blockquote> <p><strong>Note:</strong> <code class="language-plaintext highlighter-rouge">registry:5000</code> is necessary so that containers <em>inside</em> the Docker network (like Jenkins or Kubernetes/Kind) can access the registry by its service name.</p> </blockquote> <p>Then restart the Docker service: <code class="language-plaintext highlighter-rouge">sudo systemctl restart docker</code>.</p> </li> </ol> <h3 id="sources--further-reading">Sources &amp; Further Reading</h3> <ul> <li> <strong>Book:</strong> <em>The Phoenix Project</em> by Gene Kim, Kevin Behr, and George Spafford.</li> <li> <strong>Documentation:</strong> <a href="https://docs.docker.com/compose/" rel="external nofollow noopener" target="_blank">Docker Compose Overview</a> </li> </ul> <hr> <h2 id="module-01-source-code-management-with-gitea"><strong>Module 01: Source Code Management with Gitea</strong></h2> <p>Every DevOps project starts with code. A version control system like Git is essential. Gitea is a lightweight alternative to GitLab or GitHub, perfect for our lab.</p> <h3 id="key-concepts">Key Concepts</h3> <ul> <li> <strong>Git:</strong> A distributed version control system.</li> <li> <strong>Repository:</strong> A folder containing your project and its Git history.</li> <li> <strong>Commit / Branch / Merge:</strong> The basic Git operations for saving, isolating, and combining work.</li> <li> <strong>Webhook:</strong> A mechanism that allows Gitea to notify another service (Jenkins) when an event occurs (e.g., a <code class="language-plaintext highlighter-rouge">push</code>).</li> </ul> <h3 id="workshop-configure-gitea-and-create-our-project">Workshop: Configure Gitea and Create Our Project</h3> <ol> <li> <strong>Access and Configuration:</strong> <ul> <li>Open your browser to <code class="language-plaintext highlighter-rouge">http://localhost:3000</code>.</li> <li>Follow the installation wizard. <ul> <li>Database Type: <code class="language-plaintext highlighter-rouge">SQLite3</code>.</li> <li> <strong>Gitea Base URL:</strong> <code class="language-plaintext highlighter-rouge">http://gitea:3000</code> (important for internal Docker communication).</li> <li>Create your admin account.</li> </ul> </li> </ul> </li> <li> <strong>Create a New Repository:</strong> <ul> <li>Log in, click the <code class="language-plaintext highlighter-rouge">+</code> icon -&gt; “New Repository”.</li> <li>Repository Name: <code class="language-plaintext highlighter-rouge">hello-devops</code>.</li> <li>Click “Create Repository”.</li> </ul> </li> <li> <strong>Create Our Base Application:</strong> <ul> <li>In a new folder on your machine, create a file named <code class="language-plaintext highlighter-rouge">app.py</code>: <div class="language-python highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+</span></code></pre></div> </div> <blockquote> <p><strong>Note:</strong> <code class="language-plaintext highlighter-rouge">registry:5000</code> is necessary so that containers <em>inside</em> the Docker network (like Jenkins or Kubernetes/Kind) can access the registry by its service name.</p> </blockquote> <p>Then restart the Docker service: <code class="language-plaintext highlighter-rouge">sudo systemctl restart docker</code>.</p> </li> </ol> <h4 id="step-6-configure-docker-for-the-local-registry">Step 6: Configure Docker for the Local Registry</h4> <p>One final manual step is required. Our local Docker Registry is insecure (HTTP), so you must configure your Docker daemon to trust it.</p> <ul> <li>Edit (or create) the Docker daemon configuration file. It is usually located at <code class="language-plaintext highlighter-rouge">/etc/docker/daemon.json</code> on Linux/Mac.</li> <li>Add the following content: <div class="language-json highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"insecure-registries"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"localhost:5000"</span><span class="p">,</span><span class="w"> </span><span class="s2">"registry:5000"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div> </div> </li> <li>Save the file and <strong>restart your Docker daemon</strong>. On most Linux systems, this is done with <code class="language-plaintext highlighter-rouge">sudo systemctl restart docker</code>.</li> </ul> <p>You are now fully set up and ready to begin the course!</p> <h3 id="sources--further-reading">Sources &amp; Further Reading</h3> <ul> <li> <strong>Book:</strong> <em>The Phoenix Project</em> by Gene Kim, Kevin Behr, and George Spafford.</li> <li> <strong>Documentation:</strong> <a href="https://docs.docker.com/compose/" rel="external nofollow noopener" target="_blank">Docker Compose Overview</a> </li> </ul> <hr> <h2 id="module-01-source-code-management-with-gitea"><strong>Module 01: Source Code Management with Gitea</strong></h2> <p>Every DevOps project starts with code. A version control system like Git is essential. Gitea is a lightweight alternative to GitLab or GitHub, perfect for our lab.</p> <h3 id="key-concepts">Key Concepts</h3> <ul> <li> <strong>Git:</strong> A distributed version control system.</li> <li> <strong>Repository:</strong> A folder containing your project and its Git history.</li> <li> <strong>Commit / Branch / Merge:</strong> The basic Git operations for saving, isolating, and combining work.</li> <li> <strong>Webhook:</strong> A mechanism that allows Gitea to notify another service (Jenkins) when an event occurs (e.g., a <code class="language-plaintext highlighter-rouge">push</code>).</li> </ul> <h3 id="workshop-configure-gitea-and-create-our-project">Workshop: Configure Gitea and Create Our Project</h3> <ol> <li> <strong>Access and Configuration:</strong> <ul> <li>Open your browser to <code class="language-plaintext highlighter-rouge">http://localhost:3000</code>.</li> <li>Follow the installation wizard. <ul> <li>Database Type: <code class="language-plaintext highlighter-rouge">SQLite3</code>.</li> <li> <strong>Gitea Base URL:</strong> <code class="language-plaintext highlighter-rouge">http://gitea:3000</code> (important for internal Docker communication).</li> <li>Create your admin account.</li> </ul> </li> </ul> </li> <li> <strong>Create a New Repository:</strong> <ul> <li>Log in, click the <code class="language-plaintext highlighter-rouge">+</code> icon -&gt; “New Repository”.</li> <li>Repository Name: <code class="language-plaintext highlighter-rouge">hello-devops</code>.</li> <li>Click “Create Repository”.</li> </ul> </li> <li> <strong>Create Our Base Application:</strong> <ul> <li>In a new folder on your machine, create a file named <code class="language-plaintext highlighter-rouge">app.py</code>: <div class="language-python highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
 <span class="kn">import</span> <span class="n">os</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="nc">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
@@ -116,6 +300,7 @@ git push <span class="nt">-u</span> origin main
 <span class="k">CMD</span><span class="s"> ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]</span>
 </code></pre></div> </div> </li> <li> <strong>Create <code class="language-plaintext highlighter-rouge">requirements.txt</code>:</strong> <div class="language-plaintext highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>Flask==2.1.2
 gunicorn==20.1.0
+Werkzeug==2.3.7
 </code></pre></div> </div> <blockquote> <p><strong>Note:</strong> We use <code class="language-plaintext highlighter-rouge">gunicorn</code>, a robust WSGI server, which is more suitable for “production” than Flask’s built-in development server.</p> </blockquote> </li> <li> <strong>Build and Test the Image:</strong> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="c"># Build the image</span>
 docker build <span class="nt">-t</span> localhost:5000/hello-devops:1.0 <span class="nb">.</span>
 
@@ -145,21 +330,14 @@ git push origin main
             <span class="o">}</span>
         <span class="o">}</span>
 
-        <span class="n">stage</span><span class="o">(</span><span class="s1">'Build Docker Image'</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">stage</span><span class="o">(</span><span class="s1">'Build &amp; Push Docker Image'</span><span class="o">)</span> <span class="o">{</span>
             <span class="n">steps</span> <span class="o">{</span>
                 <span class="n">script</span> <span class="o">{</span>
-                    <span class="n">echo</span> <span class="s2">"Building image: ${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}"</span>
-                    <span class="n">docker</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="s2">"${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}"</span><span class="o">,</span> <span class="s2">"."</span><span class="o">)</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-
-        <span class="n">stage</span><span class="o">(</span><span class="s1">'Push to Local Registry'</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">steps</span> <span class="o">{</span>
-                <span class="n">script</span> <span class="o">{</span>
-                    <span class="n">echo</span> <span class="s2">"Pushing image to local registry"</span>
-                    <span class="c1">// No credentials needed since our registry is configured as "insecure"</span>
-                    <span class="n">docker</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s2">"${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}"</span><span class="o">)</span>
+                    <span class="c1">// 1. Build the image and store the resulting 'Image' object in a variable</span>
+                    <span class="kt">def</span> <span class="n">customImage</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="s2">"${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}"</span><span class="o">,</span> <span class="s2">"."</span><span class="o">)</span>
+                        
+                    <span class="c1">// 2. Call the .push() method on the 'Image' object</span>
+                    <span class="n">customImage</span><span class="o">.</span><span class="na">push</span><span class="o">()</span>
                 <span class="o">}</span>
             <span class="o">}</span>
         <span class="o">}</span>
@@ -408,7 +586,26 @@ terraform apply
 </span><span class="nn">[jenkins_server]</span>
 <span class="c"># Target the container directly by its name using the docker connection
 </span><span class="err">jenkins</span> <span class="py">ansible_connection</span><span class="p">=</span><span class="s">docker</span>
-</code></pre></div> </div> </li> <li> <strong>Create a playbook <code class="language-plaintext highlighter-rouge">configure-jenkins.yml</code>:</strong> ```yaml <h1 id="ansibleconfigure-jenkinsyml">ansible/configure-jenkins.yml</h1> <ul> <li> <p>name: Configure Jenkins Container hosts: jenkins_server become: yes # To execute tasks as root</p> <p>tasks:</p> <ul> <li> <p>name: Create a welcome message file copy: content: “This file was created by Ansible on .” dest: /var/jenkins_home/ansible_managed.txt owner: jenkins group: jenkins mode: ‘0644’</p> </li> <li> <p>name: Ensure a package is installed (example) apt: name: cowsay state: present update_cache: yes ```</p> </li> </ul> </li> </ul> </li> </ul> </li> <li> <strong>Run the Ansible Playbook:</strong> In your terminal, from the <code class="language-plaintext highlighter-rouge">ansible</code> folder: <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="c"># The command to run the playbook</span>
+</code></pre></div> </div> </li> <li> <strong>Create a playbook <code class="language-plaintext highlighter-rouge">configure-jenkins.yml</code>:</strong> <div class="language-yaml highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>    <span class="c1"># ansible/configure-jenkins.yml</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Configure Jenkins Container</span>
+    <span class="na">hosts</span><span class="pi">:</span> <span class="s">jenkins_server</span>
+    <span class="na">become</span><span class="pi">:</span> <span class="s">yes</span> <span class="c1"># To execute tasks as root</span>
+
+    <span class="na">tasks</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Create a welcome message file</span>
+        <span class="na">copy</span><span class="pi">:</span>
+            <span class="na">content</span><span class="pi">:</span> <span class="s2">"</span><span class="s">This</span><span class="nv"> </span><span class="s">file</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">created</span><span class="nv"> </span><span class="s">by</span><span class="nv"> </span><span class="s">Ansible</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">."</span>
+            <span class="na">dest</span><span class="pi">:</span> <span class="s">/var/jenkins_home/ansible_managed.txt</span>
+            <span class="na">owner</span><span class="pi">:</span> <span class="s">jenkins</span>
+            <span class="na">group</span><span class="pi">:</span> <span class="s">jenkins</span>
+            <span class="na">mode</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0644'</span>
+
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Ensure a package is installed (example)</span>
+        <span class="na">apt</span><span class="pi">:</span>
+            <span class="na">name</span><span class="pi">:</span> <span class="s">cowsay</span>
+            <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+            <span class="na">update_cache</span><span class="pi">:</span> <span class="s">yes</span>
+</code></pre></div> </div> </li> </ul> </li> <li> <strong>Run the Ansible Playbook:</strong> In your terminal, from the <code class="language-plaintext highlighter-rouge">ansible</code> folder: <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="c"># The command to run the playbook</span>
 ansible-playbook <span class="nt">-i</span> inventory.ini configure-jenkins.yml
 </code></pre></div> </div> </li> <li> <strong>Verify the Result:</strong> Connect to the Jenkins container and check that the file was created and the package is installed. <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="c"># Check the file</span>
 docker <span class="nb">exec </span>jenkins <span class="nb">cat</span> /var/jenkins_home/ansible_managed.txt
@@ -544,6 +741,7 @@ docker <span class="nb">exec </span>jenkins cowsay <span class="s2">"Ansible was
 </code></pre> <h3 id="workshop-set-up-prometheus-loki-and-grafana">Workshop: Set up Prometheus, Loki, and Grafana</h3> <h4 id="1-instrument-the-application-to-expose-metrics">1. Instrument the Application to Expose Metrics</h4> <p>Our application needs to expose a <code class="language-plaintext highlighter-rouge">/metrics</code> endpoint that Prometheus can read.</p> <ol> <li> <strong>Update <code class="language-plaintext highlighter-rouge">requirements.txt</code>:</strong> <div class="language-plaintext highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>Flask==2.1.2
 gunicorn==20.1.0
 prometheus-client==0.14.1
+Werkzeug==2.3.7
 </code></pre></div> </div> </li> <li> <strong>Modify <code class="language-plaintext highlighter-rouge">app.py</code>:</strong> <div class="language-python highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Response</span>
 <span class="kn">import</span> <span class="n">os</span>
 <span class="kn">from</span> <span class="n">prometheus_client</span> <span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">generate_latest</span><span class="p">,</span> <span class="n">REGISTRY</span>
