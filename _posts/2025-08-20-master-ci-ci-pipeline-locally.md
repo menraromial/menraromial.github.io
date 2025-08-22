@@ -1418,40 +1418,40 @@ The `kube-prometheus-stack` uses `ServiceMonitor` resources to automatically dis
 
 1.  **Update your `k8s/service.yaml`** to add a name to the port, which is required by the `ServiceMonitor`.
     ```yaml
-    # k8s/service.yaml
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: hello-devops-service
-      labels:
-        app: hello-devops # Important label for discovery
-    spec:
-      selector:
-        app: hello-devops
-      ports:
-      - name: http # Name the port
-        protocol: TCP
-        port: 80
-        targetPort: 5000
+        # k8s/service.yaml
+        apiVersion: v1
+        kind: Service
+        metadata:
+        name: hello-devops-service
+        labels:
+            app: hello-devops # Important label for discovery
+        spec:
+        selector:
+            app: hello-devops
+        ports:
+        - name: http # Name the port
+            protocol: TCP
+            port: 80
+            targetPort: 5000
     ```
 
 2.  **Create a `k8s/servicemonitor.yaml` manifest:**
     ```yaml
-    apiVersion: monitoring.coreos.com/v1
-    kind: ServiceMonitor
-    metadata:
-      name: hello-devops-monitor
-      namespace: default # Make sure it's in the same namespace as your service
-      labels:
-        release: prometheus # This label is crucial for Prometheus to find it
-    spec:
-      selector:
-        matchLabels:
-          app: hello-devops # Target services with this label
-      endpoints:
-      - port: http # Scrape the port named 'http'
-        path: /metrics # On this path
-        interval: 15s # Every 15 seconds
+        apiVersion: monitoring.coreos.com/v1
+        kind: ServiceMonitor
+        metadata:
+        name: hello-devops-monitor
+        namespace: default # Make sure it's in the same namespace as your service
+        labels:
+            release: prometheus # This label is crucial for Prometheus to find it
+        spec:
+        selector:
+            matchLabels:
+            app: hello-devops # Target services with this label
+        endpoints:
+        - port: http # Scrape the port named 'http'
+            path: /metrics # On this path
+            interval: 15s # Every 15 seconds
     ```
 
 #### 4. Access Grafana and Visualize
