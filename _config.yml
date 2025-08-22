@@ -214,6 +214,7 @@ plugins:
   - jekyll-toc
   - jekyll-twitter-plugin
   - jemoji
+  #- jekyll-mermaid
 
 # Sitemap settings
 defaults:
