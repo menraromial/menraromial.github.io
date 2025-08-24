@@ -51,7 +51,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-master-the-ci-cd-pipeline-locally",
+        },{id: "post-guide-to-building-a-custom-kubernetes-scheduler",
+        
+          title: "Guide to Building a Custom Kubernetes Scheduler",
+        
+        description: "Here is a complete, A-to-Z guide in English to develop and deploy your own Kubernetes scheduler using the Scheduling Framework. This guide is practical, detailed, and follows a step-by-step approach from concept to a working deployment in a kubeadm cluster.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/guide-building-custom-kubernetes-scheduler/";
+          
+        },
+      },{id: "post-master-the-ci-cd-pipeline-locally",
         
           title: "Master the CI/CD Pipeline Locally",
         

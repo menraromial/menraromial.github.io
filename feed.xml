@@ -1,5 +1,648 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-22T07:59:58+00:00</updated><id>https://menraromial.github.io/feed.xml</id><title type="html">blank</title><subtitle>A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
-</subtitle><entry><title type="html">Master the CI/CD Pipeline Locally</title><link href="https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally/" rel="alternate" type="text/html" title="Master the CI/CD Pipeline Locally" /><published>2025-08-20T10:30:00+00:00</published><updated>2025-08-20T10:30:00+00:00</updated><id>https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally</id><content type="html" xml:base="https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally/"><![CDATA[<p>Welcome to this comprehensive course on DevOps culture and tooling. The goal is to guide you, step-by-step, from theory to practice, empowering you to build, secure, and automate a full Continuous Integration and Continuous Deployment (CI/CD) pipeline.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-24T18:18:47+00:00</updated><id>https://menraromial.github.io/feed.xml</id><title type="html">blank</title><subtitle>A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
+</subtitle><entry><title type="html">Guide to Building a Custom Kubernetes Scheduler</title><link href="https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler/" rel="alternate" type="text/html" title="Guide to Building a Custom Kubernetes Scheduler" /><published>2025-08-24T17:30:00+00:00</published><updated>2025-08-24T17:30:00+00:00</updated><id>https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler</id><content type="html" xml:base="https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler/"><![CDATA[<p>This guide will walk you through creating a custom scheduler plugin that influences where pods are placed based on custom logic. We will build a simple “Network-Aware” plugin that prefers to schedule pods on nodes with a specific network label.</p>
+
+<p><strong>What We Will Build:</strong></p>
+<ul>
+  <li><strong>A <code class="language-plaintext highlighter-rouge">Filter</code> plugin:</strong> It will only allow pods that request <code class="language-plaintext highlighter-rouge">high-speed</code> networking to be scheduled on nodes that are labeled as <code class="language-plaintext highlighter-rouge">network-topology=high-speed</code>.</li>
+  <li><strong>A <code class="language-plaintext highlighter-rouge">Score</code> plugin:</strong> It will give a higher score to nodes with the <code class="language-plaintext highlighter-rouge">high-speed</code> label, making them more desirable.</li>
+  <li>We will then package this plugin into a new scheduler binary, containerize it, and deploy it to a local Kubernetes cluster.</li>
+</ul>
+
+<hr />
+
+<h3 id="part-1-understanding-the-foundations---the-scheduling-framework"><strong>Part 1: Understanding the Foundations - The Scheduling Framework</strong></h3>
+
+<p>Before writing any code, it’s crucial to understand the “why” and “how”.</p>
+
+<h4 id="what-is-the-kubernetes-scheduler">What is the Kubernetes Scheduler?</h4>
+
+<p>The default Kubernetes scheduler (<code class="language-plaintext highlighter-rouge">kube-scheduler</code>) is a control plane component that watches for newly created Pods that have no <code class="language-plaintext highlighter-rouge">nodeName</code> assigned. For every Pod it discovers, the scheduler becomes responsible for finding the best Node for that Pod to run on. This process involves two main phases:</p>
+
+<ol>
+  <li><strong>Filtering (Predicates):</strong> The scheduler finds the set of feasible Nodes where the Pod <em>can</em> run. For example, if a Pod requests 2 CPUs, all nodes with less than 2 available CPUs are filtered out.</li>
+  <li><strong>Scoring (Priorities):</strong> From the list of feasible nodes, the scheduler ranks each node by assigning it a score. It then picks the node with the highest score. For example, it might prefer a node that has fewer running pods.</li>
+</ol>
+
+<h4 id="the-scheduling-framework-your-entry-point">The Scheduling Framework: Your Entry Point</h4>
+
+<p>The Scheduling Framework is a pluggable architecture for the <code class="language-plaintext highlighter-rouge">kube-scheduler</code> that makes it easy to add custom logic without forking the entire Kubernetes codebase. It exposes a set of <strong>Extension Points</strong> in the scheduling lifecycle where your custom code (a <strong>Plugin</strong>) can be executed.</p>
+
+<p><strong>Visualizing the Extension Points:</strong></p>
+
+<p>Here is the flow of the scheduling process and where the main extension points fit in.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                  (A Pod is created without a node)
+                                  |
+                                  v
++-------------------------------------------------------------------------+
+|                        SCHEDULING CYCLE (for one Pod)                     |
++-------------------------------------------------------------------------+
+                                  |
+                                  v
+[ QueueSort ] &lt;--- Your plugin can sort pods in the scheduling queue.
+                                  |
+                                  v
++-------------------------------------------------------------------------+
+|                      SCHEDULING ATTEMPT (for one Pod)                     |
++-------------------------------------------------------------------------+
+|                                 |                                       |
+|                                 v                                       |
+| [ PreFilter ] &lt;--- Pre-process info about the Pod before filtering.     |
+|                                 |                                       |
+|          --------------------- FOR EACH NODE ----------------------     |
+|          |                                                        |     |
+|          |    [ Filter ] &lt;--- Can this Pod run on this Node? (Yes/No) |   |
+|          |          (If No, Node is discarded for this Pod)        |     |
+|          |                                                        |     |
+|          ----------------------------------------------------------     |
+|                                 |                                       |
+|                                 v                                       |
+| [ PostFilter ] &lt;- If no nodes are viable, your plugin can take action.  |
+|                                 |                                       |
+|                                 v                                       |
+| [ PreScore ] &lt;--- Pre-process info before scoring viable nodes.         |
+|                                 |                                       |
+|          --------------------- FOR EACH VIABLE NODE ---------------     |
+|          |                                                        |     |
+|          |    [ Score ] &lt;--- Give this Node a score (e.g., 0-100).  |   |
+|          |                                                        |     |
+|          ----------------------------------------------------------     |
+|                                 |                                       |
+|                                 v                                       |
+| [ NormalizeScore ] &lt;- Modify all scores to fit a common scale.          |
+|                                 |                                       |
+|                                 v                                       |
+|                          (Scheduler picks Node with highest score)        |
+|                                 |                                       |
+|                                 v                                       |
++-------------------------------------------------------------------------+
+|                           BINDING CYCLE                                 |
++-------------------------------------------------------------------------+
+|                                 |                                       |
+|                                 v                                       |
+| [ Reserve ] &lt;--- Mark resources as "reserved" on the chosen node.       |
+|                                 |                                       |
+|                                 v                                       |
+| [ Permit ] &lt;--- Approve or deny the binding. Can delay binding.         |
+|                                 |                                       |
+|                                 v                                       |
+| [ PreBind ] &lt;--- Actions to take right before the Pod is bound.         |
+|                                 |                                       |
+|                                 v                                       |
+| [ Bind ] &lt;--- The actual binding of the Pod to the Node.                |
+|                                 |                                       |
+|                                 v                                       |
+| [ PostBind ] &lt;--- Actions to take after the binding is successful.      |
+|                                 |                                       |
++-------------------------------------------------------------------------+
+</code></pre></div></div>
+
+<p>Our plugin will focus on the <strong><code class="language-plaintext highlighter-rouge">Filter</code></strong> and <strong><code class="language-plaintext highlighter-rouge">Score</code></strong> extension points.</p>
+
+<hr />
+
+<h3 id="part-2-setting-up-the-professional-development-environment"><strong>Part 2: Setting Up the Professional Development Environment</strong></h3>
+
+<p>This is where we align with the project’s standards.</p>
+
+<h4 id="prerequisites">Prerequisites:</h4>
+
+<ol>
+  <li><strong>Go:</strong> Version 1.19+ (the <code class="language-plaintext highlighter-rouge">scheduler-plugins</code> project specifies its version in the <code class="language-plaintext highlighter-rouge">go.mod</code> file).</li>
+  <li><strong>Docker:</strong> To build container images. Make sure the Docker daemon is running.</li>
+  <li><strong>kubectl:</strong> The Kubernetes command-line tool.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">kind</code></strong>: Our local Kubernetes cluster.</li>
+</ol>
+
+<h4 id="step-1-clone-the-scheduler-plugins-repository">Step 1: Clone the <code class="language-plaintext highlighter-rouge">scheduler-plugins</code> Repository</h4>
+
+<p>We will use the official repository not just as a template, but as our direct development environment. This is the standard practice.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/kubernetes-sigs/scheduler-plugins.git
+<span class="nb">cd </span>scheduler-plugins
+</code></pre></div></div>
+
+<h4 id="step-2-explore-the-makefile">Step 2: Explore the <code class="language-plaintext highlighter-rouge">Makefile</code></h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">Makefile</code> in this repository is the heart of the development workflow. Instead of running raw <code class="language-plaintext highlighter-rouge">go</code> or <code class="language-plaintext highlighter-rouge">docker</code> commands, we will use <code class="language-plaintext highlighter-rouge">make</code> targets. This ensures consistency and correctness.</p>
+
+<p>Key targets we will use:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">make verify</code>: Runs formatters and linters to ensure code quality. <strong>Always run this before committing.</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">make unit-test</code>: Runs all unit tests in the repository.</li>
+  <li><code class="language-plaintext highlighter-rouge">make local-image</code>: <strong>This is crucial.</strong> It builds a scheduler container image for your local architecture, gives it a standard local name (<code class="language-plaintext highlighter-rouge">localhost:5000/...</code>), and loads it directly into your local Docker daemon. Perfect for testing with <code class="language-plaintext highlighter-rouge">kind</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">make build</code>: Compiles the Go binaries (<code class="language-plaintext highlighter-rouge">kube-scheduler</code> and <code class="language-plaintext highlighter-rouge">controller</code>) into the <code class="language-plaintext highlighter-rouge">/bin</code> directory.</li>
+</ul>
+
+<hr />
+
+<h3 id="part-3-developing-our-custom-plugin"><strong>Part 3: Developing Our Custom Plugin</strong></h3>
+
+<p>The core logic remains the same, but the process around it will be more rigorous.</p>
+
+<h4 id="step-1-create-the-plugin-directory-and-file">Step 1: Create the Plugin Directory and File</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> pkg/networkaware
+<span class="nb">touch </span>pkg/networkaware/network_aware.go
+</code></pre></div></div>
+
+<h4 id="step-2-write-the-plugin-code">Step 2: Write the Plugin Code</h4>
+
+<p>Place the same Go code from the previous guide into <code class="language-plaintext highlighter-rouge">pkg/networkaware/network_aware.go</code>. This code implements the <code class="language-plaintext highlighter-rouge">Filter</code> and <code class="language-plaintext highlighter-rouge">Score</code> extension points.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// pkg/networkaware/network_aware.go</span>
+
+<span class="k">package</span> <span class="n">networkaware</span>
+
+<span class="k">import</span> <span class="p">(</span>
+	<span class="s">"context"</span>
+	<span class="s">"fmt"</span>
+
+	<span class="n">v1</span> <span class="s">"k8s.io/api/core/v1"</span>
+	<span class="s">"k8s.io/apimachinery/pkg/runtime"</span>
+	<span class="s">"k8s.io/klog/v2"</span>
+	<span class="s">"k8s.io/kubernetes/pkg/scheduler/framework"</span>
+<span class="p">)</span>
+
+<span class="c">// Define plugin name</span>
+<span class="k">const</span> <span class="n">Name</span> <span class="o">=</span> <span class="s">"NetworkAware"</span>
+
+<span class="k">const</span> <span class="p">(</span>
+	<span class="c">// Annotation key on a Pod to specify network preference.</span>
+	<span class="n">PodNetworkAnnotation</span> <span class="o">=</span> <span class="s">"my-network-preference"</span>
+	<span class="c">// Label key on a Node to specify the type of network it has.</span>
+	<span class="n">NodeNetworkLabel</span> <span class="o">=</span> <span class="s">"network-topology"</span>
+	<span class="c">// Value for high-speed network preference.</span>
+	<span class="n">HighSpeedNetwork</span> <span class="o">=</span> <span class="s">"high-speed"</span>
+<span class="p">)</span>
+
+<span class="c">// NetworkAware is a plugin that filters and scores nodes based on network labels.</span>
+<span class="k">type</span> <span class="n">NetworkAware</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">handle</span> <span class="n">framework</span><span class="o">.</span><span class="n">Handle</span>
+<span class="p">}</span>
+
+<span class="c">// Ensure our plugin implements the necessary interfaces.</span>
+<span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">FilterPlugin</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{}</span>
+<span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">ScorePlugin</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{}</span>
+<span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">PluginFactory</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{}</span>
+
+<span class="c">// Name returns the name of the plugin.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">Name</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">Name</span>
+<span class="p">}</span>
+
+<span class="c">// New is the factory function that creates a new instance of the plugin.</span>
+<span class="c">// This is called by the scheduler framework when it initializes.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">New</span><span class="p">(</span><span class="n">configuration</span> <span class="n">runtime</span><span class="o">.</span><span class="n">Object</span><span class="p">,</span> <span class="n">h</span> <span class="n">framework</span><span class="o">.</span><span class="n">Handle</span><span class="p">)</span> <span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Plugin</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Creating new NetworkAware plugin"</span><span class="p">)</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{</span>
+		<span class="n">handle</span><span class="o">:</span> <span class="n">h</span><span class="p">,</span>
+	<span class="p">},</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// ----------------- FILTERING LOGIC -----------------</span>
+
+<span class="c">// Filter is called by the framework for each node to see if the pod can be scheduled on it.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">Filter</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">state</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">CycleState</span><span class="p">,</span> <span class="n">pod</span> <span class="o">*</span><span class="n">v1</span><span class="o">.</span><span class="n">Pod</span><span class="p">,</span> <span class="n">nodeInfo</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">NodeInfo</span><span class="p">)</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">Status</span> <span class="p">{</span>
+	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Filtering pod %v for node %v"</span><span class="p">,</span> <span class="n">pod</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">nodeInfo</span><span class="o">.</span><span class="n">Node</span><span class="p">()</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+
+	<span class="c">// 1. Get the pod's network preference from its annotations.</span>
+	<span class="n">podNetworkPreference</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">pod</span><span class="o">.</span><span class="n">Annotations</span><span class="p">[</span><span class="n">PodNetworkAnnotation</span><span class="p">]</span>
+	<span class="k">if</span> <span class="o">!</span><span class="n">ok</span> <span class="p">{</span>
+		<span class="c">// If the pod doesn't have the annotation, it has no special network needs.</span>
+		<span class="c">// So, it can run on any node. We allow it.</span>
+		<span class="k">return</span> <span class="n">framework</span><span class="o">.</span><span class="n">NewStatus</span><span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Success</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="c">// 2. If the pod requests a high-speed network...</span>
+	<span class="k">if</span> <span class="n">podNetworkPreference</span> <span class="o">==</span> <span class="n">HighSpeedNetwork</span> <span class="p">{</span>
+		<span class="c">// ...check if the node has the required label.</span>
+		<span class="n">nodeLabels</span> <span class="o">:=</span> <span class="n">nodeInfo</span><span class="o">.</span><span class="n">Node</span><span class="p">()</span><span class="o">.</span><span class="n">GetLabels</span><span class="p">()</span>
+		<span class="n">nodeNetworkType</span><span class="p">,</span> <span class="n">labelExists</span> <span class="o">:=</span> <span class="n">nodeLabels</span><span class="p">[</span><span class="n">NodeNetworkLabel</span><span class="p">]</span>
+
+		<span class="k">if</span> <span class="n">labelExists</span> <span class="o">&amp;&amp;</span> <span class="n">nodeNetworkType</span> <span class="o">==</span> <span class="n">HighSpeedNetwork</span> <span class="p">{</span>
+			<span class="c">// The node has the required label. The pod can run here.</span>
+			<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Node %v has the required '%s' label. Allowing pod %v."</span><span class="p">,</span> <span class="n">nodeInfo</span><span class="o">.</span><span class="n">Node</span><span class="p">()</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">HighSpeedNetwork</span><span class="p">,</span> <span class="n">pod</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">framework</span><span class="o">.</span><span class="n">NewStatus</span><span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Success</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="c">// The node does not have the label. The pod cannot run here.</span>
+			<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Node %v does not have the required '%s' label. Filtering out."</span><span class="p">,</span> <span class="n">nodeInfo</span><span class="o">.</span><span class="n">Node</span><span class="p">()</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">HighSpeedNetwork</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">framework</span><span class="o">.</span><span class="n">NewStatus</span><span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Unschedulable</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"Node %s lacks required network label"</span><span class="p">,</span> <span class="n">nodeInfo</span><span class="o">.</span><span class="n">Node</span><span class="p">()</span><span class="o">.</span><span class="n">Name</span><span class="p">))</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="c">// For any other annotation value, we don't apply any special filtering.</span>
+	<span class="k">return</span> <span class="n">framework</span><span class="o">.</span><span class="n">NewStatus</span><span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Success</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<span class="c">// ----------------- SCORING LOGIC -----------------</span>
+
+<span class="c">// Score is called for each node that passed the Filter phase.</span>
+<span class="c">// It returns a score for the node, with higher scores being better.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">Score</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">state</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">CycleState</span><span class="p">,</span> <span class="n">pod</span> <span class="o">*</span><span class="n">v1</span><span class="o">.</span><span class="n">Pod</span><span class="p">,</span> <span class="n">nodeName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">Status</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Scoring node %v for pod %v"</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">pod</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+
+	<span class="n">nodeInfo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">na</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">SnapshotSharedLister</span><span class="p">()</span><span class="o">.</span><span class="n">NodeInfos</span><span class="p">()</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">nodeName</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="m">0</span><span class="p">,</span> <span class="n">framework</span><span class="o">.</span><span class="n">AsStatus</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"getting node %s from snapshot: %w"</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
+	<span class="p">}</span>
+
+	<span class="n">nodeLabels</span> <span class="o">:=</span> <span class="n">nodeInfo</span><span class="o">.</span><span class="n">Node</span><span class="p">()</span><span class="o">.</span><span class="n">GetLabels</span><span class="p">()</span>
+	<span class="n">podNetworkPreference</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">pod</span><span class="o">.</span><span class="n">Annotations</span><span class="p">[</span><span class="n">PodNetworkAnnotation</span><span class="p">]</span>
+
+	<span class="c">// If the pod wants a high-speed network and the node has it, give it the highest score.</span>
+	<span class="k">if</span> <span class="n">ok</span> <span class="o">&amp;&amp;</span> <span class="n">podNetworkPreference</span> <span class="o">==</span> <span class="n">HighSpeedNetwork</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">nodeNetworkType</span><span class="p">,</span> <span class="n">labelExists</span> <span class="o">:=</span> <span class="n">nodeLabels</span><span class="p">[</span><span class="n">NodeNetworkLabel</span><span class="p">];</span> <span class="n">labelExists</span> <span class="o">&amp;&amp;</span> <span class="n">nodeNetworkType</span> <span class="o">==</span> <span class="n">HighSpeedNetwork</span> <span class="p">{</span>
+			<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Node %v matches high-speed preference. Giving max score (100)."</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">)</span>
+			<span class="k">return</span> <span class="m">100</span><span class="p">,</span> <span class="n">framework</span><span class="o">.</span><span class="n">NewStatus</span><span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Success</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="c">// For all other cases, give a minimal score. The scheduler will still use other plugins</span>
+	<span class="c">// (like least-allocated) to make a final decision.</span>
+	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Node %v does not match high-speed preference. Giving min score (10)."</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">)</span>
+	<span class="k">return</span> <span class="m">10</span><span class="p">,</span> <span class="n">framework</span><span class="o">.</span><span class="n">NewStatus</span><span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Success</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">// ScoreExtensions returns a ScoreExtensions interface if the plugin implements one.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">ScoreExtensions</span><span class="p">()</span> <span class="n">framework</span><span class="o">.</span><span class="n">ScoreExtensions</span> <span class="p">{</span>
+	<span class="c">// We don't need to normalize scores, so we return nil.</span>
+	<span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="step-3-register-the-plugin">Step 3: Register the Plugin</h4>
+
+<p>This step is also the same. We must tell the main binary about our new plugin.</p>
+
+<p>Edit <code class="language-plaintext highlighter-rouge">cmd/scheduler/main.go</code> and add our plugin to the registry.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// cmd/scheduler/main.go</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="c">// ... other imports</span>
+	<span class="s">"k8s.io/component-base/cli"</span>
+	<span class="s">"k8s.io/kubernetes/cmd/kube-scheduler/app"</span>
+
+    <span class="c">// IMPORT YOUR PLUGIN'S PACKAGE</span>
+	<span class="s">"sigs.k8s.io/scheduler-plugins/pkg/networkaware"</span>
+    
+	<span class="c">// ... other plugin imports</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c">// Register all plugins.</span>
+	<span class="n">command</span> <span class="o">:=</span> <span class="n">app</span><span class="o">.</span><span class="n">NewSchedulerCommand</span><span class="p">(</span>
+		<span class="n">app</span><span class="o">.</span><span class="n">WithPlugin</span><span class="p">(</span><span class="n">networkaware</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">networkaware</span><span class="o">.</span><span class="n">NetworkAware</span><span class="p">{}</span><span class="o">.</span><span class="n">New</span><span class="p">),</span> <span class="c">// &lt;-- ADD THIS LINE</span>
+		<span class="n">app</span><span class="o">.</span><span class="n">WithPlugin</span><span class="p">(</span><span class="n">coscheduling</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">coscheduling</span><span class="o">.</span><span class="n">New</span><span class="p">),</span>
+		<span class="c">// ... other plugins</span>
+	<span class="p">)</span>
+    <span class="c">// ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="part-4-verifying-building-and-packaging"><strong>Part 4: Verifying, Building, and Packaging</strong></h3>
+
+<p>This section is completely revamped to use the official <code class="language-plaintext highlighter-rouge">Makefile</code>.</p>
+
+<h4 id="step-1-verify-your-code-quality">Step 1: Verify Your Code Quality</h4>
+
+<p>Before you even think about building, run the verification scripts. This catches formatting errors, dependency issues, and other common problems.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make verify
+</code></pre></div></div>
+<p>If this command fails, fix the issues it reports (e.g., run <code class="language-plaintext highlighter-rouge">go fmt ./...</code>) and try again. This is a standard prerequisite for contributing to open-source projects.</p>
+
+<h4 id="step-2-build-the-local-container-image">Step 2: Build the Local Container Image</h4>
+
+<p>This is the most significant improvement. Forget manually setting registry and image names. The <code class="language-plaintext highlighter-rouge">local-image</code> target is designed specifically for this workflow.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make local-image
+</code></pre></div></div>
+
+<p><strong>What does this command do?</strong></p>
+<ol>
+  <li>It compiles your Go code, including the new <code class="language-plaintext highlighter-rouge">networkaware</code> plugin, into a <code class="language-plaintext highlighter-rouge">kube-scheduler</code> binary.</li>
+  <li>It builds a container image using Docker.</li>
+  <li>It automatically sets the platform to your local machine’s architecture (e.g., <code class="language-plaintext highlighter-rouge">linux/amd64</code> or <code class="language-plaintext highlighter-rouge">linux/arm64</code>).</li>
+  <li>It tags the image with a convenient name for local development: <code class="language-plaintext highlighter-rouge">localhost:5000/scheduler-plugins/kube-scheduler:v0.0.0</code>.</li>
+  <li>It uses the <code class="language-plaintext highlighter-rouge">--load</code> flag with <code class="language-plaintext highlighter-rouge">docker buildx</code> to ensure the final image is available in your local Docker daemon, ready for <code class="language-plaintext highlighter-rouge">kind</code> to use.</li>
+</ol>
+
+<p>After it finishes, you can confirm the image exists:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker images | <span class="nb">grep </span>scheduler-plugins
+</code></pre></div></div>
+<p>You should see <code class="language-plaintext highlighter-rouge">localhost:5000/scheduler-plugins/kube-scheduler</code>.</p>
+
+<hr />
+
+<h3 id="part-5--production-grade-deployment-on-vms"><strong>Part 5 : Production-Grade Deployment on VMs</strong></h3>
+
+<p>This section is completely revised. We will provision two Virtual Machines (one control-plane, one worker) and bootstrap a Kubernetes cluster using the <code class="language-plaintext highlighter-rouge">kubeadm</code> tool.</p>
+
+<h4 id="prerequisites-for-this-section">Prerequisites for this Section:</h4>
+
+<ul>
+  <li><strong>VirtualBox and Vagrant:</strong> For easily provisioning and managing local VMs.</li>
+  <li><strong>Sufficient System Resources:</strong> At least 4 CPUs and 8GB of RAM available for the VMs.</li>
+</ul>
+
+<h4 id="step-1-provision-the-virtual-machines">Step 1: Provision the Virtual Machines</h4>
+
+<p>We’ll use a <code class="language-plaintext highlighter-rouge">Vagrantfile</code> to define our two-node cluster. Create a file named <code class="language-plaintext highlighter-rouge">Vagrantfile</code> with the following content:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Vagrantfile</span>
+<span class="no">Vagrant</span><span class="p">.</span><span class="nf">configure</span><span class="p">(</span><span class="s2">"2"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">box</span> <span class="o">=</span> <span class="s2">"ubuntu/jammy64"</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">provider</span> <span class="s2">"virtualbox"</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
+    <span class="n">v</span><span class="p">.</span><span class="nf">memory</span> <span class="o">=</span> <span class="mi">4096</span>
+    <span class="n">v</span><span class="p">.</span><span class="nf">cpus</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="k">end</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">define</span> <span class="s2">"k8s-control-plane"</span> <span class="k">do</span> <span class="o">|</span><span class="n">control</span><span class="o">|</span>
+    <span class="n">control</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">hostname</span> <span class="o">=</span> <span class="s2">"k8s-control-plane"</span>
+    <span class="n">control</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">network</span> <span class="s2">"private_network"</span><span class="p">,</span> <span class="ss">ip: </span><span class="s2">"192.168.56.10"</span>
+  <span class="k">end</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">define</span> <span class="s2">"k8s-worker-01"</span> <span class="k">do</span> <span class="o">|</span><span class="n">worker</span><span class="o">|</span>
+    <span class="n">worker</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">hostname</span> <span class="o">=</span> <span class="s2">"k8s-worker-01"</span>
+    <span class="n">worker</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">network</span> <span class="s2">"private_network"</span><span class="p">,</span> <span class="ss">ip: </span><span class="s2">"192.168.56.11"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now, bring up the machines:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant up
+</code></pre></div></div>
+
+<h4 id="step-2-install-container-runtime-and-kubernetes-tools-on-both-vms">Step 2: Install Container Runtime and Kubernetes Tools on Both VMs</h4>
+
+<p>Execute these commands on <strong>both</strong> the <code class="language-plaintext highlighter-rouge">k8s-control-plane</code> and <code class="language-plaintext highlighter-rouge">k8s-worker-01</code> VMs. You can connect using <code class="language-plaintext highlighter-rouge">vagrant ssh k8s-control-plane</code> and <code class="language-plaintext highlighter-rouge">vagrant ssh k8s-worker-01</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># SSH into each VM and run the following:</span>
+
+<span class="c"># 1. Install prerequisites and containerd</span>
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> apt-transport-https ca-certificates curl
+<span class="nb">sudo mkdir</span> <span class="nt">-p</span> /etc/apt/keyrings
+curl <span class="nt">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg | <span class="nb">sudo </span>gpg <span class="nt">--dearmor</span> <span class="nt">-o</span> /etc/apt/keyrings/docker.gpg
+<span class="nb">echo</span> <span class="s2">"deb [arch=</span><span class="si">$(</span>dpkg <span class="nt">--print-architecture</span><span class="si">)</span><span class="s2"> signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu </span><span class="si">$(</span>lsb_release <span class="nt">-cs</span><span class="si">)</span><span class="s2"> stable"</span> | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/docker.list <span class="o">&gt;</span> /dev/null
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> containerd.io
+
+<span class="c"># 2. Configure containerd and enable required kernel modules</span>
+<span class="nb">sudo mkdir</span> <span class="nt">-p</span> /etc/containerd
+<span class="nb">sudo </span>containerd config default | <span class="nb">sudo tee</span> /etc/containerd/config.toml
+<span class="nb">sudo sed</span> <span class="nt">-i</span> <span class="s1">'s/SystemdCgroup = false/SystemdCgroup = true/'</span> /etc/containerd/config.toml
+<span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+</span><span class="no">EOF
+</span><span class="nb">sudo </span>modprobe overlay
+<span class="nb">sudo </span>modprobe br_netfilter
+<span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+</span><span class="no">EOF
+</span><span class="nb">sudo </span>sysctl <span class="nt">--system</span>
+<span class="nb">sudo </span>systemctl restart containerd
+
+<span class="c"># 3. Disable swap</span>
+<span class="nb">sudo </span>swapoff <span class="nt">-a</span>
+<span class="nb">sudo sed</span> <span class="nt">-i</span> <span class="s1">'/ swap / s/^\(.*\)$/#\1/g'</span> /etc/fstab
+
+<span class="c"># 4. Install kubeadm, kubelet, and kubectl</span>
+<span class="nb">sudo </span>apt-get update
+curl <span class="nt">-fsSLo</span> /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+<span class="nb">echo</span> <span class="s2">"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"</span> | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/kubernetes.list
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> kubelet kubeadm kubectl
+<span class="nb">sudo </span>apt-mark hold kubelet kubeadm kubectl
+</code></pre></div></div>
+
+<h4 id="step-3-initialize-the-control-plane-node">Step 3: Initialize the Control-Plane Node</h4>
+
+<p>Run this command <strong>only on the <code class="language-plaintext highlighter-rouge">k8s-control-plane</code> VM</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On k8s-control-plane</span>
+<span class="nb">sudo </span>kubeadm init <span class="nt">--pod-network-cidr</span><span class="o">=</span>10.244.0.0/16 <span class="nt">--apiserver-advertise-address</span><span class="o">=</span>192.168.56.10
+</code></pre></div></div>
+<p>This command will take a few minutes. At the end, it will output two important things:</p>
+<ol>
+  <li>Commands to set up <code class="language-plaintext highlighter-rouge">kubectl</code> for the <code class="language-plaintext highlighter-rouge">vagrant</code> user.</li>
+  <li>A <code class="language-plaintext highlighter-rouge">kubeadm join</code> command with a token. <strong>Copy this join command and save it.</strong></li>
+</ol>
+
+<p>Run the <code class="language-plaintext highlighter-rouge">kubectl</code> setup commands on the control-plane node:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On k8s-control-plane</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.kube
+<span class="nb">sudo cp</span> <span class="nt">-i</span> /etc/kubernetes/admin.conf <span class="nv">$HOME</span>/.kube/config
+<span class="nb">sudo chown</span> <span class="si">$(</span><span class="nb">id</span> <span class="nt">-u</span><span class="si">)</span>:<span class="si">$(</span><span class="nb">id</span> <span class="nt">-g</span><span class="si">)</span> <span class="nv">$HOME</span>/.kube/config
+</code></pre></div></div>
+
+<h4 id="step-4-install-a-cni-network-plugin">Step 4: Install a CNI Network Plugin</h4>
+
+<p>The cluster nodes will not be <code class="language-plaintext highlighter-rouge">Ready</code> until a CNI is installed. From the control-plane node, install Calico:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On k8s-control-plane</span>
+kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+</code></pre></div></div>
+
+<h4 id="step-5-join-the-worker-node">Step 5: Join the Worker Node</h4>
+
+<p>Now, SSH into the <code class="language-plaintext highlighter-rouge">k8s-worker-01</code> VM and run the <code class="language-plaintext highlighter-rouge">kubeadm join</code> command that you saved from Step 3. It will look something like this (your token and hash will be different):</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On k8s-worker-01</span>
+<span class="nb">sudo </span>kubeadm <span class="nb">join </span>192.168.56.10:6443 <span class="nt">--token</span> abcdef.1234567890abcdef <span class="se">\</span>
+	<span class="nt">--discovery-token-ca-cert-hash</span> sha256:1234...cdef
+</code></pre></div></div>
+
+<p>After a minute, verify that both nodes are <code class="language-plaintext highlighter-rouge">Ready</code> from the control-plane node:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On k8s-control-plane</span>
+kubectl get nodes
+</code></pre></div></div>
+
+<h4 id="step-6-provision-the-static-configuration-on-the-control-plane">Step 6: Provision the Static Configuration on the Control-Plane</h4>
+
+<p>This is the critical step. We must place our custom scheduler’s configuration file at the exact path <code class="language-plaintext highlighter-rouge">/etc/kubernetes/config/scheduler-config.yaml</code> on the <code class="language-plaintext highlighter-rouge">k8s-control-plane</code> VM.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run this from your local machine (not inside a VM)</span>
+vagrant ssh k8s-control-plane <span class="nt">--</span> <span class="nt">-t</span> <span class="s1">'
+  sudo mkdir -p /etc/kubernetes/config &amp;&amp; \
+  sudo bash -c "cat &gt; /etc/kubernetes/config/scheduler-config.yaml" &lt;&lt;EOF
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+leaderElection:
+  leaderElect: false
+clientConnection:
+  kubeconfig: "/etc/kubernetes/scheduler.conf"
+profiles:
+  - schedulerName: my-custom-scheduler
+    plugins:
+      multiPoint:
+        enabled:
+          - name: "NetworkAware"
+EOF'</span>
+
+<span class="c"># Verify the file was created correctly</span>
+vagrant ssh k8s-control-plane <span class="nt">--</span> <span class="s2">"sudo cat /etc/kubernetes/config/scheduler-config.yaml"</span>
+</code></pre></div></div>
+
+<h4 id="step-7-load-the-custom-scheduler-image-onto-the-cluster-nodes">Step 7: Load the Custom Scheduler Image onto the Cluster Nodes</h4>
+
+<p>The container image we built exists only on our local machine. We need to transfer it to our VMs.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. On your local machine, save the Docker image to a tar file</span>
+docker save localhost:5000/scheduler-plugins/kube-scheduler:v0.0.0 <span class="o">&gt;</span> scheduler.tar
+
+<span class="c"># 2. Copy the tar file to both VMs</span>
+vagrant scp scheduler.tar k8s-control-plane:/home/vagrant/scheduler.tar
+vagrant scp scheduler.tar k8s-worker-01:/home/vagrant/scheduler.tar
+
+<span class="c"># 3. SSH into EACH VM and load the image into containerd</span>
+<span class="c"># On k8s-control-plane:</span>
+vagrant ssh k8s-control-plane <span class="nt">--</span> <span class="s2">"sudo ctr -n=k8s.io images import /home/vagrant/scheduler.tar"</span>
+<span class="c"># On k8s-worker-01:</span>
+vagrant ssh k8s-worker-01 <span class="nt">--</span> <span class="s2">"sudo ctr -n=k8s.io images import /home/vagrant/scheduler.tar"</span>
+</code></pre></div></div>
+
+<h4 id="step-8-deploy-the-custom-scheduler">Step 8: Deploy the Custom Scheduler</h4>
+
+<p>Create the final <code class="language-plaintext highlighter-rouge">deploy-kubeadm.yaml</code> manifest on your local machine. This file is identical to the previous “correct” version, as it’s designed to run in a real cluster environment.</p>
+
+<p><code class="language-plaintext highlighter-rouge">deploy-kubeadm.yaml</code>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ServiceAccount</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">my-custom-scheduler</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">kube-system</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">rbac.authorization.k8s.io/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ClusterRoleBinding</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">my-custom-scheduler-as-kube-scheduler</span>
+<span class="na">subjects</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">kind</span><span class="pi">:</span> <span class="s">ServiceAccount</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">my-custom-scheduler</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">kube-system</span>
+<span class="na">roleRef</span><span class="pi">:</span>
+  <span class="na">kind</span><span class="pi">:</span> <span class="s">ClusterRole</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">system:kube-scheduler</span>
+  <span class="na">apiGroup</span><span class="pi">:</span> <span class="s">rbac.authorization.k8s.io</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">my-custom-scheduler</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">kube-system</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">my-custom-scheduler</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">my-custom-scheduler</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">my-custom-scheduler</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">serviceAccountName</span><span class="pi">:</span> <span class="s">my-custom-scheduler</span>
+      <span class="na">nodeSelector</span><span class="pi">:</span>
+        <span class="na">node-role.kubernetes.io/control-plane</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+      <span class="na">tolerations</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">effect</span><span class="pi">:</span> <span class="s">NoSchedule</span>
+        <span class="na">key</span><span class="pi">:</span> <span class="s">node-role.kubernetes.io/control-plane</span>
+      <span class="na">containers</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">my-custom-scheduler-ctr</span>
+          <span class="na">image</span><span class="pi">:</span> <span class="s">localhost:5000/scheduler-plugins/kube-scheduler:v0.0.0</span>
+          <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">IfNotPresent</span>
+          <span class="na">args</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">/bin/kube-scheduler</span>
+            <span class="pi">-</span> <span class="s">--authentication-kubeconfig=/etc/kubernetes/scheduler.conf</span>
+            <span class="pi">-</span> <span class="s">--authorization-kubeconfig=/etc/kubernetes/scheduler.conf</span>
+            <span class="pi">-</span> <span class="s">--config=/etc/kubernetes/config/scheduler-config.yaml</span>
+            <span class="pi">-</span> <span class="s">-v=3</span>
+          <span class="na">volumeMounts</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="na">mountPath</span><span class="pi">:</span> <span class="s">/etc/kubernetes</span>
+            <span class="na">name</span><span class="pi">:</span> <span class="s">etckubernetes</span>
+            <span class="na">readOnly</span><span class="pi">:</span> <span class="kc">true</span>
+      <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">etckubernetes</span>
+        <span class="na">hostPath</span><span class="pi">:</span>
+          <span class="na">path</span><span class="pi">:</span> <span class="s">/etc/kubernetes</span>
+          <span class="na">type</span><span class="pi">:</span> <span class="s">Directory</span>
+</code></pre></div></div>
+
+<p>Now, apply this manifest to your new <code class="language-plaintext highlighter-rouge">kubeadm</code> cluster. You can copy this file to the control-plane node or configure <code class="language-plaintext highlighter-rouge">kubectl</code> on your host to point to the new cluster. The simplest is to run it from the control-plane:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Copy the YAML to the control plane</span>
+vagrant scp deploy-kubeadm.yaml k8s-control-plane:/home/vagrant/
+
+<span class="c"># Apply it from within the control plane VM</span>
+vagrant ssh k8s-control-plane <span class="nt">--</span> <span class="s2">"kubectl apply -f deploy-kubeadm.yaml"</span>
+</code></pre></div></div>
+
+<p>Verify the scheduler pod is running on the control-plane node:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant ssh k8s-control-plane <span class="nt">--</span> <span class="s2">"kubectl get pods -n kube-system -l app=my-custom-scheduler -o wide"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="part-6-testing-the-custom-scheduler"><strong>Part 6: Testing the Custom Scheduler</strong></h3>
+
+<p>The testing process is identical, but you will run the commands from your <code class="language-plaintext highlighter-rouge">k8s-control-plane</code> VM where <code class="language-plaintext highlighter-rouge">kubectl</code> is configured.</p>
+
+<ol>
+  <li><strong>Label the worker node:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c"># On k8s-control-plane VM</span>
+    kubectl label node k8s-worker-01 network-topology<span class="o">=</span>high-speed
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Create and apply <code class="language-plaintext highlighter-rouge">test-pod.yaml</code>:</strong>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1"># test-pod.yaml</span>
+    <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+    <span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">high-speed-pod</span>
+    <span class="na">annotations</span><span class="pi">:</span>
+        <span class="na">my-network-preference</span><span class="pi">:</span> <span class="s2">"</span><span class="s">high-speed"</span>
+    <span class="na">spec</span><span class="pi">:</span>
+    <span class="na">schedulerName</span><span class="pi">:</span> <span class="s">my-custom-scheduler</span>
+    <span class="na">containers</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">nginx</span>
+        <span class="s">image</span><span class="err">:</span> <span class="s">nginx</span>
+</code></pre></div>    </div>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On k8s-control-plane VM, apply the pod</span>
+kubectl apply <span class="nt">-f</span> test-pod.yaml
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Verify the pod placement:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On k8s-control-plane VM</span>
+kubectl get pod high-speed-pod <span class="nt">-o</span> wide
+</code></pre></div>    </div>
+    <p>The pod should be running on the <code class="language-plaintext highlighter-rouge">k8s-worker-01</code> node.</p>
+  </li>
+</ol>
+
+<p>You have now successfully built a custom scheduler and deployed it to a realistic, multi-node <code class="language-plaintext highlighter-rouge">kubeadm</code> cluster.</p>
+
+<p><strong>Your Professional Next Steps:</strong></p>
+
+<ol>
+  <li><strong>Write Unit Tests:</strong> Create a <code class="language-plaintext highlighter-rouge">pkg/networkaware/network_aware_test.go</code> file. The repository has many examples. Once written, you can run them with <code class="language-plaintext highlighter-rouge">make unit-test</code>.</li>
+  <li><strong>Run Integration Tests:</strong> The project has a framework for integration tests that spin up real API servers. You can add one for your plugin and run it via <code class="language-plaintext highlighter-rouge">make integration-test</code>.</li>
+  <li><strong>Pushing to a Real Registry:</strong> When you are ready to share your scheduler, you can use the <code class="language-plaintext highlighter-rouge">push-images</code> target. This requires setting environment variables:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Example for pushing to Docker Hub</span>
+<span class="nb">export </span><span class="nv">REGISTRY</span><span class="o">=</span>docker.io/your-username
+<span class="nb">export </span><span class="nv">RELEASE_VERSION</span><span class="o">=</span>v0.1.0
+make push-images 
+</code></pre></div>    </div>
+    <p>This will build and push a properly tagged image (e.g., <code class="language-plaintext highlighter-rouge">docker.io/your-username/kube-scheduler:v0.1.0</code>) to a remote registry.</p>
+  </li>
+  <li><strong>Contribute Back:</strong> If you’ve built a generally useful plugin, you can contribute it back to the <code class="language-plaintext highlighter-rouge">scheduler-plugins</code> project! Following this workflow (<code class="language-plaintext highlighter-rouge">make verify</code>, adding tests) is the first step to a successful Pull Request.</li>
+</ol>]]></content><author><name></name></author><category term="tutorial" /><summary type="html"><![CDATA[Here is a complete, A-to-Z guide in English to develop and deploy your own Kubernetes scheduler using the Scheduling Framework. This guide is practical, detailed, and follows a step-by-step approach from concept to a working deployment in a kubeadm cluster.]]></summary></entry><entry><title type="html">Master the CI/CD Pipeline Locally</title><link href="https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally/" rel="alternate" type="text/html" title="Master the CI/CD Pipeline Locally" /><published>2025-08-20T10:30:00+00:00</published><updated>2025-08-20T10:30:00+00:00</updated><id>https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally</id><content type="html" xml:base="https://menraromial.github.io/blog/2025/master-ci-ci-pipeline-locally/"><![CDATA[<p>Welcome to this comprehensive course on DevOps culture and tooling. The goal is to guide you, step-by-step, from theory to practice, empowering you to build, secure, and automate a full Continuous Integration and Continuous Deployment (CI/CD) pipeline.</p>
 
 <p><strong>Course Philosophy:</strong>
 Everything we learn will be put into practice in a <strong>100% local lab environment</strong>, running on your own machine using Docker. You will not need any cloud accounts or paid services. Every concept is illustrated with hands-on workshops and concrete examples.</p>
