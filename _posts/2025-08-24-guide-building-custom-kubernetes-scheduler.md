@@ -3,6 +3,7 @@ layout: post
 title: Guide to Building a Custom Kubernetes Scheduler
 date: 2025-08-24 17:30:00
 description : Here is a complete, A-to-Z guide in English to develop and deploy your own Kubernetes scheduler using the Scheduling Framework. This guide is practical, detailed, and follows a step-by-step approach from concept to a working deployment in a kubeadm cluster.
+tags: kubernetes scheduler kubeadm plugin opensource
 categories: tutorial
 ---
 
@@ -348,7 +349,7 @@ You should see `localhost:5000/scheduler-plugins/kube-scheduler`.
 
 ### **Part 5 : Production-Grade Deployment on VMs**
 
-This section is completely revised. We will provision two Virtual Machines (one control-plane, one worker) and bootstrap a Kubernetes cluster using the `kubeadm` tool.
+We will provision two Virtual Machines (one control-plane, one worker) and bootstrap a Kubernetes cluster using the `kubeadm` tool.
 
 #### Prerequisites for this Section:
 
