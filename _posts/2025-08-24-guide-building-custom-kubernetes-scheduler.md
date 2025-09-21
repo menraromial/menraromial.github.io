@@ -190,7 +190,6 @@ type NetworkAware struct {
 // Ensure our plugin implements the necessary interfaces.
 var _ framework.FilterPlugin = &NetworkAware{}
 var _ framework.ScorePlugin = &NetworkAware{}
-var _ framework.PluginFactory = &NetworkAware{}
 
 // Name returns the name of the plugin.
 func (na *NetworkAware) Name() string {
@@ -199,10 +198,10 @@ func (na *NetworkAware) Name() string {
 
 // New is the factory function that creates a new instance of the plugin.
 // This is called by the scheduler framework when it initializes.
-func (na *NetworkAware) New(configuration runtime.Object, h framework.Handle) (framework.Plugin, error) {
-	klog.V(3).Infof("Creating new NetworkAware plugin")
-	return &NetworkAware{
-		handle: h,
+func  New(_ context.Context, obj runtime.Object, handle framework.Handle) (framework.Plugin, error) {
+	klog.V(3).Infof("Creating new Newnetworkaware plugin")
+	return &Newnetworkaware{
+		handle: handle,
 	}, nil
 }
 
