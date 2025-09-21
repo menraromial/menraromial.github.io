@@ -102,7 +102,6 @@
 <span class="c">// Ensure our plugin implements the necessary interfaces.</span>
 <span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">FilterPlugin</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{}</span>
 <span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">ScorePlugin</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{}</span>
-<span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">PluginFactory</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{}</span>
 
 <span class="c">// Name returns the name of the plugin.</span>
 <span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">Name</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
@@ -111,10 +110,10 @@
 
 <span class="c">// New is the factory function that creates a new instance of the plugin.</span>
 <span class="c">// This is called by the scheduler framework when it initializes.</span>
-<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">New</span><span class="p">(</span><span class="n">configuration</span> <span class="n">runtime</span><span class="o">.</span><span class="n">Object</span><span class="p">,</span> <span class="n">h</span> <span class="n">framework</span><span class="o">.</span><span class="n">Handle</span><span class="p">)</span> <span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Plugin</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Creating new NetworkAware plugin"</span><span class="p">)</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{</span>
-		<span class="n">handle</span><span class="o">:</span> <span class="n">h</span><span class="p">,</span>
+<span class="k">func</span>  <span class="n">New</span><span class="p">(</span><span class="n">_</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">obj</span> <span class="n">runtime</span><span class="o">.</span><span class="n">Object</span><span class="p">,</span> <span class="n">handle</span> <span class="n">framework</span><span class="o">.</span><span class="n">Handle</span><span class="p">)</span> <span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Plugin</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Creating new Newnetworkaware plugin"</span><span class="p">)</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="n">Newnetworkaware</span><span class="p">{</span>
+		<span class="n">handle</span><span class="o">:</span> <span class="n">handle</span><span class="p">,</span>
 	<span class="p">},</span> <span class="no">nil</span>
 <span class="p">}</span>
 
