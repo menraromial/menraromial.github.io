@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-21T17:24:05+00:00</updated><id>https://menraromial.github.io/feed.xml</id><title type="html">blank</title><subtitle>A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-22T09:31:32+00:00</updated><id>https://menraromial.github.io/feed.xml</id><title type="html">blank</title><subtitle>A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
 </subtitle><entry><title type="html">Guide to Building a Custom Kubernetes Scheduler</title><link href="https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler/" rel="alternate" type="text/html" title="Guide to Building a Custom Kubernetes Scheduler" /><published>2025-08-24T17:30:00+00:00</published><updated>2025-08-24T17:30:00+00:00</updated><id>https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler</id><content type="html" xml:base="https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler/"><![CDATA[<p>This guide will walk you through creating a custom scheduler plugin that influences where pods are placed based on custom logic. We will build a simple “Network-Aware” plugin that prefers to schedule pods on nodes with a specific network label.</p>
 
 <p><strong>What We Will Build:</strong></p>
@@ -142,17 +142,17 @@
 
 <h4 id="step-1-create-the-plugin-directory-and-file">Step 1: Create the Plugin Directory and File</h4>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> pkg/networkaware
-<span class="nb">touch </span>pkg/networkaware/network_aware.go
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> pkg/networkspeed
+<span class="nb">touch </span>pkg/networkspeed/networkspeed.go
 </code></pre></div></div>
 
 <h4 id="step-2-write-the-plugin-code">Step 2: Write the Plugin Code</h4>
 
-<p>Place the same Go code from the previous guide into <code class="language-plaintext highlighter-rouge">pkg/networkaware/network_aware.go</code>. This code implements the <code class="language-plaintext highlighter-rouge">Filter</code> and <code class="language-plaintext highlighter-rouge">Score</code> extension points.</p>
+<p>Place the same Go code from the previous guide into <code class="language-plaintext highlighter-rouge">pkg/networkspeed/networkspeed.go</code>. This code implements the <code class="language-plaintext highlighter-rouge">Filter</code> and <code class="language-plaintext highlighter-rouge">Score</code> extension points.</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// pkg/networkaware/network_aware.go</span>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// pkg/networkspeed/networkspeed.go</span>
 
-<span class="k">package</span> <span class="n">networkaware</span>
+<span class="k">package</span> <span class="n">networkspeed</span>
 
 <span class="k">import</span> <span class="p">(</span>
 	<span class="s">"context"</span>
@@ -165,7 +165,7 @@
 <span class="p">)</span>
 
 <span class="c">// Define plugin name</span>
-<span class="k">const</span> <span class="n">Name</span> <span class="o">=</span> <span class="s">"NetworkAware"</span>
+<span class="k">const</span> <span class="n">Name</span> <span class="o">=</span> <span class="s">"Networkspeed"</span>
 
 <span class="k">const</span> <span class="p">(</span>
 	<span class="c">// Annotation key on a Pod to specify network preference.</span>
@@ -176,25 +176,25 @@
 	<span class="n">HighSpeedNetwork</span> <span class="o">=</span> <span class="s">"high-speed"</span>
 <span class="p">)</span>
 
-<span class="c">// NetworkAware is a plugin that filters and scores nodes based on network labels.</span>
-<span class="k">type</span> <span class="n">NetworkAware</span> <span class="k">struct</span> <span class="p">{</span>
+<span class="c">// Networkspeed is a plugin that filters and scores nodes based on network labels.</span>
+<span class="k">type</span> <span class="n">Networkspeed</span> <span class="k">struct</span> <span class="p">{</span>
 	<span class="n">handle</span> <span class="n">framework</span><span class="o">.</span><span class="n">Handle</span>
 <span class="p">}</span>
 
 <span class="c">// Ensure our plugin implements the necessary interfaces.</span>
-<span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">FilterPlugin</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{}</span>
-<span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">ScorePlugin</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">NetworkAware</span><span class="p">{}</span>
+<span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">FilterPlugin</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">Networkspeed</span><span class="p">{}</span>
+<span class="k">var</span> <span class="n">_</span> <span class="n">framework</span><span class="o">.</span><span class="n">ScorePlugin</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">Networkspeed</span><span class="p">{}</span>
 
 <span class="c">// Name returns the name of the plugin.</span>
-<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">Name</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">Networkspeed</span><span class="p">)</span> <span class="n">Name</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
 	<span class="k">return</span> <span class="n">Name</span>
 <span class="p">}</span>
 
 <span class="c">// New is the factory function that creates a new instance of the plugin.</span>
 <span class="c">// This is called by the scheduler framework when it initializes.</span>
 <span class="k">func</span>  <span class="n">New</span><span class="p">(</span><span class="n">_</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">obj</span> <span class="n">runtime</span><span class="o">.</span><span class="n">Object</span><span class="p">,</span> <span class="n">handle</span> <span class="n">framework</span><span class="o">.</span><span class="n">Handle</span><span class="p">)</span> <span class="p">(</span><span class="n">framework</span><span class="o">.</span><span class="n">Plugin</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Creating new Newnetworkaware plugin"</span><span class="p">)</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="n">Newnetworkaware</span><span class="p">{</span>
+	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Creating new Networkspeed plugin"</span><span class="p">)</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="n">Networkspeed</span><span class="p">{</span>
 		<span class="n">handle</span><span class="o">:</span> <span class="n">handle</span><span class="p">,</span>
 	<span class="p">},</span> <span class="no">nil</span>
 <span class="p">}</span>
@@ -202,7 +202,7 @@
 <span class="c">// ----------------- FILTERING LOGIC -----------------</span>
 
 <span class="c">// Filter is called by the framework for each node to see if the pod can be scheduled on it.</span>
-<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">Filter</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">state</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">CycleState</span><span class="p">,</span> <span class="n">pod</span> <span class="o">*</span><span class="n">v1</span><span class="o">.</span><span class="n">Pod</span><span class="p">,</span> <span class="n">nodeInfo</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">NodeInfo</span><span class="p">)</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">Status</span> <span class="p">{</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">Networkspeed</span><span class="p">)</span> <span class="n">Filter</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">state</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">CycleState</span><span class="p">,</span> <span class="n">pod</span> <span class="o">*</span><span class="n">v1</span><span class="o">.</span><span class="n">Pod</span><span class="p">,</span> <span class="n">nodeInfo</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">NodeInfo</span><span class="p">)</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">Status</span> <span class="p">{</span>
 	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Filtering pod %v for node %v"</span><span class="p">,</span> <span class="n">pod</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">nodeInfo</span><span class="o">.</span><span class="n">Node</span><span class="p">()</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
 
 	<span class="c">// 1. Get the pod's network preference from its annotations.</span>
@@ -239,7 +239,7 @@
 
 <span class="c">// Score is called for each node that passed the Filter phase.</span>
 <span class="c">// It returns a score for the node, with higher scores being better.</span>
-<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">Score</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">state</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">CycleState</span><span class="p">,</span> <span class="n">pod</span> <span class="o">*</span><span class="n">v1</span><span class="o">.</span><span class="n">Pod</span><span class="p">,</span> <span class="n">nodeName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">Status</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">Networkspeed</span><span class="p">)</span> <span class="n">Score</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">state</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">CycleState</span><span class="p">,</span> <span class="n">pod</span> <span class="o">*</span><span class="n">v1</span><span class="o">.</span><span class="n">Pod</span><span class="p">,</span> <span class="n">nodeName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="o">*</span><span class="n">framework</span><span class="o">.</span><span class="n">Status</span><span class="p">)</span> <span class="p">{</span>
 	<span class="n">klog</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">.</span><span class="n">Infof</span><span class="p">(</span><span class="s">"Scoring node %v for pod %v"</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">pod</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
 
 	<span class="n">nodeInfo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">na</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">SnapshotSharedLister</span><span class="p">()</span><span class="o">.</span><span class="n">NodeInfos</span><span class="p">()</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">nodeName</span><span class="p">)</span>
@@ -265,7 +265,7 @@
 <span class="p">}</span>
 
 <span class="c">// ScoreExtensions returns a ScoreExtensions interface if the plugin implements one.</span>
-<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">NetworkAware</span><span class="p">)</span> <span class="n">ScoreExtensions</span><span class="p">()</span> <span class="n">framework</span><span class="o">.</span><span class="n">ScoreExtensions</span> <span class="p">{</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">na</span> <span class="o">*</span><span class="n">Networkspeed</span><span class="p">)</span> <span class="n">ScoreExtensions</span><span class="p">()</span> <span class="n">framework</span><span class="o">.</span><span class="n">ScoreExtensions</span> <span class="p">{</span>
 	<span class="c">// We don't need to normalize scores, so we return nil.</span>
 	<span class="k">return</span> <span class="no">nil</span>
 <span class="p">}</span>
@@ -285,7 +285,7 @@
 	<span class="s">"k8s.io/kubernetes/cmd/kube-scheduler/app"</span>
 
     <span class="c">// IMPORT YOUR PLUGIN'S PACKAGE</span>
-	<span class="s">"sigs.k8s.io/scheduler-plugins/pkg/networkaware"</span>
+	<span class="s">"sigs.k8s.io/scheduler-plugins/pkg/networkspeed"</span>
     
 	<span class="c">// ... other plugin imports</span>
 <span class="p">)</span>
@@ -293,7 +293,7 @@
 <span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="c">// Register all plugins.</span>
 	<span class="n">command</span> <span class="o">:=</span> <span class="n">app</span><span class="o">.</span><span class="n">NewSchedulerCommand</span><span class="p">(</span>
-		<span class="n">app</span><span class="o">.</span><span class="n">WithPlugin</span><span class="p">(</span><span class="n">networkaware</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">networkaware</span><span class="o">.</span><span class="n">NetworkAware</span><span class="p">{}</span><span class="o">.</span><span class="n">New</span><span class="p">),</span> <span class="c">// &lt;-- ADD THIS LINE</span>
+		<span class="n">app</span><span class="o">.</span><span class="n">WithPlugin</span><span class="p">(</span><span class="n">networkspeed</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">networkspeed</span><span class="o">.</span><span class="n">New</span><span class="p">),</span> <span class="c">// &lt;-- ADD THIS LINE</span>
 		<span class="n">app</span><span class="o">.</span><span class="n">WithPlugin</span><span class="p">(</span><span class="n">coscheduling</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">coscheduling</span><span class="o">.</span><span class="n">New</span><span class="p">),</span>
 		<span class="c">// ... other plugins</span>
 	<span class="p">)</span>
@@ -324,7 +324,7 @@
 
 <p><strong>What does this command do?</strong></p>
 <ol>
-  <li>It compiles your Go code, including the new <code class="language-plaintext highlighter-rouge">networkaware</code> plugin, into a <code class="language-plaintext highlighter-rouge">kube-scheduler</code> binary.</li>
+  <li>It compiles your Go code, including the new <code class="language-plaintext highlighter-rouge">networkspeed</code> plugin, into a <code class="language-plaintext highlighter-rouge">kube-scheduler</code> binary.</li>
   <li>It builds a container image using Docker.</li>
   <li>It automatically sets the platform to your local machine’s architecture (e.g., <code class="language-plaintext highlighter-rouge">linux/amd64</code> or <code class="language-plaintext highlighter-rouge">linux/arm64</code>).</li>
   <li>It tags the image with a convenient name for local development: <code class="language-plaintext highlighter-rouge">localhost:5000/scheduler-plugins/kube-scheduler:v0.0.0</code>.</li>
@@ -482,7 +482,7 @@ profiles:
     plugins:
       multiPoint:
         enabled:
-          - name: "NetworkAware"
+          - name: "Networkspeed"
 EOF'</span>
 
 <span class="c"># Verify the file was created correctly</span>
@@ -630,7 +630,7 @@ kubectl get pod high-speed-pod <span class="nt">-o</span> wide
 <p><strong>Your Professional Next Steps:</strong></p>
 
 <ol>
-  <li><strong>Write Unit Tests:</strong> Create a <code class="language-plaintext highlighter-rouge">pkg/networkaware/network_aware_test.go</code> file. The repository has many examples. Once written, you can run them with <code class="language-plaintext highlighter-rouge">make unit-test</code>.</li>
+  <li><strong>Write Unit Tests:</strong> Create a <code class="language-plaintext highlighter-rouge">pkg/networkspeed/networkspeed_test.go</code> file. The repository has many examples. Once written, you can run them with <code class="language-plaintext highlighter-rouge">make unit-test</code>.</li>
   <li><strong>Run Integration Tests:</strong> The project has a framework for integration tests that spin up real API servers. You can add one for your plugin and run it via <code class="language-plaintext highlighter-rouge">make integration-test</code>.</li>
   <li><strong>Pushing to a Real Registry:</strong> When you are ready to share your scheduler, you can use the <code class="language-plaintext highlighter-rouge">push-images</code> target. This requires setting environment variables:
     <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Example for pushing to Docker Hub</span>
