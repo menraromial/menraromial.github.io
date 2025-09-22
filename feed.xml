@@ -1,5 +1,473 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-22T09:31:32+00:00</updated><id>https://menraromial.github.io/feed.xml</id><title type="html">blank</title><subtitle>A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
-</subtitle><entry><title type="html">Guide to Building a Custom Kubernetes Scheduler</title><link href="https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler/" rel="alternate" type="text/html" title="Guide to Building a Custom Kubernetes Scheduler" /><published>2025-08-24T17:30:00+00:00</published><updated>2025-08-24T17:30:00+00:00</updated><id>https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler</id><content type="html" xml:base="https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler/"><![CDATA[<p>This guide will walk you through creating a custom scheduler plugin that influences where pods are placed based on custom logic. We will build a simple “Network-Aware” plugin that prefers to schedule pods on nodes with a specific network label.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-22T11:37:12+00:00</updated><id>https://menraromial.github.io/feed.xml</id><title type="html">blank</title><subtitle>A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
+</subtitle><entry><title type="html">Building a Kubernetes Controller with Kubebuilder from Scratch</title><link href="https://menraromial.github.io/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch/" rel="alternate" type="text/html" title="Building a Kubernetes Controller with Kubebuilder from Scratch" /><published>2025-09-22T10:30:00+00:00</published><updated>2025-09-22T10:30:00+00:00</updated><id>https://menraromial.github.io/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch</id><content type="html" xml:base="https://menraromial.github.io/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch/"><![CDATA[<p>In this tutorial, you will learn how to build a custom Kubernetes controller (also known as an Operator) using Kubebuilder. We will create a Custom Resource Definition (CRD) for a simple <code class="language-plaintext highlighter-rouge">Website</code> resource. The goal of our controller will be to watch for these <code class="language-plaintext highlighter-rouge">Website</code> resources and, for each one, create a corresponding Kubernetes <code class="language-plaintext highlighter-rouge">Deployment</code> and <code class="language-plaintext highlighter-rouge">Service</code>.</p>
+
+<p>This is a powerful pattern that allows you to extend the Kubernetes API to manage your own applications declaratively.</p>
+
+<h4 id="what-we-are-building"><strong>What We Are Building</strong></h4>
+
+<p>We will define a <code class="language-plaintext highlighter-rouge">Website</code> custom resource that looks like this:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># config/samples/website_v1alpha1_website.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">website.my.domain/v1alpha1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Website</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">my-first-website</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="c1"># The git repository URL containing the website's static files</span>
+  <span class="na">gitRepo</span><span class="pi">:</span> <span class="s2">"</span><span class="s">https://github.com/someuser/my-static-site.git"</span>
+  <span class="c1"># The number of replicas for the web server</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+</code></pre></div></div>
+
+<p>Our controller will see this resource and automatically create:</p>
+<ol>
+  <li>A <code class="language-plaintext highlighter-rouge">Deployment</code> to run an Nginx server with the specified number of <code class="language-plaintext highlighter-rouge">replicas</code>. We’ll imagine it serves content from the <code class="language-plaintext highlighter-rouge">gitRepo</code>.</li>
+  <li>A <code class="language-plaintext highlighter-rouge">Service</code> of type <code class="language-plaintext highlighter-rouge">LoadBalancer</code> to expose the Nginx pods to the internet.</li>
+</ol>
+
+<hr />
+
+<h3 id="prerequisites"><strong>Prerequisites</strong></h3>
+
+<p>Before you begin, make sure you have the following tools installed:</p>
+
+<ol>
+  <li><strong>Go</strong> (version 1.19+): <a href="https://golang.org/dl/">https://golang.org/dl/</a></li>
+  <li><strong>Docker</strong>: To build container images.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">kubectl</code></strong>: The Kubernetes command-line tool.</li>
+  <li><strong>A Kubernetes Cluster</strong>: A local one like <a href="https://minikube.sigs.k8s.io/docs/start/">Minikube</a> or <a href="https://kind.sigs.k8s.io/docs/user/quick-start/">Kind</a> is perfect for development.</li>
+  <li><strong>Kubebuilder</strong>: The scaffolding tool.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Kubebuilder</span>
+<span class="nv">os</span><span class="o">=</span><span class="si">$(</span>go <span class="nb">env </span>GOOS<span class="si">)</span>
+<span class="nb">arch</span><span class="o">=</span><span class="si">$(</span>go <span class="nb">env </span>GOARCH<span class="si">)</span>
+curl <span class="nt">-L</span> <span class="nt">-o</span> kubebuilder <span class="s2">"https://go.kubebuilder.io/dl/latest/</span><span class="k">${</span><span class="nv">os</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">arch</span><span class="k">}</span><span class="s2">"</span>
+<span class="nb">sudo mv </span>kubebuilder /usr/local/bin/
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h3 id="step-1-initialize-your-project"><strong>Step 1: Initialize Your Project</strong></h3>
+
+<p>First, create a new directory for your project and initialize it with Kubebuilder.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create and enter the project directory</span>
+<span class="nb">mkdir </span>website-operator
+<span class="nb">cd </span>website-operator
+
+<span class="c"># Initialize the project</span>
+<span class="c"># --domain is used for the API group of your CRDs</span>
+<span class="c"># --repo is your Go module path (e.g., github.com/your-user/website-operator)</span>
+kubebuilder init <span class="nt">--domain</span> my.domain <span class="nt">--repo</span> github.com/your-user/website-operator
+</code></pre></div></div>
+
+<p>This command scaffolds a complete project structure, including a <code class="language-plaintext highlighter-rouge">Makefile</code>, a <code class="language-plaintext highlighter-rouge">main.go</code> file, and a <code class="language-plaintext highlighter-rouge">Dockerfile</code>.</p>
+
+<h3 id="step-2-create-the-api-crd-and-controller"><strong>Step 2: Create the API (CRD and Controller)</strong></h3>
+
+<p>Now, let’s create the API for our <code class="language-plaintext highlighter-rouge">Website</code> resource. This single command will generate the CRD definition, the Go struct for our resource, and a skeleton for our controller.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create the API. We'll create the resource and the controller.</span>
+kubebuilder create api <span class="nt">--group</span> website <span class="nt">--version</span> v1alpha1 <span class="nt">--kind</span> Website
+</code></pre></div></div>
+<p>When prompted, answer <code class="language-plaintext highlighter-rouge">y</code> to create both the Resource and the Controller.</p>
+
+<p>This command does several important things:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">api/v1alpha1/website_types.go</code></strong>: This file defines the Go structs that represent your <code class="language-plaintext highlighter-rouge">Website</code> resource. This is where you define your <code class="language-plaintext highlighter-rouge">Spec</code> (the desired state) and <code class="language-plaintext highlighter-rouge">Status</code> (the observed state).</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">controllers/website_controller.go</code></strong>: This is the skeleton for your controller’s logic.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">config/crd/bases/website.my.domain_websites.yaml</code></strong>: The YAML definition for your CRD.</li>
+</ul>
+
+<h4 id="defining-the-spec-and-status"><strong>Defining the <code class="language-plaintext highlighter-rouge">Spec</code> and <code class="language-plaintext highlighter-rouge">Status</code></strong></h4>
+
+<p>Open <code class="language-plaintext highlighter-rouge">api/v1alpha1/website_types.go</code>. We need to define the fields for our resource.</p>
+
+<p>Find the <code class="language-plaintext highlighter-rouge">WebsiteSpec</code> and <code class="language-plaintext highlighter-rouge">WebsiteStatus</code> structs and modify them as follows.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// api/v1alpha1/website_types.go</span>
+
+<span class="c">// ... (other imports)</span>
+
+<span class="c">// WebsiteSpec defines the desired state of Website</span>
+<span class="k">type</span> <span class="n">WebsiteSpec</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="c">// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster</span>
+	<span class="c">// Important: Run "make" to regenerate code after modifying this file</span>
+
+	<span class="c">// GitRepo is the git repository URL for the website's content.</span>
+	<span class="c">// +kubebuilder:validation:Required</span>
+	<span class="n">GitRepo</span> <span class="kt">string</span> <span class="s">`json:"gitRepo"`</span>
+
+	<span class="c">// Replicas is the number of desired pods. Defaults to 1.</span>
+	<span class="c">// +kubebuilder:validation:Minimum=1</span>
+	<span class="c">// +kubebuilder:default=1</span>
+	<span class="c">// +optional</span>
+	<span class="n">Replicas</span> <span class="o">*</span><span class="kt">int32</span> <span class="s">`json:"replicas"`</span>
+<span class="p">}</span>
+
+<span class="c">// WebsiteStatus defines the observed state of Website</span>
+<span class="k">type</span> <span class="n">WebsiteStatus</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="c">// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster</span>
+	<span class="c">// Important: Run "make" to regenerate code after modifying this file</span>
+
+	<span class="c">// DeploymentStatus reflects the status of the created Deployment.</span>
+	<span class="c">// +optional</span>
+	<span class="n">DeploymentStatus</span> <span class="n">appsv1</span><span class="o">.</span><span class="n">DeploymentStatus</span> <span class="s">`json:"deploymentStatus,omitempty"`</span>
+
+	<span class="c">// ServiceStatus reflects the status of the created Service.</span>
+	<span class="c">// +optional</span>
+	<span class="n">ServiceStatus</span> <span class="n">v1</span><span class="o">.</span><span class="n">ServiceStatus</span> <span class="s">`json:"serviceStatus,omitempty"`</span>
+<span class="p">}</span>
+<span class="c">// ... (rest of the file)</span>
+</code></pre></div></div>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">WebsiteSpec</code></strong>: We added <code class="language-plaintext highlighter-rouge">GitRepo</code> (a required string) and <code class="language-plaintext highlighter-rouge">Replicas</code> (an optional integer with a minimum value of 1). The <code class="language-plaintext highlighter-rouge">//+kubebuilder</code> comments are “markers” that generate validation rules in the CRD.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">WebsiteStatus</code></strong>: We will use this to report the status of the <code class="language-plaintext highlighter-rouge">Deployment</code> and <code class="language-plaintext highlighter-rouge">Service</code> we create. You’ll need to add the <code class="language-plaintext highlighter-rouge">appsv1</code> and <code class="language-plaintext highlighter-rouge">v1</code> imports from <code class="language-plaintext highlighter-rouge">k8s.io/api</code>.</li>
+</ul>
+
+<p>After modifying the <code class="language-plaintext highlighter-rouge">_types.go</code> file, <strong>always run <code class="language-plaintext highlighter-rouge">make</code></strong> to regenerate the deepcopy functions and CRD manifests.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make
+</code></pre></div></div>
+
+<h3 id="step-3-implement-the-controller-logic"><strong>Step 3: Implement the Controller Logic</strong></h3>
+
+<p>This is the most important part. The controller’s job is to read the state of a <code class="language-plaintext highlighter-rouge">Website</code> resource and take action to make the real world (the cluster state) match the desired state in the <code class="language-plaintext highlighter-rouge">Spec</code>.</p>
+
+<p>Open <code class="language-plaintext highlighter-rouge">internal/controllers/website_controller.go</code>. The core logic goes inside the <code class="language-plaintext highlighter-rouge">Reconcile</code> function.</p>
+
+<h4 id="the-reconciliation-loop"><strong>The Reconciliation Loop</strong></h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">Reconcile</code> function is called every time a <code class="language-plaintext highlighter-rouge">Website</code> resource is created, updated, or deleted. Its goal is to reach a steady state. It’s like a thermostat: it checks the temperature (current state) and turns the heating on or off (takes action) to reach the desired temperature (desired state).</p>
+
+<p>Let’s implement the logic.</p>
+
+<ol>
+  <li><strong>Get the <code class="language-plaintext highlighter-rouge">Website</code> resource</strong>: The request contains the name and namespace of the resource that triggered the reconciliation.</li>
+  <li><strong>Check if Deployment exists</strong>: If not, create it.</li>
+  <li><strong>If Deployment exists</strong>: Ensure its spec (e.g., number of replicas) matches the <code class="language-plaintext highlighter-rouge">Website</code> spec. If not, update it.</li>
+  <li><strong>Check if Service exists</strong>: If not, create it.</li>
+  <li><strong>Update Status</strong>: Report the current status back to the <code class="language-plaintext highlighter-rouge">Website</code> resource.</li>
+</ol>
+
+<h4 id="updating-the-controller-code"><strong>Updating the Controller Code</strong></h4>
+
+<p>Replace the contents of <code class="language-plaintext highlighter-rouge">internal/controllers/website_controller.go</code> with the following code. Read the comments carefully to understand each step.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// internal/controllers/website_controller.go</span>
+
+<span class="k">package</span> <span class="n">controllers</span>
+
+<span class="k">import</span> <span class="p">(</span>
+	<span class="s">"context"</span>
+	<span class="s">"reflect"</span>
+
+	<span class="n">appsv1</span> <span class="s">"k8s.ioio/api/apps/v1"</span>
+	<span class="n">corev1</span> <span class="s">"k8s.io/api/core/v1"</span>
+	<span class="s">"k8s.io/apimachinery/pkg/api/errors"</span>
+	<span class="n">metav1</span> <span class="s">"k8s.io/apimachinery/pkg/apis/meta/v1"</span>
+	<span class="s">"k8s.io/apimachinery/pkg/runtime"</span>
+	<span class="s">"k8s.io/apimachinery/pkg/types"</span>
+	<span class="n">ctrl</span> <span class="s">"sigs.k8s.io/controller-runtime"</span>
+	<span class="s">"sigs.k8s.io/controller-runtime/pkg/client"</span>
+	<span class="s">"sigs.k8s.io/controller-runtime/pkg/log"</span>
+
+	<span class="n">websitev1alpha1</span> <span class="s">"github.com/your-user/website-operator/api/v1alpha1"</span>
+<span class="p">)</span>
+
+<span class="c">// WebsiteReconciler reconciles a Website object</span>
+<span class="k">type</span> <span class="n">WebsiteReconciler</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">client</span><span class="o">.</span><span class="n">Client</span>
+	<span class="n">Scheme</span> <span class="o">*</span><span class="n">runtime</span><span class="o">.</span><span class="n">Scheme</span>
+<span class="p">}</span>
+
+<span class="c">//+kubebuilder:rbac:groups=website.my.domain,resources=websites,verbs=get;list;watch;create;update;patch;delete</span>
+<span class="c">//+kubebuilder:rbac:groups=website.my.domain,resources=websites/status,verbs=get;update;patch</span>
+<span class="c">//+kubebuilder:rbac:groups=website.my.domain,resources=websites/finalizers,verbs=update</span>
+<span class="c">//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete</span>
+<span class="c">//+kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">WebsiteReconciler</span><span class="p">)</span> <span class="n">Reconcile</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">req</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">logger</span> <span class="o">:=</span> <span class="n">log</span><span class="o">.</span><span class="n">FromContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+	<span class="c">// 1. Fetch the Website instance</span>
+	<span class="n">website</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">websitev1alpha1</span><span class="o">.</span><span class="n">Website</span><span class="p">{}</span>
+	<span class="n">err</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">NamespacedName</span><span class="p">,</span> <span class="n">website</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">errors</span><span class="o">.</span><span class="n">IsNotFound</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="s">"Website resource not found. Ignoring since object must be deleted."</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="no">nil</span>
+		<span class="p">}</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="s">"Failed to get Website"</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="n">err</span>
+	<span class="p">}</span>
+
+	<span class="c">// 2. Reconcile the Deployment</span>
+	<span class="n">deployment</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">appsv1</span><span class="o">.</span><span class="n">Deployment</span><span class="p">{}</span>
+	<span class="n">err</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">NamespacedName</span><span class="p">{</span><span class="n">Name</span><span class="o">:</span> <span class="n">website</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Namespace</span><span class="o">:</span> <span class="n">website</span><span class="o">.</span><span class="n">Namespace</span><span class="p">},</span> <span class="n">deployment</span><span class="p">)</span>
+
+	<span class="c">// If the deployment does not exist, create it. Otherwise, update it.</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="o">&amp;&amp;</span> <span class="n">errors</span><span class="o">.</span><span class="n">IsNotFound</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c">// Define a new deployment</span>
+		<span class="n">dep</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">deploymentForWebsite</span><span class="p">(</span><span class="n">website</span><span class="p">)</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="s">"Creating a new Deployment"</span><span class="p">,</span> <span class="s">"Deployment.Namespace"</span><span class="p">,</span> <span class="n">dep</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="s">"Deployment.Name"</span><span class="p">,</span> <span class="n">dep</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+		<span class="n">err</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">dep</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="s">"Failed to create new Deployment"</span><span class="p">,</span> <span class="s">"Deployment.Namespace"</span><span class="p">,</span> <span class="n">dep</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="s">"Deployment.Name"</span><span class="p">,</span> <span class="n">dep</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="n">err</span>
+		<span class="p">}</span>
+		<span class="c">// Deployment created successfully - return and requeue</span>
+		<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{</span><span class="n">Requeue</span><span class="o">:</span> <span class="no">true</span><span class="p">},</span> <span class="no">nil</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="s">"Failed to get Deployment"</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="n">err</span>
+	<span class="p">}</span>
+
+	<span class="c">// Ensure the deployment size is the same as the spec</span>
+	<span class="n">size</span> <span class="o">:=</span> <span class="n">website</span><span class="o">.</span><span class="n">Spec</span><span class="o">.</span><span class="n">Replicas</span>
+	<span class="k">if</span> <span class="o">*</span><span class="n">deployment</span><span class="o">.</span><span class="n">Spec</span><span class="o">.</span><span class="n">Replicas</span> <span class="o">!=</span> <span class="o">*</span><span class="n">size</span> <span class="p">{</span>
+		<span class="n">deployment</span><span class="o">.</span><span class="n">Spec</span><span class="o">.</span><span class="n">Replicas</span> <span class="o">=</span> <span class="n">size</span>
+		<span class="n">err</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">Update</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">deployment</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="s">"Failed to update Deployment"</span><span class="p">,</span> <span class="s">"Deployment.Namespace"</span><span class="p">,</span> <span class="n">deployment</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="s">"Deployment.Name"</span><span class="p">,</span> <span class="n">deployment</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="n">err</span>
+		<span class="p">}</span>
+		<span class="c">// Ask to requeue after 1 minute in order to give time for the</span>
+		<span class="c">// pods be created</span>
+		<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{</span><span class="n">RequeueAfter</span><span class="o">:</span> <span class="n">time</span><span class="o">.</span><span class="n">Minute</span><span class="p">},</span> <span class="no">nil</span>
+	<span class="p">}</span>
+
+	<span class="c">// 3. Reconcile the Service</span>
+	<span class="n">service</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">corev1</span><span class="o">.</span><span class="n">Service</span><span class="p">{}</span>
+	<span class="n">err</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">NamespacedName</span><span class="p">{</span><span class="n">Name</span><span class="o">:</span> <span class="n">website</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Namespace</span><span class="o">:</span> <span class="n">website</span><span class="o">.</span><span class="n">Namespace</span><span class="p">},</span> <span class="n">service</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="o">&amp;&amp;</span> <span class="n">errors</span><span class="o">.</span><span class="n">IsNotFound</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c">// Define a new service</span>
+		<span class="n">svc</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">serviceForWebsite</span><span class="p">(</span><span class="n">website</span><span class="p">)</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="s">"Creating a new Service"</span><span class="p">,</span> <span class="s">"Service.Namespace"</span><span class="p">,</span> <span class="n">svc</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="s">"Service.Name"</span><span class="p">,</span> <span class="n">svc</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+		<span class="n">err</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">svc</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="s">"Failed to create new Service"</span><span class="p">,</span> <span class="s">"Service.Namespace"</span><span class="p">,</span> <span class="n">svc</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="s">"Service.Name"</span><span class="p">,</span> <span class="n">svc</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="n">err</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{</span><span class="n">Requeue</span><span class="o">:</span> <span class="no">true</span><span class="p">},</span> <span class="no">nil</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="s">"Failed to get Service"</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="n">err</span>
+	<span class="p">}</span>
+	
+	<span class="c">// 4. Update the Website status</span>
+	<span class="c">// We'll just reflect the deployment status for simplicity</span>
+	<span class="k">if</span> <span class="o">!</span><span class="n">reflect</span><span class="o">.</span><span class="n">DeepEqual</span><span class="p">(</span><span class="n">deployment</span><span class="o">.</span><span class="n">Status</span><span class="p">,</span> <span class="n">website</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">DeploymentStatus</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">website</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">DeploymentStatus</span> <span class="o">=</span> <span class="n">deployment</span><span class="o">.</span><span class="n">Status</span>
+		<span class="n">err</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">Status</span><span class="p">()</span><span class="o">.</span><span class="n">Update</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">website</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="s">"Failed to update Website status"</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="n">err</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Result</span><span class="p">{},</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// deploymentForWebsite returns a Website Deployment object</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">WebsiteReconciler</span><span class="p">)</span> <span class="n">deploymentForWebsite</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span><span class="n">websitev1alpha1</span><span class="o">.</span><span class="n">Website</span><span class="p">)</span> <span class="o">*</span><span class="n">appsv1</span><span class="o">.</span><span class="n">Deployment</span> <span class="p">{</span>
+	<span class="n">labels</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">"app"</span><span class="o">:</span> <span class="n">w</span><span class="o">.</span><span class="n">Name</span><span class="p">}</span>
+	<span class="n">replicas</span> <span class="o">:=</span> <span class="n">w</span><span class="o">.</span><span class="n">Spec</span><span class="o">.</span><span class="n">Replicas</span>
+
+	<span class="c">// For a real-world controller, you would likely use an initContainer</span>
+	<span class="c">// to clone the gitRepo into a volume. For this tutorial, we'll use</span>
+	<span class="c">// a simple nginx image.</span>
+	<span class="n">dep</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">appsv1</span><span class="o">.</span><span class="n">Deployment</span><span class="p">{</span>
+		<span class="n">ObjectMeta</span><span class="o">:</span> <span class="n">metav1</span><span class="o">.</span><span class="n">ObjectMeta</span><span class="p">{</span>
+			<span class="n">Name</span><span class="o">:</span>      <span class="n">w</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+			<span class="n">Namespace</span><span class="o">:</span> <span class="n">w</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+		<span class="p">},</span>
+		<span class="n">Spec</span><span class="o">:</span> <span class="n">appsv1</span><span class="o">.</span><span class="n">DeploymentSpec</span><span class="p">{</span>
+			<span class="n">Replicas</span><span class="o">:</span> <span class="n">replicas</span><span class="p">,</span>
+			<span class="n">Selector</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">metav1</span><span class="o">.</span><span class="n">LabelSelector</span><span class="p">{</span>
+				<span class="n">MatchLabels</span><span class="o">:</span> <span class="n">labels</span><span class="p">,</span>
+			<span class="p">},</span>
+			<span class="n">Template</span><span class="o">:</span> <span class="n">corev1</span><span class="o">.</span><span class="n">PodTemplateSpec</span><span class="p">{</span>
+				<span class="n">ObjectMeta</span><span class="o">:</span> <span class="n">metav1</span><span class="o">.</span><span class="n">ObjectMeta</span><span class="p">{</span>
+					<span class="n">Labels</span><span class="o">:</span> <span class="n">labels</span><span class="p">,</span>
+				<span class="p">},</span>
+				<span class="n">Spec</span><span class="o">:</span> <span class="n">corev1</span><span class="o">.</span><span class="n">PodSpec</span><span class="p">{</span>
+					<span class="n">Containers</span><span class="o">:</span> <span class="p">[]</span><span class="n">corev1</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span>
+					<span class="p">}},</span>
+				<span class="p">},</span>
+			<span class="p">},</span>
+		<span class="p">},</span>
+	<span class="p">}</span>
+
+	<span class="c">// Set Website instance as the owner and controller</span>
+	<span class="n">ctrl</span><span class="o">.</span><span class="n">SetControllerReference</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">dep</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">Scheme</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">dep</span>
+<span class="p">}</span>
+
+<span class="c">// serviceForWebsite returns a Website Service object</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">WebsiteReconciler</span><span class="p">)</span> <span class="n">serviceForWebsite</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span><span class="n">websitev1alpha1</span><span class="o">.</span><span class="n">Website</span><span class="p">)</span> <span class="o">*</span><span class="n">corev1</span><span class="o">.</span><span class="n">Service</span> <span class="p">{</span>
+	<span class="n">labels</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">"app"</span><span class="o">:</span> <span class="n">w</span><span class="o">.</span><span class="n">Name</span><span class="p">}</span>
+
+	<span class="n">svc</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">corev1</span><span class="o">.</span><span class="n">Service</span><span class="p">{</span>
+		<span class="n">ObjectMeta</span><span class="o">:</span> <span class="n">metav1</span><span class="o">.</span><span class="n">ObjectMeta</span><span class="p">{</span>
+			<span class="n">Name</span><span class="o">:</span>      <span class="n">w</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+			<span class="n">Namespace</span><span class="o">:</span> <span class="n">w</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+		<span class="p">},</span>
+		<span class="n">Spec</span><span class="o">:</span> <span class="n">corev1</span><span class="o">.</span><span class="n">ServiceSpec</span><span class="p">{</span>
+			<span class="n">Selector</span><span class="o">:</span> <span class="n">labels</span><span class="p">,</span>
+			<span class="n">Ports</span><span class="o">:</span> <span class="p">[]</span><span class="n">corev1</span><span class="o">.</span><span class="n">ServicePort</span><span class="p">,</span>
+			<span class="n">Type</span><span class="o">:</span> <span class="n">corev1</span><span class="o">.</span><span class="n">ServiceTypeLoadBalancer</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">}</span>
+	<span class="c">// Set Website instance as the owner and controller</span>
+	<span class="n">ctrl</span><span class="o">.</span><span class="n">SetControllerReference</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">svc</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">Scheme</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">svc</span>
+<span class="p">}</span>
+
+<span class="c">// SetupWithManager sets up the controller with the Manager.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">WebsiteReconciler</span><span class="p">)</span> <span class="n">SetupWithManager</span><span class="p">(</span><span class="n">mgr</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">Manager</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">NewControllerManagedBy</span><span class="p">(</span><span class="n">mgr</span><span class="p">)</span><span class="o">.</span>
+		<span class="n">For</span><span class="p">(</span><span class="o">&amp;</span><span class="n">websitev1alpha1</span><span class="o">.</span><span class="n">Website</span><span class="p">{})</span><span class="o">.</span>
+		<span class="n">Owns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">appsv1</span><span class="o">.</span><span class="n">Deployment</span><span class="p">{})</span><span class="o">.</span>
+		<span class="n">Owns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">corev1</span><span class="o">.</span><span class="n">Service</span><span class="p">{})</span><span class="o">.</span>
+		<span class="n">Complete</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Key changes and explanations:</strong></p>
+
+<ul>
+  <li><strong>RBAC Permissions (<code class="language-plaintext highlighter-rouge">//+kubebuilder:rbac</code>):</strong> We added permissions for the controller to manage <code class="language-plaintext highlighter-rouge">Deployments</code> and <code class="language-plaintext highlighter-rouge">Services</code>. After adding these, run <code class="language-plaintext highlighter-rouge">make manifests</code> to update the RBAC roles in <code class="language-plaintext highlighter-rouge">config/rbac/role.yaml</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">deploymentForWebsite</code> &amp; <code class="language-plaintext highlighter-rouge">serviceForWebsite</code>:</strong> These helper functions create the desired Deployment and Service objects.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">ctrl.SetControllerReference</code></strong>: <strong>This is crucial.</strong> It sets the <code class="language-plaintext highlighter-rouge">Website</code> resource as the “owner” of the Deployment and Service. This means when you delete the <code class="language-plaintext highlighter-rouge">Website</code> resource, Kubernetes garbage collection will automatically delete the owned Deployment and Service.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">SetupWithManager</code></strong>: We configured the controller to <code class="language-plaintext highlighter-rouge">Own</code> Deployments and Services. This tells the controller-runtime framework to trigger a reconciliation for a <code class="language-plaintext highlighter-rouge">Website</code> resource whenever its owned <code class="language-plaintext highlighter-rouge">Deployment</code> or <code class="language-plaintext highlighter-rouge">Service</code> is changed or deleted.</li>
+</ul>
+
+<h3 id="step-4-run-and-test-the-controller"><strong>Step 4: Run and Test the Controller</strong></h3>
+
+<p>Now for the exciting part! Let’s run our controller and see it in action.</p>
+
+<h4 id="1-install-the-crd-into-the-cluster"><strong>1. Install the CRD into the Cluster</strong></h4>
+
+<p>The cluster needs to know about the <code class="language-plaintext highlighter-rouge">Website</code> resource type.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make <span class="nb">install</span>
+</code></pre></div></div>
+
+<p>Verify that the CRD is installed:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get crd websites.website.my.domain
+<span class="c"># NAME                          CREATED AT</span>
+<span class="c"># websites.website.my.domain    2023-10-27T10:30:00Z</span>
+</code></pre></div></div>
+
+<h4 id="2-run-the-controller-locally"><strong>2. Run the Controller Locally</strong></h4>
+
+<p>Running the controller on your local machine is fantastic for development and debugging. It will use your local kubeconfig to talk to the cluster.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make run
+</code></pre></div></div>
+<p>You will see logs from the controller manager starting up. It is now waiting for <code class="language-plaintext highlighter-rouge">Website</code> resources to be created.</p>
+
+<h4 id="3-create-a-website-resource"><strong>3. Create a <code class="language-plaintext highlighter-rouge">Website</code> Resource</strong></h4>
+
+<p>In a <strong>new terminal</strong>, apply the sample <code class="language-plaintext highlighter-rouge">Website</code> resource. Kubebuilder has already created a sample for you in <code class="language-plaintext highlighter-rouge">config/samples/website_v1alpha1_website.yaml</code>. Let’s modify it to match our <code class="language-plaintext highlighter-rouge">Spec</code>.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># config/samples/website_v1alpha1_website.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">website.my.domain/v1alpha1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Website</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app.kubernetes.io/name</span><span class="pi">:</span> <span class="s">website</span>
+    <span class="na">app.kubernetes.io/instance</span><span class="pi">:</span> <span class="s">website-sample</span>
+    <span class="na">app.kubernetes.io/part-of</span><span class="pi">:</span> <span class="s">website-operator</span>
+    <span class="na">app.kubernetes.io/managed-by</span><span class="pi">:</span> <span class="s">kustomize</span>
+    <span class="na">app.kubernetes.io/created-by</span><span class="pi">:</span> <span class="s">website-operator</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">website-sample</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">gitRepo</span><span class="pi">:</span> <span class="s2">"</span><span class="s">https://github.com/my-user/my-repo.git"</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">2</span>
+</code></pre></div></div>
+
+<p>Apply it:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> config/samples/website_v1alpha1_website.yaml
+</code></pre></div></div>
+
+<h4 id="4-observe-the-results"><strong>4. Observe the Results</strong></h4>
+
+<p>Look at the logs from your <code class="language-plaintext highlighter-rouge">make run</code> terminal. You should see the controller creating the Deployment and Service.</p>
+
+<p>Now, check the resources in your cluster:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check our custom resource</span>
+kubectl get website
+
+<span class="c"># NAME             AGE</span>
+<span class="c"># website-sample   15s</span>
+
+<span class="c"># Check the Deployment created by our controller</span>
+kubectl get deployment website-sample
+
+<span class="c"># NAME             READY   UP-TO-DATE   AVAILABLE   AGE</span>
+<span class="c"># website-sample   2/2     2            2           12s</span>
+
+<span class="c"># Check the Service created by our controller</span>
+kubectl get service website-sample
+
+<span class="c"># NAME             TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE</span>
+<span class="c"># website-sample   LoadBalancer   10.10.10.10    &lt;pending&gt;     80:31234/TCP   10s</span>
+</code></pre></div></div>
+<p>Success! Our controller saw the <code class="language-plaintext highlighter-rouge">Website</code> resource and created the corresponding Deployment and Service.</p>
+
+<p>Now, try changing the number of replicas in the YAML file to <code class="language-plaintext highlighter-rouge">3</code> and <code class="language-plaintext highlighter-rouge">kubectl apply</code> it again. You will see the controller update the Deployment to match.</p>
+
+<h4 id="5-cleanup"><strong>5. Cleanup</strong></h4>
+<p>Delete the <code class="language-plaintext highlighter-rouge">Website</code> resource. Because we set the Owner Reference, the Deployment and Service will be automatically deleted too.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl delete <span class="nt">-f</span> config/samples/website_v1alpha1_website.yaml
+
+<span class="c"># Verify they are gone</span>
+kubectl get deployment,service
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="step-5-build-and-deploy-to-the-cluster"><strong>Step 5: Build and Deploy to the Cluster</strong></h3>
+
+<p>Running locally is great for development, but for production, you need to run the controller as a <code class="language-plaintext highlighter-rouge">Deployment</code> inside the cluster.</p>
+
+<ol>
+  <li><strong>Build and Push the Docker Image</strong>:
+(Replace <code class="language-plaintext highlighter-rouge">your-dockerhub-username</code> with your actual username)
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make docker-build <span class="nv">IMG</span><span class="o">=</span>your-dockerhub-username/website-operator:v0.0.1
+make docker-push <span class="nv">IMG</span><span class="o">=</span>your-dockerhub-username/website-operator:v0.0.1
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Deploy the Controller to the Cluster</strong>:
+This command will use the manifests in the <code class="language-plaintext highlighter-rouge">config</code> directory to create the <code class="language-plaintext highlighter-rouge">Deployment</code>, <code class="language-plaintext highlighter-rouge">RBAC</code> roles, and everything else needed to run the controller.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make deploy <span class="nv">IMG</span><span class="o">=</span>your-dockerhub-username/website-operator:v0.0.1
+</code></pre></div>    </div>
+    <p>Your controller is now running inside the cluster, just like any other application. It will continue to watch for <code class="language-plaintext highlighter-rouge">Website</code> resources and reconcile them.</p>
+  </li>
+</ol>
+
+<h3 id="conclusion-and-next-steps"><strong>Conclusion and Next Steps</strong></h3>
+
+<p>Congratulations! You have successfully built a fully functional Kubernetes controller. You learned how to:</p>
+<ul>
+  <li>Scaffold a project with Kubebuilder.</li>
+  <li>Define a Custom Resource Definition (<code class="language-plaintext highlighter-rouge">CRD</code>).</li>
+  <li>Implement the reconciliation logic in a controller.</li>
+  <li>Set owner references for garbage collection.</li>
+  <li>Run, test, and deploy your controller.</li>
+</ul>
+
+<p>From here, you can explore more advanced topics:</p>
+<ul>
+  <li><strong>Finalizers</strong>: To perform cleanup actions before a resource is deleted.</li>
+  <li><strong>Webhooks</strong>: To validate or mutate your custom resources on creation/update.</li>
+  <li><strong>More Complex Status Updates</strong>: Provide richer status information about the resources your controller manages.</li>
+  <li><strong>Testing</strong>: Write unit and integration tests for your controller logic.</li>
+</ul>]]></content><author><name></name></author><category term="tutorial" /><category term="kubernetes" /><category term="controller" /><category term="Kubebuilder" /><category term="crd" /><category term="opensource" /><summary type="html"><![CDATA[In this tutorial, you will learn how to build a custom Kubernetes controller (also known as an Operator) using Kubebuilder. We will create a Custom Resource Definition (CRD) for a simple Website resource.]]></summary></entry><entry><title type="html">Guide to Building a Custom Kubernetes Scheduler</title><link href="https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler/" rel="alternate" type="text/html" title="Guide to Building a Custom Kubernetes Scheduler" /><published>2025-08-24T17:30:00+00:00</published><updated>2025-08-24T17:30:00+00:00</updated><id>https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler</id><content type="html" xml:base="https://menraromial.github.io/blog/2025/guide-building-custom-kubernetes-scheduler/"><![CDATA[<p>This guide will walk you through creating a custom scheduler plugin that influences where pods are placed based on custom logic. We will build a simple “Network-Aware” plugin that prefers to schedule pods on nodes with a specific network label.</p>
 
 <p><strong>What We Will Build:</strong></p>
 <ul>

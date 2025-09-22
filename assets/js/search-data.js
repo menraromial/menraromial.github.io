@@ -51,7 +51,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-guide-to-building-a-custom-kubernetes-scheduler",
+        },{id: "post-building-a-kubernetes-controller-with-kubebuilder-from-scratch",
+        
+          title: "Building a Kubernetes Controller with Kubebuilder from Scratch",
+        
+        description: "In this tutorial, you will learn how to build a custom Kubernetes controller (also known as an Operator) using Kubebuilder. We will create a Custom Resource Definition (CRD) for a simple Website resource.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch/";
+          
+        },
+      },{id: "post-guide-to-building-a-custom-kubernetes-scheduler",
         
           title: "Guide to Building a Custom Kubernetes Scheduler",
         
