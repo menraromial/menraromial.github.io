@@ -146,19 +146,19 @@ The core logic remains the same, but the process around it will be more rigorous
 #### Step 1: Create the Plugin Directory and File
 
 ```bash
-mkdir -p pkg/networkaware
-touch pkg/networkaware/network_aware.go
+mkdir -p pkg/networkspeed
+touch pkg/networkspeed/networkspeed.go
 ```
 
 #### Step 2: Write the Plugin Code
 
-Place the same Go code from the previous guide into `pkg/networkaware/network_aware.go`. This code implements the `Filter` and `Score` extension points.
+Place the same Go code from the previous guide into `pkg/networkspeed/networkspeed.go`. This code implements the `Filter` and `Score` extension points.
 
 
 ```go
-// pkg/networkaware/network_aware.go
+// pkg/networkspeed/networkspeed.go
 
-package networkaware
+package networkspeed
 
 import (
 	"context"
@@ -171,7 +171,7 @@ import (
 )
 
 // Define plugin name
-const Name = "NetworkAware"
+const Name = "Networkspeed"
 
 const (
 	// Annotation key on a Pod to specify network preference.
@@ -182,25 +182,25 @@ const (
 	HighSpeedNetwork = "high-speed"
 )
 
-// NetworkAware is a plugin that filters and scores nodes based on network labels.
-type NetworkAware struct {
+// Networkspeed is a plugin that filters and scores nodes based on network labels.
+type Networkspeed struct {
 	handle framework.Handle
 }
 
 // Ensure our plugin implements the necessary interfaces.
-var _ framework.FilterPlugin = &NetworkAware{}
-var _ framework.ScorePlugin = &NetworkAware{}
+var _ framework.FilterPlugin = &Networkspeed{}
+var _ framework.ScorePlugin = &Networkspeed{}
 
 // Name returns the name of the plugin.
-func (na *NetworkAware) Name() string {
+func (na *Networkspeed) Name() string {
 	return Name
 }
 
 // New is the factory function that creates a new instance of the plugin.
 // This is called by the scheduler framework when it initializes.
 func  New(_ context.Context, obj runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-	klog.V(3).Infof("Creating new Newnetworkaware plugin")
-	return &Newnetworkaware{
+	klog.V(3).Infof("Creating new Networkspeed plugin")
+	return &Networkspeed{
 		handle: handle,
 	}, nil
 }
@@ -208,7 +208,7 @@ func  New(_ context.Context, obj runtime.Object, handle framework.Handle) (frame
 // ----------------- FILTERING LOGIC -----------------
 
 // Filter is called by the framework for each node to see if the pod can be scheduled on it.
-func (na *NetworkAware) Filter(ctx context.Context, state *framework.CycleState, pod *v1.Pod, nodeInfo *framework.NodeInfo) *framework.Status {
+func (na *Networkspeed) Filter(ctx context.Context, state *framework.CycleState, pod *v1.Pod, nodeInfo *framework.NodeInfo) *framework.Status {
 	klog.V(3).Infof("Filtering pod %v for node %v", pod.Name, nodeInfo.Node().Name)
 
 	// 1. Get the pod's network preference from its annotations.
@@ -245,7 +245,7 @@ func (na *NetworkAware) Filter(ctx context.Context, state *framework.CycleState,
 
 // Score is called for each node that passed the Filter phase.
 // It returns a score for the node, with higher scores being better.
-func (na *NetworkAware) Score(ctx context.Context, state *framework.CycleState, pod *v1.Pod, nodeName string) (int64, *framework.Status) {
+func (na *Networkspeed) Score(ctx context.Context, state *framework.CycleState, pod *v1.Pod, nodeName string) (int64, *framework.Status) {
 	klog.V(3).Infof("Scoring node %v for pod %v", nodeName, pod.Name)
 
 	nodeInfo, err := na.handle.SnapshotSharedLister().NodeInfos().Get(nodeName)
@@ -271,7 +271,7 @@ func (na *NetworkAware) Score(ctx context.Context, state *framework.CycleState, 
 }
 
 // ScoreExtensions returns a ScoreExtensions interface if the plugin implements one.
-func (na *NetworkAware) ScoreExtensions() framework.ScoreExtensions {
+func (na *Networkspeed) ScoreExtensions() framework.ScoreExtensions {
 	// We don't need to normalize scores, so we return nil.
 	return nil
 }
@@ -292,7 +292,7 @@ import (
 	"k8s.io/kubernetes/cmd/kube-scheduler/app"
 
     // IMPORT YOUR PLUGIN'S PACKAGE
-	"sigs.k8s.io/scheduler-plugins/pkg/networkaware"
+	"sigs.k8s.io/scheduler-plugins/pkg/networkspeed"
     
 	// ... other plugin imports
 )
@@ -300,7 +300,7 @@ import (
 func main() {
 	// Register all plugins.
 	command := app.NewSchedulerCommand(
-		app.WithPlugin(networkaware.Name, networkaware.NetworkAware{}.New), // <-- ADD THIS LINE
+		app.WithPlugin(networkspeed.Name, networkspeed.New), // <-- ADD THIS LINE
 		app.WithPlugin(coscheduling.Name, coscheduling.New),
 		// ... other plugins
 	)
@@ -332,7 +332,7 @@ make local-image
 ```
 
 **What does this command do?**
-1.  It compiles your Go code, including the new `networkaware` plugin, into a `kube-scheduler` binary.
+1.  It compiles your Go code, including the new `networkspeed` plugin, into a `kube-scheduler` binary.
 2.  It builds a container image using Docker.
 3.  It automatically sets the platform to your local machine's architecture (e.g., `linux/amd64` or `linux/arm64`).
 4.  It tags the image with a convenient name for local development: `localhost:5000/scheduler-plugins/kube-scheduler:v0.0.0`.
@@ -495,7 +495,7 @@ profiles:
     plugins:
       multiPoint:
         enabled:
-          - name: "NetworkAware"
+          - name: "Networkspeed"
 EOF'
 
 # Verify the file was created correctly
@@ -645,7 +645,7 @@ You have now successfully built a custom scheduler and deployed it to a realisti
 
 **Your Professional Next Steps:**
 
-1.  **Write Unit Tests:** Create a `pkg/networkaware/network_aware_test.go` file. The repository has many examples. Once written, you can run them with `make unit-test`.
+1.  **Write Unit Tests:** Create a `pkg/networkspeed/networkspeed_test.go` file. The repository has many examples. Once written, you can run them with `make unit-test`.
 2.  **Run Integration Tests:** The project has a framework for integration tests that spin up real API servers. You can add one for your plugin and run it via `make integration-test`.
 3.  **Pushing to a Real Registry:** When you are ready to share your scheduler, you can use the `push-images` target. This requires setting environment variables:
     ```bash
