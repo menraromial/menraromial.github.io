@@ -9,10 +9,10 @@ last_name: Romial
 contact_note: > 
   You can email me at itsme@menraromial.com.
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  A personal website and blog by MENRA W. Romial, showcasing expertise in cloud computing, edge technologies, IoT, and innovation. Explore research insights, technical articles, and projects aimed at advancing technology and innovation.
+  MENRA W. Romial (Menra Wedwang Romial) - Personal website and blog showcasing expertise in cloud computing, edge technologies, IoT, and Kubernetes. Computer science researcher specializing in energy-aware computing, green cloud infrastructure, and sustainable data centers. Explore research insights, technical articles, talks, and innovative projects in distributed systems and energy-efficient orchestration.
 footer_text: >
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
-keywords: menra, academic-website, portfolio-website, cloud-computing, edge-technologies, IoT, research, innovation, personal-website, tech-blog
+keywords: menra, menraromial, menra romial, romial, menra wedwang, wedwang romial, MENRA W. Romial, cloud computing, edge technologies, IoT, kubernetes, energy-aware computing, green computing, academic-website, portfolio-website, research, innovation, personal-website, tech-blog, computer science researcher
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: mwr_icon.png # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
@@ -73,7 +73,7 @@ og_image: /assets/img/mwr_og_image.png # The site-wide (default for all links) O
 
 # For Google Analytics, see https://support.google.com/analytics/answer/10447272?hl=en&ref_topic=14088998&sjid=5129943941510317771-SA#zippy=%2Cgoogle-sites
 # and follow the instructions for Google Sites. You will need to create a Google Analytics property and copy the Google tag ID.
-google_analytics: # your Google Analytics measurement ID (format: G-XXXXXXXXXX)
+google_analytics: GTM-PH9QMM8J	 # your Google Analytics measurement ID (format: G-XXXXXXXXXX)
 cronitor_analytics: # cronitor RUM analytics site ID (format: XXXXXXXXX)
 pirsch_analytics: # your Pirsch analytics site ID (length 32 characters)
 openpanel_analytics: # your Openpanel analytics client ID (format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX)
