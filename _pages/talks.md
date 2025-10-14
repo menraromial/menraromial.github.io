@@ -11,7 +11,8 @@ nav: true
 
 Welcome to the Talks page! Here you will find a collection of all the talks and presentations.
 
-{% for talk in site.talks %}
+{% assign sorted_talks = site.talks | sort: 'date' | reverse %}
+{% for talk in sorted_talks %}
 - **[{{ talk.title }}]({{ talk.url | relative_url }})**  
     _{{ talk.date | date: "%B %d, %Y" }}_  
     {{ talk.excerpt }}
