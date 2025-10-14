@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Inria Rennes</a>. 263 Avenue Général Leclerc, 35042 Rennes
+subtitle: <a href='#'>IMTA</a>. 4 Rue Alfred Kastler, 44300 Nantes
 
 profile:
   align: right
