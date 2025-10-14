@@ -127,6 +127,16 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/scheduling-linux-/";
+            },},{id: "talks-integration-of-the-energy-aspect-in-kubernetes",
+          title: 'Integration of the Energy Aspect in Kubernetes',
+          description: "",
+          section: "Talks",handler: () => {
+              window.location.href = "/talks/compas-conference-2024/";
+            },},{id: "talks-energy-aware-kubernetes-orchestration-for-grid-responsive-computing",
+          title: 'Energy-Aware Kubernetes Orchestration for Grid-Responsive Computing',
+          description: "",
+          section: "Talks",handler: () => {
+              window.location.href = "/talks/stack-team-seminar-2025/";
             },},{
         id: 'social-email',
         title: 'email',
