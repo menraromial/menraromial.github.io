@@ -51,7 +51,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-building-a-kubernetes-controller-with-kubebuilder-from-scratch",
+        },{id: "post-a-comprehensive-guide-to-powercap-utils-on-linux",
+        
+          title: "A Comprehensive Guide to powercap-utils on Linux",
+        
+        description: "powercap-utils is a suite of user-space command-line tools for Linux that allow you to interact with the kernel&#39;s Power Capping Framework. This framework provides a standardized way to monitor and limit the power consumption of hardware devices.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/comprehensive-guide-powercap-utils-linux/";
+          
+        },
+      },{id: "post-building-a-kubernetes-controller-with-kubebuilder-from-scratch",
         
           title: "Building a Kubernetes Controller with Kubebuilder from Scratch",
         

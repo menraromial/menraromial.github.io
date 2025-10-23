@@ -1,5 +1,272 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.com/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-10-14T11:31:00+00:00</updated><id>https://menraromial.com/feed.xml</id><title type="html">blank</title><subtitle>MENRA W. Romial (Menra Wedwang Romial) - Personal website and blog showcasing expertise in cloud computing, edge technologies, IoT, and Kubernetes. Computer science researcher specializing in energy-aware computing, green cloud infrastructure, and sustainable data centers. Explore research insights, technical articles, talks, and innovative projects in distributed systems and energy-efficient orchestration.
-</subtitle><entry><title type="html">Building a Kubernetes Controller with Kubebuilder from Scratch</title><link href="https://menraromial.com/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch/" rel="alternate" type="text/html" title="Building a Kubernetes Controller with Kubebuilder from Scratch" /><published>2025-09-22T10:30:00+00:00</published><updated>2025-09-22T10:30:00+00:00</updated><id>https://menraromial.com/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch</id><content type="html" xml:base="https://menraromial.com/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch/"><![CDATA[<p>In this tutorial, you will learn how to build a custom Kubernetes controller (also known as an Operator) using Kubebuilder. We will create a Custom Resource Definition (CRD) for a simple <code class="language-plaintext highlighter-rouge">Website</code> resource. The goal of our controller will be to watch for these <code class="language-plaintext highlighter-rouge">Website</code> resources and, for each one, create a corresponding Kubernetes <code class="language-plaintext highlighter-rouge">Deployment</code> and <code class="language-plaintext highlighter-rouge">Service</code>.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.com/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-10-23T13:23:16+00:00</updated><id>https://menraromial.com/feed.xml</id><title type="html">blank</title><subtitle>MENRA W. Romial (Menra Wedwang Romial) - Personal website and blog showcasing expertise in cloud computing, edge technologies, IoT, and Kubernetes. Computer science researcher specializing in energy-aware computing, green cloud infrastructure, and sustainable data centers. Explore research insights, technical articles, talks, and innovative projects in distributed systems and energy-efficient orchestration.
+</subtitle><entry><title type="html">A Comprehensive Guide to powercap-utils on Linux</title><link href="https://menraromial.com/blog/2025/comprehensive-guide-powercap-utils-linux/" rel="alternate" type="text/html" title="A Comprehensive Guide to powercap-utils on Linux" /><published>2025-10-23T13:00:00+00:00</published><updated>2025-10-23T13:00:00+00:00</updated><id>https://menraromial.com/blog/2025/comprehensive-guide-powercap-utils-linux</id><content type="html" xml:base="https://menraromial.com/blog/2025/comprehensive-guide-powercap-utils-linux/"><![CDATA[<h3 id="1-introduction-what-is-powercap-utils">1. Introduction: What is <code class="language-plaintext highlighter-rouge">powercap-utils</code>?</h3>
+
+<p><code class="language-plaintext highlighter-rouge">powercap-utils</code> is a suite of user-space command-line tools for Linux that allow you to interact with the kernel’s <strong>Power Capping Framework</strong>. This framework provides a standardized way to monitor and limit the power consumption of hardware devices.</p>
+
+<p>Its most common use is to control <strong>Intel’s Running Average Power Limit (RAPL)</strong> and <strong>AMD’s RAPL-like features</strong> on modern CPUs. These features let you directly set power budgets for the CPU package, its cores, and DRAM.</p>
+
+<h3 id="2-prerequisites-and-installation">2. Prerequisites and Installation</h3>
+
+<h4 id="prerequisites">Prerequisites</h4>
+<ol>
+  <li><strong>A Linux System:</strong> Any modern Linux distribution.</li>
+  <li><strong>Supported Hardware:</strong>
+    <ul>
+      <li>Intel Sandy Bridge and newer processors.</li>
+      <li>Modern AMD Zen-based processors.</li>
+    </ul>
+  </li>
+  <li><strong>Kernel Support:</strong> The <code class="language-plaintext highlighter-rouge">intel_rapl</code> (for Intel) or <code class="language-plaintext highlighter-rouge">amd_energy</code> (for AMD) kernel module must be loaded. This is typically automatic.</li>
+</ol>
+
+<h4 id="installation">Installation</h4>
+<p>The package name is usually <code class="language-plaintext highlighter-rouge">powercap-utils</code>.</p>
+
+<ul>
+  <li><strong>On Debian / Ubuntu:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>powercap-utils
+</code></pre></div>    </div>
+  </li>
+  <li><strong>On Fedora / CentOS / RHEL:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>dnf <span class="nb">install </span>powercap-utils
+</code></pre></div>    </div>
+  </li>
+  <li><strong>On Arch Linux:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>pacman <span class="nt">-S</span> powercap-utils
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="3-core-concepts-of-the-power-capping-framework">3. Core Concepts of the Power Capping Framework</h3>
+
+<p>The framework is organized as a hierarchy, which you navigate using the tools.</p>
+
+<p><img src="/assets/img/posts/rapl_domains.png" alt="RAPL domains diagram showing package, core, uncore, and DRAM" style="max-width:100%;height:auto;display:block;margin:0 auto;" /></p>
+
+<p><em>Figure — RAPL domains: package, core, uncore, and DRAM.</em></p>
+
+<ul>
+  <li><strong>Control Type:</strong> The top-level driver. This will be <code class="language-plaintext highlighter-rouge">intel-rapl</code> on Intel systems.</li>
+  <li><strong>Zone:</strong> A device or a part of a device that can be power-managed. Common zones are:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">package-0</code> (or <code class="language-plaintext highlighter-rouge">0</code>): The entire CPU socket. This is the most important zone.</li>
+      <li><code class="language-plaintext highlighter-rouge">core</code> (sub-zone): A group of CPU cores.</li>
+      <li><code class="language-plaintext highlighter-rouge">uncore</code> (sub-zone): Components like the L3 cache and memory controller.</li>
+      <li><code class="language-plaintext highlighter-rouge">dram</code> (sub-zone): The DRAM interface.</li>
+    </ul>
+  </li>
+  <li><strong>Constraint:</strong> A specific power limiting rule within a zone.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Constraint 0</code>: The <strong><code class="language-plaintext highlighter-rouge">long_term</code></strong> limit. This is the sustained power limit, similar to the CPU’s TDP (Thermal Design Power).</li>
+      <li><code class="language-plaintext highlighter-rouge">Constraint 1</code>: The <strong><code class="language-plaintext highlighter-rouge">short_term</code></strong> limit. This is a higher power limit that the CPU is allowed to use for a short burst of time.</li>
+    </ul>
+  </li>
+  <li><strong>Parameters:</strong> Each constraint has settings you can read and write:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">power_limit_uw</code>: The power limit in <strong>microwatts (µW)</strong>.</li>
+      <li><code class="language-plaintext highlighter-rouge">time_window_us</code>: The time period in <strong>microseconds (µs)</strong> over which the power limit is enforced.</li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p><strong>⚠️ Critical Note on Units:</strong> The tools operate in micro-units. This is the most common source of error.</p>
+  <ul>
+    <li>To set a limit of <strong>50 Watts</strong>, you must use <code class="language-plaintext highlighter-rouge">50000000</code> microwatts.</li>
+    <li>To set a time window of <strong>1 second</strong>, you must use <code class="language-plaintext highlighter-rouge">1000000</code> microseconds.</li>
+  </ul>
+</blockquote>
+
+<hr />
+
+<h3 id="4-the-tools-powercap-info-and-powercap-set">4. The Tools: <code class="language-plaintext highlighter-rouge">powercap-info</code> and <code class="language-plaintext highlighter-rouge">powercap-set</code></h3>
+
+<h4 id="part-1-exploring-with-powercap-info-read-only">Part 1: Exploring with <code class="language-plaintext highlighter-rouge">powercap-info</code> (Read-Only)</h4>
+
+<p><code class="language-plaintext highlighter-rouge">powercap-info</code> is your tool for discovery. It’s safe to use as it only reads information.</p>
+
+<p><strong>1. List all power capping control types and their full hierarchy:</strong>
+This is the most common command to get an overview of your system.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>powercap-info
+</code></pre></div></div>
+<p><em>Output (example from an Intel CPU):</em></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>intel-rapl
+└── package-0
+    ├── core
+    ├── uncore
+    └── dram
+</code></pre></div></div>
+<p>This shows the control type is <code class="language-plaintext highlighter-rouge">intel-rapl</code> and the primary zone is <code class="language-plaintext highlighter-rouge">package-0</code>.</p>
+
+<p><strong>2. Get detailed information for a specific zone:</strong>
+Based on the <code class="language-plaintext highlighter-rouge">--help</code> output, the correct syntax is <code class="language-plaintext highlighter-rouge">powercap-info &lt;control-type-name&gt; -z &lt;zone-id&gt;</code>.</p>
+
+<p>Let’s inspect <code class="language-plaintext highlighter-rouge">package-0</code>, which corresponds to zone <code class="language-plaintext highlighter-rouge">0</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>powercap-info intel-rapl <span class="nt">-z</span> 0
+</code></pre></div></div>
+<p><em>Output (abbreviated):</em></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>package-0:
+  enabled: 1
+  energy_uj: 1234567890
+  constraints:
+    0: long_term
+      power_limit_uw: 65000000
+      time_window_us: 28000000
+      name: long_term
+    1: short_term
+      power_limit_uw: 85000000
+      time_window_us: 2441
+      name: short_term
+</code></pre></div></div>
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li>This package has a <code class="language-plaintext highlighter-rouge">long_term</code> limit (constraint <code class="language-plaintext highlighter-rouge">0</code>) of 65,000,000 µW (<strong>65 W</strong>).</li>
+  <li>It has a <code class="language-plaintext highlighter-rouge">short_term</code> limit (constraint <code class="language-plaintext highlighter-rouge">1</code>) of 85,000,000 µW (<strong>85 W</strong>).</li>
+  <li><code class="language-plaintext highlighter-rouge">energy_uj</code> is the total energy consumed (in microjoules) since boot.</li>
+</ul>
+
+<p><strong>3. Get a single value:</strong>
+The <code class="language-plaintext highlighter-rouge">--help</code> shows many flags to query specific values. For example, to get <em>only</em> the power limit for the <code class="language-plaintext highlighter-rouge">long_term</code> constraint:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Syntax: powercap-info &lt;control-type&gt; -z &lt;zone&gt; -c &lt;constraint&gt; --c-power-limit</span>
+powercap-info intel-rapl <span class="nt">-z</span> 0 <span class="nt">-c</span> 0 <span class="nt">-l</span>
+</code></pre></div></div>
+<p><em>Output:</em></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>65000000
+</code></pre></div></div>
+<p>This is excellent for scripting, as it gives you a clean number to work with.</p>
+
+<h4 id="part-2-setting-limits-with-powercap-set-writemodify">Part 2: Setting Limits with <code class="language-plaintext highlighter-rouge">powercap-set</code> (Write/Modify)</h4>
+
+<p><code class="language-plaintext highlighter-rouge">powercap-set</code> is used to change the power settings. <strong>You will need <code class="language-plaintext highlighter-rouge">sudo</code> for this.</strong></p>
+
+<p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">sudo powercap-set &lt;control-type-name&gt; [options]</code></p>
+
+<p><strong>Key Options:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-z, --zone=&lt;zone-id&gt;</code>: Specifies the zone to modify (e.g., <code class="language-plaintext highlighter-rouge">-z 0</code>).</li>
+  <li><code class="language-plaintext highlighter-rouge">-c, --constraint=&lt;constraint-id&gt;</code>: Specifies the constraint (<code class="language-plaintext highlighter-rouge">0</code> for long_term, <code class="language-plaintext highlighter-rouge">1</code> for short_term).</li>
+  <li><code class="language-plaintext highlighter-rouge">-l, --c-power-limit=&lt;uw&gt;</code>: Sets the power limit in <strong>microwatts</strong>.</li>
+  <li><code class="language-plaintext highlighter-rouge">-s, --c-time-window=&lt;us&gt;</code>: Sets the time window in <strong>microseconds</strong>.</li>
+  <li><code class="language-plaintext highlighter-rouge">-e, --z-enabled=1|0</code>: Enables (<code class="language-plaintext highlighter-rouge">1</code>) or disables (<code class="language-plaintext highlighter-rouge">0</code>) an entire zone.</li>
+</ul>
+
+<p><strong>Example Workflow: Limiting a CPU to 35 Watts</strong></p>
+
+<p>Let’s cap the entire CPU package (<code class="language-plaintext highlighter-rouge">package-0</code>, which is zone <code class="language-plaintext highlighter-rouge">0</code>) to a sustained 35 Watts.</p>
+
+<p><strong>Step 1: Identify the current limits.</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>powercap-info intel-rapl <span class="nt">-z</span> 0 <span class="nt">-c</span> 0
+</code></pre></div></div>
+<p>Let’s assume the current limit is <code class="language-plaintext highlighter-rouge">65000000</code> (65W).</p>
+
+<p><strong>Step 2: Set the new power limit.</strong>
+We want to set a 35W limit for the <code class="language-plaintext highlighter-rouge">long_term</code> constraint (ID <code class="language-plaintext highlighter-rouge">0</code>).
+35 Watts = <code class="language-plaintext highlighter-rouge">35000000</code> microwatts.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>powercap-set intel-rapl <span class="nt">-z</span> 0 <span class="nt">-c</span> 0 <span class="nt">-l</span> 35000000
+</code></pre></div></div>
+
+<p><strong>Step 3: Verify the change.</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>powercap-info intel-rapl <span class="nt">-z</span> 0 <span class="nt">-c</span> 0 <span class="nt">-l</span>
+</code></pre></div></div>
+<p><em>New Output:</em></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>35000000
+</code></pre></div></div>
+<p>Success! The CPU’s sustained power limit is now 35W.</p>
+
+<h3 id="5-practical-example-setting-a-custom-boost-and-sustained-limit">5. Practical Example: Setting a Custom Boost and Sustained Limit</h3>
+
+<p><strong>Goal:</strong> Configure a CPU to run at a sustained 60W but allow it to boost to 90W for up to 15 seconds.</p>
+
+<p><strong>1. Set the <code class="language-plaintext highlighter-rouge">long_term</code> (sustained) limit:</strong></p>
+<ul>
+  <li>Constraint: <code class="language-plaintext highlighter-rouge">0</code></li>
+  <li>Power: 60W = <code class="language-plaintext highlighter-rouge">60000000</code> µW</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>powercap-set intel-rapl <span class="nt">-z</span> 0 <span class="nt">-c</span> 0 <span class="nt">-l</span> 60000000
+</code></pre></div></div>
+<p><em>(The default time window for <code class="language-plaintext highlighter-rouge">long_term</code> is usually fine, so we don’t need to set it.)</em></p>
+
+<p><strong>2. Set the <code class="language-plaintext highlighter-rouge">short_term</code> (boost) limit:</strong></p>
+<ul>
+  <li>Constraint: <code class="language-plaintext highlighter-rouge">1</code></li>
+  <li>Power: 90W = <code class="language-plaintext highlighter-rouge">90000000</code> µW</li>
+  <li>Time Window: 15 seconds = <code class="language-plaintext highlighter-rouge">15000000</code> µs</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>powercap-set intel-rapl <span class="nt">-z</span> 0 <span class="nt">-c</span> 1 <span class="nt">-l</span> 90000000 <span class="nt">-s</span> 15000000
+</code></pre></div></div>
+
+<p><strong>3. Verify all settings:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>powercap-info intel-rapl <span class="nt">-z</span> 0
+</code></pre></div></div>
+<p>Check the output to confirm that both <code class="language-plaintext highlighter-rouge">constraint 0</code> and <code class="language-plaintext highlighter-rouge">constraint 1</code> now reflect your new values. The CPU will now adhere to this custom power profile.</p>
+
+<h3 id="6-scripting-and-automation">6. Scripting and Automation</h3>
+
+<p>Because the tools can output clean numbers, they are perfect for scripts.</p>
+
+<p><strong>Example: A script to toggle a “low power” mode (25W) and a “high power” mode (80W).</strong></p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">power-mode.sh</code></strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="c"># Check for root privileges</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$EUID</span> <span class="nt">-ne</span> 0 <span class="o">]]</span><span class="p">;</span> <span class="k">then
+   </span><span class="nb">echo</span> <span class="s2">"This script must be run as root"</span> 
+   <span class="nb">exit </span>1
+<span class="k">fi
+
+</span><span class="nv">MODE</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">CONTROL_TYPE</span><span class="o">=</span><span class="s2">"intel-rapl"</span>
+<span class="nv">ZONE</span><span class="o">=</span><span class="s2">"0"</span>
+<span class="nv">CONSTRAINT</span><span class="o">=</span><span class="s2">"0"</span> <span class="c"># We will only change the long_term limit</span>
+
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$MODE</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"low"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nv">POWER_LIMIT_UW</span><span class="o">=</span>25000000 <span class="c"># 25 Watts</span>
+    <span class="nb">echo</span> <span class="s2">"Setting low power mode (25W)..."</span>
+<span class="k">elif</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$MODE</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"high"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nv">POWER_LIMIT_UW</span><span class="o">=</span>80000000 <span class="c"># 80 Watts</span>
+    <span class="nb">echo</span> <span class="s2">"Setting high power mode (80W)..."</span>
+<span class="k">else
+    </span><span class="nb">echo</span> <span class="s2">"Usage: sudo </span><span class="nv">$0</span><span class="s2"> &lt;low|high&gt;"</span>
+    <span class="nb">exit </span>1
+<span class="k">fi
+
+</span>powercap-set <span class="s2">"</span><span class="nv">$CONTROL_TYPE</span><span class="s2">"</span> <span class="nt">-z</span> <span class="s2">"</span><span class="nv">$ZONE</span><span class="s2">"</span> <span class="nt">-c</span> <span class="s2">"</span><span class="nv">$CONSTRAINT</span><span class="s2">"</span> <span class="nt">-l</span> <span class="s2">"</span><span class="nv">$POWER_LIMIT_UW</span><span class="s2">"</span>
+
+<span class="c"># Verify</span>
+<span class="nv">CURRENT_LIMIT</span><span class="o">=</span><span class="si">$(</span>powercap-info <span class="s2">"</span><span class="nv">$CONTROL_TYPE</span><span class="s2">"</span> <span class="nt">-z</span> <span class="s2">"</span><span class="nv">$ZONE</span><span class="s2">"</span> <span class="nt">-c</span> <span class="s2">"</span><span class="nv">$CONSTRAINT</span><span class="s2">"</span> <span class="nt">-l</span><span class="si">)</span>
+<span class="nv">CURRENT_LIMIT_W</span><span class="o">=</span><span class="k">$((</span>CURRENT_LIMIT <span class="o">/</span> <span class="m">1000000</span><span class="k">))</span>
+<span class="nb">echo</span> <span class="s2">"Successfully set power limit to </span><span class="k">${</span><span class="nv">CURRENT_LIMIT_W</span><span class="k">}</span><span class="s2">W."</span>
+</code></pre></div></div>
+
+<p><strong>How to use the script:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x power-mode.sh
+
+<span class="c"># Set low power mode</span>
+<span class="nb">sudo</span> ./power-mode.sh low
+
+<span class="c"># Set high power mode</span>
+<span class="nb">sudo</span> ./power-mode.sh high
+</code></pre></div></div>
+
+<h3 id="7-conclusion">7. Conclusion</h3>
+
+<p><code class="language-plaintext highlighter-rouge">powercap-utils</code> gives you precise, low-level control over your CPU’s power consumption. By understanding the hierarchy of control types, zones, and constraints, you can effectively use these tools to manage thermals, optimize performance, and control energy usage.</p>
+
+<p><strong>Key Takeaways:</strong></p>
+<ul>
+  <li>Use <code class="language-plaintext highlighter-rouge">powercap-info</code> to explore the available zones and constraints on your system.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">sudo powercap-set</code> to apply limits, always remembering that units are in <strong>microwatts</strong> and <strong>microseconds</strong>.</li>
+  <li>The primary targets are usually <code class="language-plaintext highlighter-rouge">zone 0</code> (<code class="language-plaintext highlighter-rouge">package-0</code>), with <code class="language-plaintext highlighter-rouge">constraint 0</code> (<code class="language-plaintext highlighter-rouge">long_term</code>) for sustained limits and <code class="language-plaintext highlighter-rouge">constraint 1</code> (<code class="language-plaintext highlighter-rouge">short_term</code>) for boost behavior.</li>
+  <li>The single-value flags (like <code class="language-plaintext highlighter-rouge">-l</code> for <code class="language-plaintext highlighter-rouge">powercap-info</code>) are incredibly useful for scripting and verification.</li>
+</ul>]]></content><author><name></name></author><category term="tutorial" /><category term="linux" /><category term="powercap" /><category term="rapl" /><summary type="html"><![CDATA[powercap-utils is a suite of user-space command-line tools for Linux that allow you to interact with the kernel's Power Capping Framework. This framework provides a standardized way to monitor and limit the power consumption of hardware devices.]]></summary></entry><entry><title type="html">Building a Kubernetes Controller with Kubebuilder from Scratch</title><link href="https://menraromial.com/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch/" rel="alternate" type="text/html" title="Building a Kubernetes Controller with Kubebuilder from Scratch" /><published>2025-09-22T10:30:00+00:00</published><updated>2025-09-22T10:30:00+00:00</updated><id>https://menraromial.com/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch</id><content type="html" xml:base="https://menraromial.com/blog/2025/building-a-kubernetes-controller-with-kubebuilder-from-scratch/"><![CDATA[<p>In this tutorial, you will learn how to build a custom Kubernetes controller (also known as an Operator) using Kubebuilder. We will create a Custom Resource Definition (CRD) for a simple <code class="language-plaintext highlighter-rouge">Website</code> resource. The goal of our controller will be to watch for these <code class="language-plaintext highlighter-rouge">Website</code> resources and, for each one, create a corresponding Kubernetes <code class="language-plaintext highlighter-rouge">Deployment</code> and <code class="language-plaintext highlighter-rouge">Service</code>.</p>
 
 <p>This is a powerful pattern that allows you to extend the Kubernetes API to manage your own applications declaratively.</p>
 
