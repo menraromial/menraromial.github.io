@@ -2,7 +2,7 @@
 layout: book-review # Or 'book-details', 'publication', as per your template
 title: "Kubernetes Masterclass: From Beginner to Expert"
 author: "Cloud Native & DevOps Expert" # Or your actual name/handle
-cover: assets/img/book_covers/k8sm.png # Replace with your cover image path
+cover: assets/img/book_covers/autobg.png # Replace with your cover image path
 # olid: YOUR_OLID_HERE # If registered on Open Library
 # isbn: YOUR_ISBN_HERE # If you have an ISBN
 categories: IT Technology Cloud DevOps Kubernetes Container Orchestration
@@ -11,7 +11,7 @@ download_link: /assets/pdf/cours_sur_kube.pdf # Link to download
 # If it's a purchase link, you can keep 'buy_link'
 # buy_link: YOUR_LINK_TO_A_SALES_PLATFORM
 released: 2025 # Year of "publication" or availability
-status: Test # Or "Available", "Complete Course"
+status: Available # Or "Available", "Complete Course"
 ---
 
 ## Master Kubernetes from A to Z!
