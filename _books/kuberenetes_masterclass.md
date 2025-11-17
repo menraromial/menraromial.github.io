@@ -2,7 +2,7 @@
 layout: book-review # Or 'book-details', 'publication', as per your template
 title: "Kubernetes Masterclass: From Beginner to Expert"
 author: "Cloud Native & DevOps Expert" # Or your actual name/handle
-cover: assets/img/book_covers/autobg.png # Replace with your cover image path
+cover: assets/img/book_covers/k8sm.png # Replace with your cover image path
 # olid: YOUR_OLID_HERE # If registered on Open Library
 # isbn: YOUR_ISBN_HERE # If you have an ISBN
 categories: IT Technology Cloud DevOps Kubernetes Container Orchestration
