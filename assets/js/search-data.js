@@ -133,6 +133,11 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/kuberenetes_masterclass/";
+            },},{id: "books-autobiography",
+          title: 'Autobiography',
+          description: "MENRA W. Romial&#39;s autobiography - A comprehensive account of my personal and professional journey",
+          section: "Books",handler: () => {
+              window.location.href = "/autobiography/";
             },},{id: "books-linux-scheduling-mastery-from-core-concepts-to-real-time-amp-distributed-systems",
           title: 'Linux Scheduling Mastery: From Core Concepts to Real-Time &amp;amp; Distributed Systems',
           description: "",
