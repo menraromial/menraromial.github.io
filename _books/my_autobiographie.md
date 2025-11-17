@@ -2,6 +2,7 @@
 layout: page
 title: Autobiography
 description: MENRA W. Romial's autobiography - A comprehensive account of my personal and professional journey
+cover: assets/img/book_covers/autobg.png
 permalink: /autobiography/
 pdf: /assets/pdf/autobiographie_romial.pdf
 ---
