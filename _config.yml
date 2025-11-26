@@ -121,13 +121,13 @@ disqus_shortname: mwr # put your disqus shortname
 # External sources.
 # If you have blog posts published on medium.com or other external sources,
 # you can display them in your blog by adding a link to the RSS feed.
-external_sources:
-  - name: medium.com
-    rss_url: https://medium.com/@menraromial/feed
-  # - name: Dev Community
-  #   posts:
-  #     - url: https://dev.to/menraromial/kubernetes-tutorial-setting-up-a-k3s-cluster-with-a-hello-world-deployment-1753
-  #       published_date: 2024-07-07
+# external_sources:
+#   - name: medium.com
+#     rss_url: https://medium.com/@menraromial/feed
+#   - name: Dev Community
+#     posts:
+#       - url: https://dev.to/menraromial/kubernetes-tutorial-setting-up-a-k3s-cluster-with-a-hello-world-deployment-1753
+#         published_date: 2024-07-07
 
 # -----------------------------------------------------------------------------
 # Newsletter
