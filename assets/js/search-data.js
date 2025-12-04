@@ -132,6 +132,11 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/scheduling-linux-/";
+            },},{id: "news-volunteering-at-ucc-amp-bdcat-2025-my-experience",
+          title: 'Volunteering at UCC &amp;amp; BDCAT 2025 — My Experience',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/volunteering-ucc-bdcat-nantes-2025/";
             },},{id: "talks-integration-of-the-energy-aspect-in-kubernetes",
           title: 'Integration of the Energy Aspect in Kubernetes',
           description: "",
