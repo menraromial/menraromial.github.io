@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: <a href='#'>IMTA</a>. 4 Rue Alfred Kastler, 44300 Nantes
+subtitle: <a href='https://www.imt-atlantique.fr'>IMTA</a>. 4 Rue Alfred Kastler, 44300 Nantes
 description: MENRA W. Romial (Menra Wedwang Romial) - PhD researcher specializing in cloud computing, edge technologies, IoT, Kubernetes, and energy-aware computing. Expert in green cloud infrastructure and sustainable distributed systems.
 keywords: menra, menraromial, menra romial, romial, menra wedwang, wedwang, MENRA W. Romial, cloud computing, edge technologies, IoT, kubernetes, energy-aware computing, researcher
 
