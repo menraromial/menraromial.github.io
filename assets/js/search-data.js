@@ -37,13 +37,6 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/projects/";
           },
-        },{id: "nav-repositories",
-          title: "repositories",
-          description: "A showcase of my personal and collaborative GitHub repositories, highlighting projects, contributions, and achievements.",
-          section: "Navigation",
-          handler: () => {
-            window.location.href = "/repositories/";
-          },
         },{id: "nav-cv",
           title: "cv",
           description: "This page contains my professional curriculum vitae, showcasing my skills, experiences, and achievements. You can also download a PDF version for offline viewing.",
@@ -127,11 +120,6 @@ ninja.data = [{
           description: "MENRA W. Romial&#39;s autobiography - A comprehensive account of my personal and professional journey",
           section: "Books",handler: () => {
               window.location.href = "/autobiography/";
-            },},{id: "books-linux-scheduling-mastery-from-core-concepts-to-real-time-amp-distributed-systems",
-          title: 'Linux Scheduling Mastery: From Core Concepts to Real-Time &amp;amp; Distributed Systems',
-          description: "",
-          section: "Books",handler: () => {
-              window.location.href = "/books/scheduling-linux-/";
             },},{id: "news-volunteering-at-ucc-amp-bdcat-2025-my-experience",
           title: 'Volunteering at UCC &amp;amp; BDCAT 2025 — My Experience',
           description: "",
