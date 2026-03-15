@@ -18,14 +18,14 @@ ninja.data = [{
           },
         },{id: "nav-talks",
           title: "Talks",
-          description: "",
+          description: "Conference talks and presentations by MENRA W. Romial (Menra Wedwang Romial) on cloud computing, Kubernetes, edge technologies, and energy-aware computing.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/talks/";
           },
         },{id: "nav-blog",
           title: "blog",
-          description: "",
+          description: "Technical blog by MENRA W. Romial (Menra Wedwang Romial) covering cloud computing, Kubernetes, edge technologies, IoT, and energy-aware computing.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/blog/";
@@ -43,6 +43,13 @@ ninja.data = [{
           section: "Navigation",
           handler: () => {
             window.location.href = "/cv/";
+          },
+        },{id: "nav-teaching",
+          title: "teaching",
+          description: "Courses taught by MENRA W. Romial at IMT Atlantique.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/teaching/";
           },
         },{id: "post-a-comprehensive-guide-to-powercap-utils-on-linux",
         
@@ -135,6 +142,16 @@ ninja.data = [{
           description: "",
           section: "Talks",handler: () => {
               window.location.href = "/talks/stack-team-seminar-2025/";
+            },},{id: "teachings-bases-de-donnees-databases",
+          title: 'Bases de Donnees (Databases)',
+          description: "TD/TP on relational databases: DBMS, SQL, normalization theory, conceptual modeling, and programmatic interfaces.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teaching/bases-de-donnees/";
+            },},{id: "teachings-cloud-computing-vmware-vsphere",
+          title: 'Cloud Computing (VMware vSphere)',
+          description: "TP on cloud infrastructure using VMware vSphere/vCenter: virtual machine management, resource allocation, and cloud deployment.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teaching/cloud-vmware/";
             },},{
         id: 'social-email',
         title: 'email',
@@ -148,6 +165,13 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("https://github.com/menraromial", "_blank");
+        },
+      },{
+        id: 'social-linkedin',
+        title: 'LinkedIn',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.linkedin.com/in/menraromial", "_blank");
         },
       },{
         id: 'social-medium',
@@ -169,6 +193,13 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("/feed.xml", "_blank");
+        },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
         },
       },{
         id: 'social-x',
