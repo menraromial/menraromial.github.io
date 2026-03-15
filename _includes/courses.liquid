@@ -1,0 +1,22 @@
+{% if site.teachings.size > 0 %}
+{% assign courses_by_year = site.teachings | sort: 'year' | reverse | group_by: 'year' %}
+{% for year_group in courses_by_year %}
+<h2 class="year">{{ year_group.name }}</h2>
+{% assign sorted_courses = year_group.items | sort: 'term' %}
+{% for course in sorted_courses %}
+<div class="course-item mb-3">
+<h3><a href="{{ course.url | relative_url }}">{{ course.title }}</a></h3>
+<div class="course-meta text-muted">
+{% if course.term %}<span>{{ course.term }}</span>{% endif %}
+{% if course.role %}<span> &middot; {{ course.role }}</span>{% endif %}
+{% if course.institution %}<span> &middot; {{ course.institution }}</span>{% endif %}
+</div>
+{% if course.description %}
+<div class="course-description mt-1">{{ course.description | markdownify }}</div>
+{% endif %}
+</div>
+{% endfor %}
+{% endfor %}
+{% else %}
+<p>No courses available yet.</p>
+{% endif %}

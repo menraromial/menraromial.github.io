@@ -3,14 +3,23 @@
 {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "{{ site.url }}{{ site.baseurl }}/#person",
   "name": "MENRA W. Romial",
+  "givenName": "Wedwang Romial",
+  "familyName": "MENRA",
   "alternateName": [
     "Menra Romial",
     "Menra Wedwang Romial",
     "Romial Menra",
     "Wedwang Romial",
     "MENRA Wedwang",
-    "MWR"
+    "MWR",
+    "menraromial",
+    "Romial MENRA",
+    "Wedwang Romial MENRA",
+    "Romial Wedwang MENRA",
+    "M. W. Romial",
+    "Menra W. Romial"
   ],
   "url": "{{ site.url }}{{ site.baseurl }}",
   "image": "{{ site.url }}{{ site.baseurl }}/assets/img/prof_pic_color.jpg",
@@ -18,18 +27,21 @@
     {% if site.scholar_userid %}"https://scholar.google.com/citations?user={{ site.scholar_userid }}",{% endif %}
     {% if site.github_username %}"https://github.com/{{ site.github_username }}",{% endif %}
     {% if site.linkedin_username %}"https://www.linkedin.com/in/{{ site.linkedin_username }}",{% endif %}
-    {% if site.twitter_username %}"https://twitter.com/{{ site.twitter_username }}",{% endif %}
+    {% if site.x_username %}"https://twitter.com/{{ site.x_username }}",{% endif %}
     {% if site.orcid_id %}"https://orcid.org/{{ site.orcid_id }}",{% endif %}
+    {% if site.medium_username %}"https://medium.com/@{{ site.medium_username }}",{% endif %}
     "{{ site.url }}{{ site.baseurl }}"
   ],
   "jobTitle": "PhD Researcher",
   "worksFor": {
     "@type": "Organization",
-    "name": "IMT Atlantique"
+    "name": "IMT Atlantique",
+    "url": "https://www.imt-atlantique.fr"
   },
   "alumniOf": {
     "@type": "Organization",
-    "name": "IMT Atlantique"
+    "name": "IMT Atlantique",
+    "url": "https://www.imt-atlantique.fr"
   },
   "address": {
     "@type": "PostalAddress",
@@ -48,9 +60,13 @@
     "Green Computing",
     "Distributed Systems",
     "Sustainable Data Centers",
-    "Container Orchestration"
+    "Container Orchestration",
+    "RAPL",
+    "Power Capping"
   ],
-  "description": "PhD researcher specializing in cloud computing, edge technologies, IoT, and energy-aware Kubernetes orchestration. Expert in sustainable distributed systems and green cloud infrastructure."
+  "knowsLanguage": ["French", "English"],
+  "nationality": "Cameroonian",
+  "description": "MENRA W. Romial (Menra Wedwang Romial) - PhD researcher specializing in cloud computing, edge technologies, IoT, and energy-aware Kubernetes orchestration. Expert in sustainable distributed systems and green cloud infrastructure at IMT Atlantique, Nantes."
 }
 </script>
 {% endif %}
