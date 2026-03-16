@@ -22,8 +22,8 @@
       },
       {
         "network": "LinkedIn",
-        "username": "yourprofile",
-        "url": "https://linkedin.com/in/yourprofile"
+        "username": "menraromial",
+        "url": "https://linkedin.com/in/menraromial"
       }
     ]
   },
@@ -73,6 +73,35 @@
     }
   ],
   "volunteer": [],
+  "teaching": [
+    {
+      "course": "Bases de Donnees (Databases)",
+      "role": "Teaching Assistant (TD/TP)",
+      "institution": "IMT Atlantique",
+      "location": "Nantes, France",
+      "startDate": "2025-01-01",
+      "endDate": "2025-06-30",
+      "summary": "Relational databases: DBMS, SQL, normalization theory, conceptual modeling, and programmatic interfaces.",
+      "highlights": [
+        "Supervised practical sessions (TD/TP) for first-year engineering students (FISE 1A, S6)",
+        "Covered DBMS fundamentals, advanced SQL queries, transactions, and security",
+        "Guided students through normalization theory, UML-based schema design, and data persistence in applications"
+      ]
+    },
+    {
+      "course": "Cloud Computing (VMware vSphere)",
+      "role": "Teaching Assistant (TP)",
+      "institution": "IMT Atlantique",
+      "location": "Nantes, France",
+      "startDate": "2025-01-01",
+      "endDate": "2025-06-30",
+      "summary": "Practical lab sessions on cloud infrastructure using VMware vSphere and vCenter.",
+      "highlights": [
+        "Assisted thesis supervisor with cloud computing lab sessions",
+        "Guided students through VMware vSphere/vCenter virtual machine management and resource allocation"
+      ]
+    }
+  ],
   "education": [
     {
       "institution": "ENSPY, Cameroon",
