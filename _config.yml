@@ -230,6 +230,10 @@ defaults:
 
 sass:
   style: compressed
+  quiet_deps: true
+  silence_deprecations:
+    - import
+    - global-builtin
 
 # -----------------------------------------------------------------------------
 # Jekyll Minifier
@@ -447,7 +451,7 @@ third_party_libraries:
   google_fonts:
     url:
       # fonts: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&display=swap"
-      fonts: "https://fonts.googleapis.com/css?family=Fira+Code:300,400,500,700&display=swap"
+      fonts: "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;700&display=swap"
       
   highlightjs:
     integrity:
