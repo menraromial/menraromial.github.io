@@ -158,6 +158,7 @@ Let's implement the logic.
 
 Replace the contents of `internal/controllers/website_controller.go` with the following code. Read the comments carefully to understand each step.
 
+{% raw %}
 ```go
 // internal/controllers/website_controller.go
 
@@ -348,6 +349,7 @@ func (r *WebsiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 ```
+{% endraw %}
 
 **Key changes and explanations:**
 
