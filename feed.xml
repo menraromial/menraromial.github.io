@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.com/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-04-02T13:16:56+00:00</updated><id>https://menraromial.com/feed.xml</id><title type="html">blank</title><subtitle>MENRA W. Romial (Menra Wedwang Romial) - Personal website and blog showcasing expertise in cloud computing, edge technologies, IoT, and Kubernetes. Computer science researcher specializing in energy-aware computing, green cloud infrastructure, and sustainable data centers. Explore research insights, technical articles, talks, and innovative projects in distributed systems and energy-efficient orchestration.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://menraromial.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://menraromial.com/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-04-13T08:57:34+00:00</updated><id>https://menraromial.com/feed.xml</id><title type="html">blank</title><subtitle>MENRA W. Romial (Menra Wedwang Romial) - Personal website and blog showcasing expertise in cloud computing, edge technologies, IoT, and Kubernetes. Computer science researcher specializing in energy-aware computing, green cloud infrastructure, and sustainable data centers. Explore research insights, technical articles, talks, and innovative projects in distributed systems and energy-efficient orchestration.
 </subtitle><entry><title type="html">A Comprehensive Guide to powercap-utils on Linux</title><link href="https://menraromial.com/blog/2025/comprehensive-guide-powercap-utils-linux/" rel="alternate" type="text/html" title="A Comprehensive Guide to powercap-utils on Linux" /><published>2025-10-23T13:00:00+00:00</published><updated>2025-10-23T13:00:00+00:00</updated><id>https://menraromial.com/blog/2025/comprehensive-guide-powercap-utils-linux</id><content type="html" xml:base="https://menraromial.com/blog/2025/comprehensive-guide-powercap-utils-linux/"><![CDATA[<h3 id="1-introduction-what-is-powercap-utils">1. Introduction: What is <code class="language-plaintext highlighter-rouge">powercap-utils</code>?</h3>
 
 <p><code class="language-plaintext highlighter-rouge">powercap-utils</code> is a suite of user-space command-line tools for Linux that allow you to interact with the kernel’s <strong>Power Capping Framework</strong>. This framework provides a standardized way to monitor and limit the power consumption of hardware devices.</p>
@@ -560,7 +560,13 @@ kubebuilder create api <span class="nt">--group</span> website <span class="nt">
 					<span class="n">Labels</span><span class="o">:</span> <span class="n">labels</span><span class="p">,</span>
 				<span class="p">},</span>
 				<span class="n">Spec</span><span class="o">:</span> <span class="n">corev1</span><span class="o">.</span><span class="n">PodSpec</span><span class="p">{</span>
-					<span class="n">Containers</span><span class="o">:</span> <span class="p">[]</span><span class="n">corev1</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span>
+					<span class="n">Containers</span><span class="o">:</span> <span class="p">[]</span><span class="n">corev1</span><span class="o">.</span><span class="n">Container</span><span class="p">{{</span>
+						<span class="n">Image</span><span class="o">:</span> <span class="s">"nginx:1.14.2"</span><span class="p">,</span>
+						<span class="n">Name</span><span class="o">:</span>  <span class="s">"web-server"</span><span class="p">,</span>
+						<span class="n">Ports</span><span class="o">:</span> <span class="p">[]</span><span class="n">corev1</span><span class="o">.</span><span class="n">ContainerPort</span><span class="p">{{</span>
+							<span class="n">ContainerPort</span><span class="o">:</span> <span class="m">80</span><span class="p">,</span>
+							<span class="n">Name</span><span class="o">:</span>          <span class="s">"http"</span><span class="p">,</span>
+						<span class="p">}},</span>
 					<span class="p">}},</span>
 				<span class="p">},</span>
 			<span class="p">},</span>
@@ -583,7 +589,11 @@ kubebuilder create api <span class="nt">--group</span> website <span class="nt">
 		<span class="p">},</span>
 		<span class="n">Spec</span><span class="o">:</span> <span class="n">corev1</span><span class="o">.</span><span class="n">ServiceSpec</span><span class="p">{</span>
 			<span class="n">Selector</span><span class="o">:</span> <span class="n">labels</span><span class="p">,</span>
-			<span class="n">Ports</span><span class="o">:</span> <span class="p">[]</span><span class="n">corev1</span><span class="o">.</span><span class="n">ServicePort</span><span class="p">,</span>
+			<span class="n">Ports</span><span class="o">:</span> <span class="p">[]</span><span class="n">corev1</span><span class="o">.</span><span class="n">ServicePort</span><span class="p">{{</span>
+				<span class="n">Protocol</span><span class="o">:</span>   <span class="n">corev1</span><span class="o">.</span><span class="n">ProtocolTCP</span><span class="p">,</span>
+				<span class="n">Port</span><span class="o">:</span>       <span class="m">80</span><span class="p">,</span>
+				<span class="n">TargetPort</span><span class="o">:</span> <span class="n">intstr</span><span class="o">.</span><span class="n">FromString</span><span class="p">(</span><span class="s">"http"</span><span class="p">),</span>
+			<span class="p">}},</span>
 			<span class="n">Type</span><span class="o">:</span> <span class="n">corev1</span><span class="o">.</span><span class="n">ServiceTypeLoadBalancer</span><span class="p">,</span>
 		<span class="p">},</span>
 	<span class="p">}</span>
