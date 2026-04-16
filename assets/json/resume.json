@@ -102,6 +102,19 @@
       ]
     }
   ],
+  "supervision": [
+    {
+      "name": "Clement Obama",
+      "level": "M2 Research Intern",
+      "institution": "IMT Atlantique",
+      "startDate": "2026-04-01",
+      "endDate": "2026-09-30",
+      "highlights": [
+        "Topic: Reactive control of energy constraints in Kubernetes clusters: multi-lever re-adaptation policy with SLA management",
+        "Status: ongoing"
+      ]
+    }
+  ],
   "education": [
     {
       "institution": "ENSPY, Cameroon",

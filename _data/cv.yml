@@ -110,6 +110,16 @@
       description:
         - Mathematics, Physics and Computer Science
 
+- title: Student Supervision
+  type: time_table
+  contents:
+    - title: Clement Obama
+      institution: IMT Atlantique
+      year: April 2026 - September 2026
+      description:
+        - "M2 Research Intern — en cours de supervision"
+        - "Thème : Contrôle réactif des contraintes énergétiques dans les clusters Kubernetes : politique de réadaptation multi-levier avec gestion des SLA"
+
 - title: Technical Skills
   type: nested_list
   contents:
