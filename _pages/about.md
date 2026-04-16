@@ -29,14 +29,20 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I spend my days trying to convince servers that they can work **without heating up like a toaster**.  
-Between two negotiation sessions with **RAPL**, I'm busy reinventing how **Kubernetes schedules containers** — all with one simple goal:  
-**stopping the algorithm from wasting more energy than a Christmas tree.**
+My job is to convince Kubernetes to care about energy.  
+It doesn’t listen. I insist. We compromise. Eventually, something moves.
 
-🛠️ *Power capping, smart scheduling, sneaky optimizations* —  
-if it can shrink a cluster’s energy bill, I’m on it.
+The question I wake up with every morning: why does running a container have to cost so much electricity?
+Spoiler: it doesn’t have to. That’s the whole point of my PhD at **Inria**.
 
-In short: I make the Cloud consume less **without complaining** —  
-even though, sometimes, **it’s the one complaining**.
+I work on energy-aware scheduling, power capping, and SLA management in cloud clusters.
+Concretely: I poke servers with **Intel RAPL**, run large-scale experiments on **Grid’5000**,
+and write schedulers that treat energy as a first-class constraint, not an afterthought.
+
+The result: clusters that do more with less: less heat, less waste, less electricity bill.  
+Not by sacrificing performance. By being smarter about how resources are used.
+
+Somewhere between a PhD thesis and a power meter, that’s where you’ll find me.  
+If you want to talk cloud, green computing, or Kubernetes internals, I’m always up for it.
 
 
