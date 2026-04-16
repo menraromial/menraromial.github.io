@@ -132,7 +132,10 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/volunteering-ucc-bdcat-nantes-2025/";
-            },},{id: "talks-integration-of-the-energy-aspect-in-kubernetes",
+            },},{id: "news-welcoming-clement-obama-as-a-new-m2-research-intern-april-september-2026-working-on-reactive-control-of-energy-constraints-in-kubernetes-clusters-multi-lever-re-adaptation-policy-with-sla-management",
+          title: 'Welcoming Clement Obama as a new M2 research intern (April–September 2026) working on...',
+          description: "",
+          section: "News",},{id: "talks-integration-of-the-energy-aspect-in-kubernetes",
           title: 'Integration of the Energy Aspect in Kubernetes',
           description: "",
           section: "Talks",handler: () => {
