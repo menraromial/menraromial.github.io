@@ -10,7 +10,7 @@ ninja.data = [{
       window.location.href = "/";
     },
   },{id: "nav-bookshelf",
-          title: "bookshelf",
+          title: "Bookshelf",
           description: "",
           section: "Navigation",
           handler: () => {
@@ -24,28 +24,28 @@ ninja.data = [{
             window.location.href = "/talks/";
           },
         },{id: "nav-blog",
-          title: "blog",
+          title: "Blog",
           description: "Technical blog by MENRA W. Romial (Menra Wedwang Romial) covering cloud computing, Kubernetes, edge technologies, IoT, and energy-aware computing.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/blog/";
           },
         },{id: "nav-projects",
-          title: "projects",
+          title: "Projects",
           description: "A growing collection of my cool projects.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/projects/";
           },
-        },{id: "nav-cv",
-          title: "cv",
+        },{id: "nav-resume",
+          title: "Resume",
           description: "This page contains my professional curriculum vitae, showcasing my skills, experiences, and achievements. You can also download a PDF version for offline viewing.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/cv/";
           },
         },{id: "nav-teaching",
-          title: "teaching",
+          title: "Teaching",
           description: "Courses taught by MENRA W. Romial at IMT Atlantique.",
           section: "Navigation",
           handler: () => {
@@ -196,13 +196,6 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("/feed.xml", "_blank");
-        },
-      },{
-        id: 'social-scholar',
-        title: 'Google Scholar',
-        section: 'Socials',
-        handler: () => {
-          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
         },
       },{
         id: 'social-x',
