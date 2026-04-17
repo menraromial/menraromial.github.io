@@ -1,7 +1,7 @@
 ---
 layout: default
 permalink: /blog/
-title: blog
+title: Blog
 description: Technical blog by MENRA W. Romial (Menra Wedwang Romial) covering cloud computing, Kubernetes, edge technologies, IoT, and energy-aware computing.
 keywords: menra blog, romial blog, menra wedwang blog, menraromial, cloud computing blog, kubernetes tutorials, edge computing, IoT
 nav: true
