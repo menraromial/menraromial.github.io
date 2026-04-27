@@ -32,7 +32,7 @@ ninja.data = [{
           },
         },{id: "nav-projects",
           title: "Projects",
-          description: "A growing collection of my cool projects.",
+          description: "Open artefacts, running experiments, and side-quests.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/projects/";
@@ -50,6 +50,13 @@ ninja.data = [{
           section: "Navigation",
           handler: () => {
             window.location.href = "/teaching/";
+          },
+        },{id: "nav-gallery",
+          title: "Gallery",
+          description: "Conferences, fieldwork, people, and places.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/gallery/";
           },
         },{id: "post-a-comprehensive-guide-to-powercap-utils-on-linux",
         
@@ -119,12 +126,12 @@ ninja.data = [{
         },
       },{id: "books-kubernetes-masterclass-from-beginner-to-expert",
           title: 'Kubernetes Masterclass: From Beginner to Expert',
-          description: "",
+          description: "A comprehensive guide to Kubernetes from first principles to production-grade deployments. Designed for developers, system administrators, and DevOps engineers who want to move beyond the basics and understand how container orchestration actually works at scale.",
           section: "Books",handler: () => {
-              window.location.href = "/books/kuberenetes_masterclass/";
+              window.location.href = "/books/kubernetes-masterclass/";
             },},{id: "books-autobiography",
           title: 'Autobiography',
-          description: "MENRA W. Romial&#39;s autobiography - A comprehensive account of my personal and professional journey",
+          description: "A personal account of my journey from my early years to my current work in cloud computing and sustainable technology. Covers formative experiences, academic milestones, research into energy-aware computing, and reflections on what it means to build systems that last.",
           section: "Books",handler: () => {
               window.location.href = "/autobiography/";
             },},{id: "news-volunteering-at-ucc-amp-bdcat-2025-my-experience",
