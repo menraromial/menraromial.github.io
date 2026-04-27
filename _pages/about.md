@@ -15,6 +15,14 @@ profile:
   #   <p>4 Rue Alfred Kastler </p>
   #   <p>44300 Nantes</p>
 
+abstract: >
+  The author grew up in Pont Mayo Sina, a village in northern Cameroon where there was no electricity
+  and no computer until he arrived at university. He is now a PhD candidate at <a href="https://www.inria.fr/fr/centre-inria-universite-rennes">Inria Rennes</a>, working
+  on power management in cloud infrastructure. Engineering graduate of ENSPY. Believer in God, in
+  discipline, and in the power of what you say about yourself. He finds the irony of his trajectory
+  more poetic than anything else.
+abstract_keywords: "Kubernetes · Energy Proportionality · RAPL · Volta · Day-Ahead Markets · Green Cloud"
+
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 
@@ -29,20 +37,24 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-My job is to convince Kubernetes to care about energy.  
-It doesn’t listen. I insist. We compromise. Eventually, something moves.
+I grew up in Pont Mayo Sina, a village in northern Cameroon with no electricity and no computer.
+The first time I ever touched one was the day I walked through the doors of **ENSPY**
+(École Nationale Supérieure Polytechnique de Yaoundé). I never looked back.
 
-The question I wake up with every morning: why does running a container have to cost so much electricity?
-Spoiler: it doesn’t have to. That’s the whole point of my PhD at **Inria**.
+Today I am a PhD candidate at **Inria** in Nantes. My thesis:
+*"Contribution to Power Management in Cloud Infrastructures: from Hardware Limitation to Adaptive Orchestration."*
+From a village with no grid to research on power management at cloud scale. I did not plan the
+symmetry, but I find it fitting.
 
-I work on energy-aware scheduling, power capping, and SLA management in cloud clusters.
-Concretely: I poke servers with **Intel RAPL**, run large-scale experiments on **Grid’5000**,
-and write schedulers that treat energy as a first-class constraint, not an afterthought.
+I believe in God. I love nature because I grew up completely inside it. I believe there are no
+idiots, only people who have not found their right frame yet. I believe the words you speak about
+yourself build the life you live: *from the abundance of the heart, the mouth speaks.* Clear vision,
+faith, and disciplined work is not a formula. It is an operating system.
 
-The result: clusters that do more with less: less heat, less waste, less electricity bill.  
-Not by sacrificing performance. By being smarter about how resources are used.
+See yourself big. Be the prophet of your own life.
 
-Somewhere between a PhD thesis and a power meter, that’s where you’ll find me.  
-If you want to talk cloud, green computing, or Kubernetes internals, I’m always up for it.
+---
 
+If you want to talk cloud computing, energy-aware systems, or how someone from a village with no
+electricity ended up caring about megawatts in data centres: I am always up for it.
 

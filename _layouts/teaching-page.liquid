@@ -1,0 +1,70 @@
+---
+layout: default
+---
+<section class="doc-head">
+  <div class="eyebrow">§ 6 &middot; Teaching Record</div>
+  <h1>Teaching</h1>
+  <div class="authors">
+    {% assign teaching_count = site.teachings | size %}
+    {{ teaching_count }} course{% if teaching_count != 1 %}s{% endif %}
+    &middot;
+    {% assign supervision_count = site.data.resume.supervision | size %}
+    {{ supervision_count }} supervised student{% if supervision_count != 1 %}s{% endif %}
+  </div>
+  <div class="date-line">IMT Atlantique &middot; 2024 &mdash; present</div>
+</section>
+
+<section class="abstract">
+  <div class="label">Pedagogy</div>
+  <p>
+    I teach because I learn twice when I do. My courses emphasise hands-on experimentation —
+    students should touch the kernel, watch the counter move, and be productively surprised.
+    Labs and notes are open-source; reuse is encouraged; corrections are welcomed by email.
+  </p>
+</section>
+
+<div class="section-label">Current courses</div>
+
+{% assign sorted_teachings = site.teachings | sort: 'title' %}
+{% for course in sorted_teachings %}
+<div class="course">
+  <div class="code">{{ course.course_id | upcase | default: 'UE' }}</div>
+  <div>
+    <h3>{{ course.title }}</h3>
+    <div class="meta">{{ course.institution }} &middot; {{ course.term }} {{ course.year }}</div>
+    <p>{{ course.description }}</p>
+  </div>
+  <div class="right">
+    {% if course.hours %}
+    <div class="hours">{{ course.hours }}<small>hours {{ course.session_type | default: 'TD/TP' }}</small></div>
+    {% endif %}
+    <b>Role</b>{{ course.role }}<br/>
+    {% if course.students %}<b>Students</b>{{ course.students }} enrolled{% endif %}
+  </div>
+</div>
+{% endfor %}
+
+{% if site.data.resume.supervision and site.data.resume.supervision.size > 0 %}
+<div class="section-label">Student supervision</div>
+<table class="index">
+  <tbody>
+    {% for student in site.data.resume.supervision %}
+    <tr>
+      <td class="date">
+        {{ student.startDate | date: "%b %Y" }} &ndash; {{ student.endDate | date: "%b %Y" }}
+      </td>
+      <td>
+        <b>{{ student.name }}</b> &middot; {{ student.level }}
+        {% if student.highlights.size > 0 %}
+        &mdash; <i>{{ student.highlights[0] | remove: "Topic: " }}</i>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+
+
+{{ content }}

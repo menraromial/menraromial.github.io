@@ -1,0 +1,64 @@
+---
+layout: default
+---
+<section class="doc-head">
+  <div class="eyebrow">§ 3 &middot; Laboratory Projects</div>
+  <h1>Projects</h1>
+  <div class="authors">Open artefacts, running experiments, and side-quests</div>
+  <div class="date-line">
+    {% assign total = site.data.projects.active | size %}
+    {{ total }} active project{% if total != 1 %}s{% endif %}
+    &middot; everything listed here is reproducible, or a bug report away from being so
+  </div>
+</section>
+
+{% assign research = site.data.projects.active | where: "category", "research" %}
+{% assign community = site.data.projects.active | where: "category", "community" %}
+
+{% if research.size > 0 %}
+<div class="section-label">Research &middot; Active</div>
+<div class="proj-grid">
+  {% for proj in research %}
+  <div class="proj" data-no="§ {{ proj.id }}">
+    <div class="proj-status">{{ proj.status }}</div>
+    <h3>{{ proj.name }}</h3>
+    <p>{{ proj.description }}</p>
+    {% if proj.tags %}
+    <div class="tags">
+      {% for tag in proj.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    {% if proj.links %}
+    <div class="proj-links">
+      {% for link in proj.links %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if community.size > 0 %}
+<div class="section-label">Community &middot; Active</div>
+<div class="proj-grid">
+  {% for proj in community %}
+  <div class="proj" data-no="§ {{ proj.id }}">
+    <div class="proj-status">{{ proj.status }}</div>
+    <h3>{{ proj.name }}</h3>
+    <p>{{ proj.description }}</p>
+    {% if proj.tags %}
+    <div class="tags">
+      {% for tag in proj.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    {% if proj.links %}
+    <div class="proj-links">
+      {% for link in proj.links %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{{ content }}

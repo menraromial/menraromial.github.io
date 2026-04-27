@@ -2,30 +2,24 @@
 layout: default
 ---
 {% if page._styles %}
-  <!-- Page/Post style -->
-  <style type="text/css">
-    {{ page._styles }}
-  </style>
+<style type="text/css">{{ page._styles }}</style>
 {% endif %}
 
-<div class="post">
-  <header class="post-header">
-    <h1 class="post-title">{{ page.title }}</h1>
-    <p class="post-description">{{ page.description }}</p>
-  </header>
+<section class="doc-head">
+  <div class="eyebrow">{{ page.nav_order | default: '§' }} &middot; {{ page.title | upcase }}</div>
+  <h1>{{ page.title | capitalize }}</h1>
+  {% if page.description %}<div class="date-line">{{ page.description }}</div>{% endif %}
+</section>
 
-  <article>
-    {{ content }}
-  </article>
+<article class="prose">
+  {{ content }}
+</article>
 
-  {% if page.related_publications %}
-    <h2>References</h2>
-    <div class="publications">
-      {% bibliography --cited_in_order %}
-    </div>
-  {% endif %}
+{% if page.related_publications %}
+<div class="section-label">References</div>
+<div>{% bibliography --cited_in_order %}</div>
+{% endif %}
 
-  {% if site.giscus and page.giscus_comments %}
-    {% include giscus.liquid %}
-  {% endif %}
-</div>
+{% if site.giscus and page.giscus_comments %}
+  {% include giscus.liquid %}
+{% endif %}

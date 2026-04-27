@@ -1,0 +1,91 @@
+active:
+  - id: "3.1"
+    name: "Powercap"
+    status: "Ongoing"
+    category: research
+    description: >
+      A power-capping tool leveraging Intel RAPL, designed to plug into Kubernetes as a
+      DaemonSet. Enforces per-node power budgets at the package and DRAM domain level,
+      with audit logs and dry-run mode for cautious operators.
+    tags: [Go, Kubernetes, RAPL, Linux]
+    links:
+      - label: github
+        url: "#"
+
+  - id: "3.2"
+    name: "Wattson"
+    status: "Ongoing"
+    category: research
+    description: >
+      A Kubernetes operator for automatic server power profiling. Wattson observes
+      workload behaviour and builds per-node energy models that feed into scheduling
+      and capping decisions — no manual characterisation required.
+    tags: [Go, Kubernetes, Operator, Profiling]
+    links:
+      - label: github
+        url: "#"
+
+  - id: "3.3"
+    name: "Volta"
+    status: "Ongoing"
+    category: research
+    description: >
+      A custom Kubernetes scheduler plugin that treats energy as a first-class
+      constraint alongside CPU and memory. Volta routes pods to nodes where the
+      marginal energy cost is lowest without violating SLAs.
+    tags: [Go, Kubernetes, Scheduler, Energy]
+    links:
+      - label: github
+        url: "#"
+      - label: paper
+        url: "/publications/"
+
+  - id: "3.4"
+    name: "Thèse"
+    status: "Ongoing &middot; 2024–2027"
+    category: research
+    description: >
+      Contribution à la gestion de la puissance dans les infrastructures cloud :
+      de la limitation matérielle à l'orchestration adaptative. PhD research at Inria Nantes.
+    tags: [Research, Kubernetes, RAPL, "Grid'5000", Power Management, Cloud]
+    links:
+      - label: publications
+        url: "/publications/"
+
+  - id: "3.5"
+    name: "DIBAC"
+    status: "Ongoing"
+    category: community
+    description: >
+      Dépôt Institutionnel et Bibliothèque Académique du Cameroun. An open-access
+      repository for Cameroonian academic and institutional publications — making
+      local research visible and citable internationally.
+    tags: [Open Access, Web, Cameroon, Academic]
+    links:
+      - label: website
+        url: "#"
+
+  - id: "3.6"
+    name: "C5IN"
+    status: "Ongoing"
+    category: community
+    description: >
+      Le Cameroon Cloud-Edge-IoT Innovation Network — the first research and innovation
+      network in Cameroon dedicated to emerging technologies in cloud, edge computing,
+      and IoT. Building bridges between academia, industry, and government.
+    tags: [Cloud, Edge, IoT, Cameroon, Research Network]
+    links:
+      - label: website
+        url: "#"
+
+  - id: "3.7"
+    name: "TupuriHub"
+    status: "Ongoing"
+    category: community
+    description: >
+      A digital hub dedicated to Toupouri culture, language, and heritage. Aggregates
+      resources, events, and community voices for the Toupouri people across borders.
+    tags: [Culture, Community, Toupouri, Heritage]
+    links:
+      - label: website
+        url: "#"
