@@ -1,0 +1,82 @@
+---
+layout: default
+---
+<section class="doc-head">
+  <div class="eyebrow">§ 0.5 &middot; Authored Work</div>
+  <h1>{{ page.title }}</h1>
+  {% if page.author %}<div class="authors">{{ page.author }}</div>{% endif %}
+  <div class="date-line">
+    {% if page.released %}{{ page.released }}{% endif %}
+    {% if page.status %} &middot; {{ page.status }}{% endif %}
+  </div>
+</section>
+
+{% if page.description %}
+<section class="abstract" style="max-width:720px">
+  <div class="label">Synopsis</div>
+  <p>{{ page.description }}</p>
+</section>
+{% endif %}
+
+<div class="article-grid">
+
+  <!-- Left: cover + auto-generated TOC -->
+  <aside class="toc" id="toc-aside">
+    {% if page.cover %}
+    <div class="toc-cover">
+      <div class="book c-ink" style="margin:0;gap:0;">
+        <div class="cover" style="aspect-ratio:2/3;">
+          <img src="{{ page.cover | relative_url }}" alt="{{ page.title }}" />
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="toc-label">Contents</div>
+    <nav id="toc-nav"></nav>
+  </aside>
+
+  <!-- Center: body prose -->
+  <article class="prose has-sidenotes" id="article-prose">
+    {{ content }}
+  </article>
+
+  <!-- Right: margin metadata -->
+  <aside class="margin">
+    {% if page.revisions %}
+    <p>
+      <b>Revision history.</b><br/>
+      {% for rev in page.revisions %}{{ rev }}{% unless forloop.last %}<br/>{% endunless %}{% endfor %}
+    </p>
+    <hr/>
+    {% endif %}
+    {% if page.prerequisites %}
+    <p><b>Prerequisites.</b> {{ page.prerequisites }}</p>
+    <hr/>
+    {% endif %}
+    <p>
+      <b>Corrections.</b>
+      Found an error? Email:
+      <a href="mailto:itsme@menraromial.com" class="mono" style="font-style:normal;font-size:11px">itsme@menraromial.com</a>.
+    </p>
+    <hr/>
+    {% if page.download_link %}
+    <p>
+      <b>Download.</b><br/>
+      <a href="{{ page.download_link | relative_url }}" class="mono" style="font-style:normal;font-size:11px">Full PDF &rarr;</a>
+    </p>
+    <hr/>
+    {% endif %}
+    {% if page.pdf %}
+    <p>
+      <b>Read.</b><br/>
+      <a href="{{ page.pdf | relative_url }}" class="mono" style="font-style:normal;font-size:11px">Full PDF &rarr;</a>
+    </p>
+    <hr/>
+    {% endif %}
+    <p>
+      <b>Cite as.</b><br/>
+      <span class="mono" style="font-style:normal;font-size:10.5px">{{ page.author }} ({{ page.released }}). <i>{{ page.title }}</i>. menraromial.com.</span>
+    </p>
+  </aside>
+
+</div>

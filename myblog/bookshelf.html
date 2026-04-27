@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bookshelf — Menra W. Romial</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>
+    .epigraph {
+      max-width: 560px;
+      margin: 8px auto 36px;
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--ink-2);
+      font-size: 17px;
+      line-height: 1.55;
+      padding: 18px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .epigraph .ref {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-style: normal;
+      margin-top: 10px;
+    }
+
+    .shelf {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px 24px;
+      margin: 14px 0 8px;
+    }
+    .book {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-decoration: none;
+      border: none;
+      color: inherit;
+    }
+    .book:hover { background: transparent; }
+    .book .cover {
+      aspect-ratio: 2 / 3;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        inset 6px 0 0 rgba(0,0,0,0.03),
+        inset 7px 0 0 rgba(0,0,0,0.08),
+        4px 4px 0 var(--rule-2);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px 14px 16px 22px;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .book:hover .cover {
+      transform: translate(-1px, -2px);
+      box-shadow:
+        inset 6px 0 0 rgba(0,0,0,0.03),
+        inset 7px 0 0 rgba(0,0,0,0.08),
+        6px 6px 0 var(--rule);
+    }
+    .book .cover .t {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1.18;
+      color: var(--ink);
+      letter-spacing: -0.005em;
+      text-wrap: balance;
+    }
+    .book .cover .a {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--ink-2);
+    }
+    .book .cover .pub {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    /* Cover flavours */
+    .book.c-ink .cover    { background: #14120f; }
+    .book.c-ink .cover .t { color: #f0e9d9; }
+    .book.c-ink .cover .a { color: #b4a992; }
+    .book.c-ink .cover .pub { color: #7a7060; }
+    .book.c-green .cover    { background: oklch(0.42 0.08 150); }
+    .book.c-green .cover .t { color: #f4efe1; }
+    .book.c-green .cover .a { color: #d7cfbb; }
+    .book.c-green .cover .pub { color: #a6a08f; }
+    .book.c-rust .cover    { background: oklch(0.52 0.14 35); }
+    .book.c-rust .cover .t { color: #faf4e6; }
+    .book.c-rust .cover .a { color: #e2d6bf; }
+    .book.c-rust .cover .pub { color: #bfaf93; }
+    .book.c-blue .cover    { background: oklch(0.35 0.07 240); }
+    .book.c-blue .cover .t { color: #eef1fa; }
+    .book.c-blue .cover .a { color: #b9beca; }
+    .book.c-blue .cover .pub { color: #8a8fa0; }
+    .book.c-cream .cover  { background: #efe7d2; }
+    .book.c-cream .cover .t { color: #1a1613; }
+    .book.c-cream .cover .a { color: #524637; }
+
+    .book .meta {
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--ink-2);
+      line-height: 1.4;
+    }
+    .book .meta .bt {
+      font-family: var(--display);
+      font-size: 15px;
+      color: var(--ink);
+      font-weight: 600;
+      display: block;
+      text-wrap: balance;
+    }
+    .book .meta .ba { font-style: italic; color: var(--ink-3); font-size: 13px; }
+    .book .rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .stars { letter-spacing: 1px; color: var(--accent); font-size: 13px; }
+    .stars .o { color: var(--rule); }
+
+    .reading-now {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 28px;
+      padding: 20px 22px;
+      border: 1px solid var(--ink);
+      background: var(--paper-2);
+      margin: 10px 0 36px;
+      box-shadow: 4px 4px 0 var(--rule);
+    }
+    .reading-now .cover { aspect-ratio: 2/3; }
+    .reading-now h3 { margin: 0 0 4px; font-family: var(--display); font-size: 22px; line-height: 1.2; }
+    .reading-now .ba { font-style: italic; color: var(--ink-2); margin-bottom: 8px; }
+    .reading-now p { font-size: 14.5px; line-height: 1.55; color: var(--ink-2); margin: 0 0 10px; max-width: 60ch; }
+    .reading-now .progress {
+      height: 4px;
+      background: var(--rule);
+      position: relative;
+      margin: 10px 0 6px;
+    }
+    .reading-now .progress::after {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 62%; background: var(--accent);
+    }
+    .reading-now .progress-label {
+      font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-3);
+      display: flex; justify-content: space-between;
+    }
+  </style>
+</head>
+<body data-page="bookshelf">
+  <div class="page">
+    <div data-mount="masthead"></div>
+
+    <section class="doc-head">
+      <div class="eyebrow">§ 0.5 &middot; Bibliotheca Personalis</div>
+      <h1>Bookshelf</h1>
+      <div class="authors">Books finished, books begun, books abandoned &mdash; annotated</div>
+      <div class="date-line">Thirty-eight volumes catalogued &middot; updated 12 Apr. MMXXVI</div>
+    </section>
+
+    <div class="epigraph">
+      &ldquo;Of making many books there is no end; and much study is a weariness of the flesh.&rdquo;
+      <span class="ref">— Ecclesiastes 12:12</span>
+    </div>
+
+    <!-- Currently reading -->
+    <div class="section-label">Currently on the desk</div>
+    <div class="reading-now">
+      <div class="book c-ink" style="margin:0;">
+        <div class="cover">
+          <div class="pub">Pragmatic &middot; 2024</div>
+          <div>
+            <div class="t">Systems Performance</div>
+            <div class="a">Brendan Gregg</div>
+          </div>
+          <div class="pub">2ᴇ · 2024</div>
+        </div>
+      </div>
+      <div>
+        <h3>Systems Performance, 2nd edition</h3>
+        <div class="ba">Brendan Gregg &middot; Pearson, 2020</div>
+        <p>
+          A re-read, slowly. Chapter 6 (CPUs) every time I forget what <span class="mono">perf</span> actually measures,
+          which is more often than I would like to admit. Gregg&rsquo;s flame graphs have ruined me for
+          any other profiling visualisation.
+        </p>
+        <div class="progress"></div>
+        <div class="progress-label">
+          <span>p. 438 / 735</span>
+          <span>started Mar. MMXXVI</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2026 -->
+    <div class="section-label">MMXXVI &middot; Year in progress</div>
+    <div class="shelf">
+
+      <a class="book c-green" href="#">
+        <div class="cover">
+          <div class="pub">O&rsquo;Reilly &middot; 2023</div>
+          <div>
+            <div class="t">Building Green Software</div>
+            <div class="a">Hsu · Beswick · McCormick</div>
+          </div>
+          <div class="pub">2023</div>
+        </div>
+        <div class="meta">
+          <span class="bt">Building Green Software</span>
+          <span class="ba">A. Hsu, S. Beswick, A. McCormick</span>
+        </div>
+        <div class="rating"><span class="stars">★★★★<span class="o">★</span></span> Mar 2026</div>
+      </a>
+
+      <a class="book c-cream" href="#">
+        <div class="cover">
+          <div class="pub">Basic Books &middot; 1999</div>
+          <div>
+            <div class="t">The Design of Everyday Things</div>
+            <div class="a">Don Norman</div>
+          </div>
+          <div class="pub">Rev. ed.</div>
+        </div>
+        <div class="meta">
+          <span class="bt">The Design of Everyday Things</span>
+          <span class="ba">Don Norman</span>
+        </div>
+        <div class="rating"><span class="stars">★★★★★</span> Feb 2026</div>
+      </a>
+
+      <a class="book c-blue" href="#">
+        <div class="cover">
+          <div class="pub">MIT Press &middot; 2019</div>
+          <div>
+            <div class="t">Reinforcement Learning</div>
+            <div class="a">Sutton &amp; Barto</div>
+          </div>
+          <div class="pub">2ᴇ</div>
+        </div>
+        <div class="meta">
+          <span class="bt">Reinforcement Learning: An Introduction</span>
+          <span class="ba">R. Sutton, A. Barto</span>
+        </div>
+        <div class="rating"><span class="stars">★★★<span class="o">★★</span></span> Jan 2026 &middot; partial</div>
+      </a>
+
+      <a class="book c-rust" href="book.html">
+        <div class="cover">
+          <div class="pub">Hatchet Books &middot; 1978</div>
+          <div>
+            <div class="t">Gödel, Escher, Bach</div>
+            <div class="a">Douglas Hofstadter</div>
+          </div>
+          <div class="pub">Annotated ed.</div>
+        </div>
+        <div class="meta">
+          <span class="bt">Gödel, Escher, Bach: an Eternal Golden Braid</span>
+          <span class="ba">Douglas Hofstadter</span>
+        </div>
+        <div class="rating"><span class="stars">★★★★★</span> Jan 2026</div>
+      </a>
+
+    </div>
+
+    <!-- 2025 -->
+    <div class="section-label">MMXXV</div>
+    <div class="shelf">
+      <a class="book c-ink" href="#">
+        <div class="cover">
+          <div class="pub">Addison-Wesley &middot; 2017</div>
+          <div><div class="t">Site Reliability Engineering</div><div class="a">Beyer, Jones, Petoff, Murphy</div></div>
+          <div class="pub">Google · 2017</div>
+        </div>
+        <div class="meta"><span class="bt">Site Reliability Engineering</span><span class="ba">B. Beyer et al.</span></div>
+        <div class="rating"><span class="stars">★★★★<span class="o">★</span></span> Nov 2025</div>
+      </a>
+      <a class="book c-green" href="#">
+        <div class="cover">
+          <div class="pub">O&rsquo;Reilly &middot; 2019</div>
+          <div><div class="t">Kubernetes Up &amp; Running</div><div class="a">Hightower · Burns · Beda</div></div>
+          <div class="pub">2ᴇ</div>
+        </div>
+        <div class="meta"><span class="bt">Kubernetes Up &amp; Running</span><span class="ba">K. Hightower, B. Burns, J. Beda</span></div>
+        <div class="rating"><span class="stars">★★★★<span class="o">★</span></span> Sep 2025</div>
+      </a>
+      <a class="book c-cream" href="#">
+        <div class="cover">
+          <div class="pub">Penguin &middot; 2011</div>
+          <div><div class="t">Thinking, Fast and Slow</div><div class="a">Daniel Kahneman</div></div>
+          <div class="pub">FSG · 2011</div>
+        </div>
+        <div class="meta"><span class="bt">Thinking, Fast and Slow</span><span class="ba">Daniel Kahneman</span></div>
+        <div class="rating"><span class="stars">★★★★<span class="o">★</span></span> Jul 2025</div>
+      </a>
+      <a class="book c-blue" href="#">
+        <div class="cover">
+          <div class="pub">Houghton Mifflin</div>
+          <div><div class="t">The Soul of a New Machine</div><div class="a">Tracy Kidder</div></div>
+          <div class="pub">1981</div>
+        </div>
+        <div class="meta"><span class="bt">The Soul of a New Machine</span><span class="ba">Tracy Kidder</span></div>
+        <div class="rating"><span class="stars">★★★★★</span> May 2025</div>
+      </a>
+      <a class="book c-rust" href="#">
+        <div class="cover">
+          <div class="pub">Morgan Kaufmann</div>
+          <div><div class="t">Designing Data-Intensive Applications</div><div class="a">Martin Kleppmann</div></div>
+          <div class="pub">2017</div>
+        </div>
+        <div class="meta"><span class="bt">Designing Data-Intensive Applications</span><span class="ba">Martin Kleppmann</span></div>
+        <div class="rating"><span class="stars">★★★★★</span> Apr 2025</div>
+      </a>
+      <a class="book c-ink" href="#">
+        <div class="cover">
+          <div class="pub">Gallimard &middot; 1942</div>
+          <div><div class="t">Le Mythe de Sisyphe</div><div class="a">Albert Camus</div></div>
+          <div class="pub">Coll. Folio</div>
+        </div>
+        <div class="meta"><span class="bt">Le Mythe de Sisyphe</span><span class="ba">Albert Camus</span></div>
+        <div class="rating"><span class="stars">★★★★<span class="o">★</span></span> Feb 2025</div>
+      </a>
+      <a class="book c-green" href="#">
+        <div class="cover">
+          <div class="pub">No Starch &middot; 2021</div>
+          <div><div class="t">Linux Kernel Programming</div><div class="a">Kaiwan N. Billimoria</div></div>
+          <div class="pub">2021</div>
+        </div>
+        <div class="meta"><span class="bt">Linux Kernel Programming</span><span class="ba">Kaiwan N. Billimoria</span></div>
+        <div class="rating"><span class="stars">★★★<span class="o">★★</span></span> Jan 2025 &middot; skim</div>
+      </a>
+      <a class="book c-blue" href="#">
+        <div class="cover">
+          <div class="pub">Ginkgo Press</div>
+          <div><div class="t">The Pragmatic Programmer</div><div class="a">Hunt &amp; Thomas</div></div>
+          <div class="pub">20ᵗʰ anniv.</div>
+        </div>
+        <div class="meta"><span class="bt">The Pragmatic Programmer (20th anniv.)</span><span class="ba">Andrew Hunt, David Thomas</span></div>
+        <div class="rating"><span class="stars">★★★★<span class="o">★</span></span> Jan 2025</div>
+      </a>
+    </div>
+
+    <!-- 2024 -->
+    <div class="section-label">MMXXIV</div>
+    <div class="shelf">
+      <a class="book c-rust" href="#">
+        <div class="cover">
+          <div class="pub">O&rsquo;Reilly &middot; 2020</div>
+          <div><div class="t">BPF Performance Tools</div><div class="a">Brendan Gregg</div></div>
+          <div class="pub">2020</div>
+        </div>
+        <div class="meta"><span class="bt">BPF Performance Tools</span><span class="ba">Brendan Gregg</span></div>
+        <div class="rating"><span class="stars">★★★★★</span> Dec 2024</div>
+      </a>
+      <a class="book c-cream" href="#">
+        <div class="cover">
+          <div class="pub">Harper &middot; 1974</div>
+          <div><div class="t">Zen and the Art of Motorcycle Maintenance</div><div class="a">R. M. Pirsig</div></div>
+          <div class="pub">1974</div>
+        </div>
+        <div class="meta"><span class="bt">Zen and the Art of Motorcycle Maintenance</span><span class="ba">Robert M. Pirsig</span></div>
+        <div class="rating"><span class="stars">★★★★<span class="o">★</span></span> Oct 2024</div>
+      </a>
+      <a class="book c-ink" href="#">
+        <div class="cover">
+          <div class="pub">O&rsquo;Reilly &middot; 2022</div>
+          <div><div class="t">Understanding the Linux Kernel</div><div class="a">Bovet &amp; Cesati</div></div>
+          <div class="pub">3ᴇ</div>
+        </div>
+        <div class="meta"><span class="bt">Understanding the Linux Kernel</span><span class="ba">Daniel Bovet, Marco Cesati</span></div>
+        <div class="rating"><span class="stars">★★★<span class="o">★★</span></span> Aug 2024 &middot; partial</div>
+      </a>
+      <a class="book c-green" href="#">
+        <div class="cover">
+          <div class="pub">Seuil &middot; 2019</div>
+          <div><div class="t">Bifurquer</div><div class="a">Bernard Stiegler</div></div>
+          <div class="pub">Seuil · 2019</div>
+        </div>
+        <div class="meta"><span class="bt">Bifurquer</span><span class="ba">Bernard Stiegler &amp; collectif</span></div>
+        <div class="rating"><span class="stars">★★★<span class="o">★★</span></span> Jun 2024</div>
+      </a>
+    </div>
+
+    <!-- Wishlist -->
+    <div class="section-label">Wishlist &middot; queued</div>
+    <table class="index">
+      <tbody>
+        <tr><td class="date">pending</td><td><i>The Phoenix Project</i> — Kim, Behr &amp; Spafford. Borrowed from a colleague; due any week now.</td></tr>
+        <tr><td class="date">pending</td><td><i>Code: The Hidden Language of Computer Hardware and Software</i> — Charles Petzold. Second edition is on order.</td></tr>
+        <tr><td class="date">pending</td><td><i>L&rsquo;Ordinateur : étude de mœurs</i> — fictitious title placeholder while awaiting a copy of the Stiegler posthumous.</td></tr>
+        <tr><td class="date">pending</td><td><i>Database Internals</i> — Alex Petrov. On the desk, untouched, judging me.</td></tr>
+      </tbody>
+    </table>
+
+    <p class="small muted" style="margin-top:32px">
+      Ratings follow the unambitious <i>American Library Association</i> convention: five stars if I
+      will re-read, four if I recommend, three if I finished it, two if I did not, one if it wronged
+      me personally. Reviews are available on request — i.e. if you send an email, you&rsquo;ll get
+      opinions.
+    </p>
+
+    <div data-mount="footer"></div>
+  </div>
+
+  <script src="assets/layout.js"></script>
+  <script src="assets/shell.js"></script>
+</body>
+</html>

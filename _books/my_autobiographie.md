@@ -1,17 +1,23 @@
 ---
-layout: page
-title: Autobiography
-description: MENRA W. Romial's autobiography - A comprehensive account of my personal and professional journey
+layout: book-detail
+title: "Autobiography"
+author: "MENRA W. Romial"
 cover: assets/img/book_covers/autobg.png
 permalink: /autobiography/
 pdf: /assets/pdf/autobiographie_romial.pdf
+released: 2024
+status: Available
+description: >
+  A personal account of my journey from my early years to my current work in cloud computing
+  and sustainable technology. Covers formative experiences, academic milestones, research into
+  energy-aware computing, and reflections on what it means to build systems that last.
+revisions:
+  - "v1.0 — First edition, 2025"
+prerequisites: "No prerequisites. Written for a general audience."
 ---
 
-# My Autobiography
-
-This is the story of my life journey—from my early years to my current work in cloud computing and sustainable technology.
-
 The autobiography covers:
+
 - My personal background and formative years
 - Educational milestones and academic achievements
 - Professional experiences and career development
@@ -19,9 +25,4 @@ The autobiography covers:
 - My vision for the future of sustainable computing
 - Personal reflections and lessons learned along the way
 
-📄 **[Read the Full Autobiography (PDF)]({{ page.pdf }})**
-
----
-
-*For a complete and detailed account of my journey, please download and read the full autobiography PDF.*
-
+**[Read the full autobiography (PDF)]({{ page.pdf | relative_url }})**

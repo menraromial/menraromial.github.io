@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: teaching-page
 permalink: /teaching/
 title: Teaching
 description: Courses taught by MENRA W. Romial at IMT Atlantique.
@@ -8,4 +8,3 @@ nav: true
 nav_order: 6
 ---
 
-{% include courses.liquid %}

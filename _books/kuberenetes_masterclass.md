@@ -1,61 +1,65 @@
 ---
-layout: book-review # Or 'book-details', 'publication', as per your template
+layout: book-detail
 title: "Kubernetes Masterclass: From Beginner to Expert"
-author: "Cloud Native & DevOps Expert" # Or your actual name/handle
-cover: assets/img/book_covers/k8sm.png # Replace with your cover image path
-# olid: YOUR_OLID_HERE # If registered on Open Library
-# isbn: YOUR_ISBN_HERE # If you have an ISBN
-categories: IT Technology Cloud DevOps Kubernetes Container Orchestration
-tags: Kubernetes Docker Containers Orchestration DevOps Cloud Training Tutorial
-download_link: /assets/pdf/cours_sur_kube.pdf # Link to download
-# If it's a purchase link, you can keep 'buy_link'
-# buy_link: YOUR_LINK_TO_A_SALES_PLATFORM
-released: 2025 # Year of "publication" or availability
-status: Available # Or "Available", "Complete Course"
+author: "MENRA W. Romial"
+cover: assets/img/book_covers/k8sm.png
+permalink: /books/kubernetes-masterclass/
+download_link: /assets/pdf/cours_sur_kube.pdf
+released: 2025
+status: Available
+description: >
+  A comprehensive guide to Kubernetes from first principles to production-grade deployments.
+  Designed for developers, system administrators, and DevOps engineers who want to move
+  beyond the basics and understand how container orchestration actually works at scale.
+revisions:
+  - "v1.0 — Initial release, 2025"
+  - "v1.1 — Added RBAC and Security Contexts chapter"
+prerequisites: "Basic Linux command line, familiarity with Docker and container concepts."
 ---
 
-## Master Kubernetes from A to Z!
+## 1. Kubernetes Architecture
 
-This **comprehensive guide** walks you through your Kubernetes learning journey, from installing your first local cluster to advanced production orchestration techniques. Designed for developers, system administrators, and DevOps engineers, this course transforms complex Kubernetes concepts into practical, applicable knowledge.
+Kubernetes is a container orchestration platform built around a master/worker node model.
+The control plane (API server, scheduler, etcd, controller manager) manages the desired
+state of the cluster, while worker nodes run the actual workloads inside **Pods**.
 
-**What You Will Learn:**
+## 2. Core Objects
 
-*   **The Fundamentals:** Understand Kubernetes' robust architecture, its key components (Pods, Services, Deployments, Namespaces), and how they interact.
-*   **Application Deployment:** Master deploying, scaling, and managing the lifecycle of your containerized applications.
-*   **Networking and Storage:** Deep dive into network configuration (Services, Ingress, Network Policies) and persistent storage solutions (Volumes, PV, PVC, StorageClasses).
-*   **Configuration and Security:** Effectively manage configurations (ConfigMaps) and sensitive data (Secrets), and implement security best practices (RBAC, Security Contexts, Pod Security Admission).
-*   **Observability and Maintenance:** Implement logging and monitoring strategies, and learn how to debug and maintain your cluster.
-*   **Advanced Ecosystem:** Discover essential tools like Helm and Kustomize, and understand the role of Kubernetes Operators.
-*   **Best Practices:** Adopt industry best practices for successful and maintainable Kubernetes deployments.
-*   **Practical Exercises and Capstone Project:** Solidify your learning with targeted exercises for each chapter and a final project integrating all a_learncquired concepts.
+The fundamental building blocks are: **Pod** (the smallest deployable unit), **Deployment**
+(declarative rolling updates), **Service** (stable network endpoint), and **Namespace**
+(logical isolation between teams or environments).
 
-**Who Is This Course For?**
+## 3. Networking and Storage
 
-*   Developers looking to containerize and orchestrate their applications.
-*   System administrators seeking to manage Kubernetes clusters.
-*   DevOps engineers aiming to automate CI/CD pipelines with Kubernetes.
-*   Anyone curious to learn the de facto standard for container orchestration.
+Kubernetes networking follows a flat IP model — every Pod can reach every other Pod without NAT.
+**Services** expose Pods via stable ClusterIP, NodePort, or LoadBalancer. **Ingress** handles
+HTTP routing at Layer 7. Persistent data lives in **PersistentVolumes** provisioned by
+StorageClasses.
 
-**Prerequisites:**
+## 4. Configuration and Security
 
-*   Basic knowledge of the Linux command line.
-*   Understanding of containerization concepts (Docker опыта is a plus).
-*   Basic understanding of networking and YAML (recommended).
+**ConfigMaps** store non-sensitive configuration; **Secrets** store credentials (base64-encoded,
+optionally encrypted at rest). **RBAC** (Role-Based Access Control) restricts what users and
+service accounts can do. **Pod Security Admission** enforces security profiles at namespace level.
 
-Get ready to become a Kubernetes expert! This course is your roadmap to confidently navigating the world of cloud native.
+## 5. Observability and Maintenance
 
-*   Chapter 1: Kubernetes Architecture
-*   Chapter 2: Core Objects
-*   ...
-*   Chapter 11: Hands-on Exercises
-*   Chapter 12: Capstone Project
+Use `kubectl logs`, `kubectl describe`, and `kubectl top` for day-to-day debugging.
+For production, integrate **Prometheus** + **Grafana** for metrics and **Loki** for log aggregation.
+Rolling updates with `kubectl rollout` enable zero-downtime deployments.
 
----
+## 6. Advanced Ecosystem
 
-### About the Author
+**Helm** packages Kubernetes manifests into reusable charts. **Kustomize** applies
+environment-specific patches without templating. **Operators** extend the Kubernetes API
+to manage stateful applications (databases, queues) with domain-specific logic.
 
-{% include contact.liquid %}
+## 7. Best Practices
 
+- Define resource `requests` and `limits` on every container.
+- Use `livenessProbe` and `readinessProbe` to let Kubernetes manage restarts safely.
+- Prefer `Deployment` over raw `Pod` for any stateless workload.
+- Keep images small and pin their digest, not just a tag.
+- Separate concerns with Namespaces and RBAC from day one.
 
-**Download your copy now!**
-[Click here to download the complete guide in PDF format]({{ page.download_link | default: site.default_download_link }})
+**[Download the full guide (PDF)]({{ page.download_link | relative_url }})**

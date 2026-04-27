@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Projects — Menra W. Romial</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>
+    .proj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 32px; margin-top: 16px; }
+    .proj { border: 1px solid var(--rule); padding: 20px 22px 22px; background: var(--paper); display: flex; flex-direction: column; gap: 10px; position: relative; }
+    .proj::before { content: attr(data-no); position: absolute; top: -12px; left: 16px; background: var(--paper); padding: 0 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; color: var(--ink-3); }
+    .proj .ph { height: 130px; background: repeating-linear-gradient(135deg, var(--paper-2) 0 10px, transparent 10px 20px), var(--paper); border: 1px solid var(--rule); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.1em; text-transform: uppercase; }
+    .proj h3 { font-family: var(--display); font-size: 20px; font-weight: 600; margin: 0; line-height: 1.25; }
+    .proj p { font-size: 14.5px; line-height: 1.5; color: var(--ink-2); margin: 0; }
+    .proj .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+    .proj .status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 6px; }
+    .proj .status::before { content: ""; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; }
+    .proj.done .status { color: var(--ink-3); }
+    .proj.done .status::before { background: var(--ink-3); }
+    .proj .links { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; display: flex; gap: 14px; }
+  </style>
+</head>
+<body data-page="projects">
+  <div class="page">
+    <div data-mount="masthead"></div>
+
+    <section class="doc-head">
+      <div class="eyebrow">§ 3 &middot; Laboratory Projects</div>
+      <h1>Projects</h1>
+      <div class="authors">Open artefacts, running experiments, and side-quests</div>
+      <div class="date-line">Everything listed here is reproducible. Or a bug report away from being so.</div>
+    </section>
+
+    <div class="section-label">Active &middot; MMXXV–MMXXVI</div>
+    <div class="proj-grid">
+
+      <div class="proj" data-no="§ 3.1">
+        <div class="ph">DIAGRAM · ADAPTRAPL ARCHITECTURE</div>
+        <div class="status">Ongoing &middot; v0.4</div>
+        <h3>AdaptRAPL</h3>
+        <p>A Kubernetes scheduler extension that re-negotiates per-package power budgets every
+        250 ms based on observed SLO slack. Implemented as a scheduler plugin + a DaemonSet.</p>
+        <div class="tags"><span class="tag">Go</span><span class="tag">Kubernetes</span><span class="tag">RAPL</span></div>
+        <div class="links"><a href="#">github</a><a href="publications.html">paper</a><a href="#">docs</a></div>
+      </div>
+
+      <div class="proj" data-no="§ 3.2">
+        <div class="ph">FIGURE · G5K EXPERIMENT GRAPH</div>
+        <div class="status">Ongoing &middot; v0.2</div>
+        <h3>Greenlab</h3>
+        <p>A reproducible Grid&rsquo;5000 harness for energy experiments: one YAML, one
+        <span class="mono">make run</span>, archived results with provenance. Currently used by
+        three colleagues, which is either a victory or a warning.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Grid&rsquo;5000</span><span class="tag">Nix</span></div>
+        <div class="links"><a href="#">github</a><a href="#">tutorial</a></div>
+      </div>
+
+      <div class="proj" data-no="§ 3.3">
+        <div class="ph">FIGURE · CONTROLLER RECONCILIATION</div>
+        <div class="status">Ongoing &middot; v0.1</div>
+        <h3>kepler-cap</h3>
+        <p>A companion controller to Kepler that translates energy-budget CRDs into live
+        <span class="mono">powercap</span> writes, with audit logs and a dry-run mode for
+        sceptical SREs.</p>
+        <div class="tags"><span class="tag">Go</span><span class="tag">CRD</span><span class="tag">Kepler</span></div>
+        <div class="links"><a href="#">github</a></div>
+      </div>
+
+      <div class="proj" data-no="§ 3.4">
+        <div class="ph">SCREENSHOT · DASHBOARD</div>
+        <div class="status">Ongoing &middot; v0.3</div>
+        <h3>joulescope-web</h3>
+        <p>A tiny web dashboard for RAPL counters: Grafana for people who refuse to install
+        Grafana. Pair it with <span class="mono">rapl-read</span> and you&rsquo;re done.</p>
+        <div class="tags"><span class="tag">TypeScript</span><span class="tag">D3</span></div>
+        <div class="links"><a href="#">github</a><a href="#">demo</a></div>
+      </div>
+    </div>
+
+    <div class="section-label">Archive &middot; Completed or dormant</div>
+    <div class="proj-grid">
+      <div class="proj done" data-no="§ 3.5">
+        <div class="status">Finished · 2024</div>
+        <h3>container-energy-bench</h3>
+        <p>Benchmark suite that measures container cold-start, steady-state, and teardown
+        energy. Superseded by Greenlab but still cited occasionally.</p>
+        <div class="links"><a href="#">github</a><a href="#">paper</a></div>
+      </div>
+      <div class="proj done" data-no="§ 3.6">
+        <div class="status">Archived · 2023</div>
+        <h3>cgroups-visualiser</h3>
+        <p>Weekend project, ANSI-only. Draws the <span class="mono">cgroups</span> v2 hierarchy in
+        your terminal. Abandoned when <span class="mono">systemd-cgls</span> caught up.</p>
+        <div class="links"><a href="#">github</a></div>
+      </div>
+    </div>
+
+    <div data-mount="footer"></div>
+  </div>
+
+  <script src="assets/layout.js"></script>
+  <script src="assets/shell.js"></script>
+</body>
+</html>

@@ -1,131 +1,76 @@
 ---
 layout: default
 ---
-{% unless site.data.resume %}
-  <div class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        {{ page.title }}
-        {% if page.cv_pdf %}
-          <a
-            {% if page.cv_pdf contains '://' %}
-              href="{{ page.cv_pdf }}"
-            {% else %}
-              href="{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}"
-            {% endif %}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="float-right"
-          >
-            <i class="fa-solid fa-file-pdf"></i>
-          </a>
-        {% endif %}
-      </h1>
-      {% if page.description %}
-        <p class="post-description">{{ page.description }}</p>
-      {% endif %}
-    </header>
+{% assign basics = site.data.resume.basics %}
 
-    <article>
-      <div class="cv">
-        {% for entry in site.data.cv %}
-          <a class="anchor" id="{{ entry.title }}"></a>
-          <div class="card mt-3 p-3">
-            <h3 class="card-title font-weight-medium">{{ entry.title }}</h3>
-            <div>
-              {% if entry.type == 'list' %}
-                {% include cv/list.liquid %}
-              {% elsif entry.type == 'map' %}
-                {% include cv/map.liquid %}
-              {% elsif entry.type == 'nested_list' %}
-                {% include cv/nested_list.liquid %}
-              {% elsif entry.type == 'time_table' %}
-                {% include cv/time_table.liquid %}
-              {% elsif entry.type == 'list_groups' %}
-                {% include cv/list_groups.liquid %}
-              {% else %}
-                {{ entry.contents }}
-              {% endif %}
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    </article>
+<section class="doc-head">
+  <div class="eyebrow">§ 5 &middot; Curriculum Vit&aelig;</div>
+  <h1>{{ basics.name }}</h1>
+  <div class="authors">{{ basics.label }}</div>
+  <div class="affil">IMT ATLANTIQUE &middot; INRIA STACK &middot; NANTES, FRANCE</div>
+  <div class="date-line">
+    <a href="mailto:{{ basics.email }}">{{ basics.email }}</a>
+    {% if basics.url %} &middot; <a href="{{ basics.url }}">{{ basics.url }}</a>{% endif %}
   </div>
-{% else %}
-  <div class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        {{ page.title }}
-        {% if page.cv_pdf %}
-          <a
-            {% if page.cv_pdf contains '://' %}
-              href="{{ page.cv_pdf }}"
-            {% else %}
-              href="{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}"
-            {% endif %}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="float-right"
-          >
-            <i class="fa-solid fa-file-pdf"></i>
-          </a>
-        {% endif %}
-      </h1>
-      {% if page.description %}
-        <p class="post-description">{{ page.description }}</p>
-      {% endif %}
-    </header>
+</section>
 
-    <article>
-      <div class="cv">
-        {% for data in site.data.resume %}
-          {% if site.jsonresume and site.jsonresume.size > 0 %}
-            {% unless site.jsonresume contains data[0] %}
-              {% continue %}
-            {% endunless %}
-          {% endif %}
-          {% if data[0] == 'meta' or data[1].size == 0 %} {% continue %} {% endif %}
-          <a class="anchor" id="{{ data[0] }}"></a>
-          <div class="card mt-3 p-3">
-            <h3 class="card-title font-weight-medium">{{ data[0] | capitalize }}</h3>
-            <div>
-              {% case data[0] %}
-                {% when 'basics' %}
-                  {% include resume/basics.liquid %}
-                {% when 'education' %}
-                  {% include resume/education.liquid %}
-                {% when 'work' %}
-                  {% include resume/work.liquid %}
-                {% when 'volunteer' %}
-                  {% include resume/volunteer.liquid %}
-                {% when 'projects' %}
-                  {% include resume/projects.liquid %}
-                {% when 'awards' %}
-                  {% include resume/awards.liquid %}
-                {% when 'skills' %}
-                  {% include resume/skills.liquid %}
-                {% when 'publications' %}
-                  {% include resume/publications.liquid %}
-                {% when 'languages' %}
-                  {% include resume/languages.liquid %}
-                {% when 'interests' %}
-                  {% include resume/interests.liquid %}
-                {% when 'certificates' %}
-                  {% include resume/certificates.liquid %}
-                {% when 'references' %}
-                  {% include resume/references.liquid %}
-                {% when 'supervision' %}
-                  {% include resume/supervision.liquid %}
-                {% when 'teaching' %}
-                  {% include resume/teaching.liquid %}
-                {% else %}
+<div class="dl-bar">
+  <span>Last compiled &mdash; {{ site.time | date: '%-d %b. %Y' }}</span>
+  <span>
+    {% if page.cv_pdf %}
+      <a href="{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}">Download PDF</a> &middot;
+    {% endif %}
+    <a href="{{ '/publications/' | relative_url }}">Publications page</a>
+  </span>
+</div>
 
-              {% endcase %}
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    </article>
-  </div>
-{% endunless %}
+{% for data in site.data.resume %}
+  {% if site.jsonresume and site.jsonresume.size > 0 %}
+    {% unless site.jsonresume contains data[0] %}{% continue %}{% endunless %}
+  {% endif %}
+  {% if data[0] == 'meta' or data[0] == 'basics' %}{% continue %}{% endif %}
+  {% assign section_size = data[1] | size %}
+  {% if section_size == 0 %}{% continue %}{% endif %}
+
+  {% case data[0] %}
+    {% when 'education' %}
+      <div class="section-label">Education</div>
+      {% include resume/education.liquid %}
+    {% when 'work' %}
+      <div class="section-label">Work Experience</div>
+      {% include resume/work.liquid %}
+    {% when 'teaching' %}
+      <div class="section-label">Teaching</div>
+      {% include resume/teaching.liquid %}
+    {% when 'supervision' %}
+      <div class="section-label">Student Supervision</div>
+      {% include resume/supervision.liquid %}
+    {% when 'awards' %}
+      <div class="section-label">Awards &amp; Grants</div>
+      {% include resume/awards.liquid %}
+    {% when 'publications' %}
+      <div class="section-label">Publications</div>
+      {% include resume/publications.liquid %}
+    {% when 'projects' %}
+      <div class="section-label">Selected Projects</div>
+      {% include resume/projects.liquid %}
+    {% when 'volunteer' %}
+      <div class="section-label">Service &amp; Volunteering</div>
+      {% include resume/volunteer.liquid %}
+    {% when 'certificates' %}
+      <div class="section-label">Certificates</div>
+      {% include resume/certificates.liquid %}
+    {% when 'skills' %}
+      <div class="section-label">Skills &amp; Tooling</div>
+      {% include resume/skills.liquid %}
+    {% when 'languages' %}
+      <div class="section-label">Languages</div>
+      {% include resume/languages.liquid %}
+    {% when 'interests' %}
+      <div class="section-label">Interests</div>
+      {% include resume/interests.liquid %}
+    {% when 'references' %}
+      <div class="section-label">References</div>
+      {% include resume/references.liquid %}
+  {% endcase %}
+{% endfor %}
