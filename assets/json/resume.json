@@ -6,7 +6,7 @@
     "email": "itsme@menraromial.com",
     "phone": "",
     "url": "https://menraromial.com",
-    "summary": "PhD candidate specializing in Cloud Computing and Green IT, with a strong focus on energy-efficient application deployment and infrastructure optimization. Combining advanced research in sustainable computing with extensive full-stack development experience, I bridge the gap between theoretical innovation and practical implementation. My expertise spans from low-level power management (Intel RAPL) to high-level orchestration systems (Kubernetes), with a proven track record in designing scalable, energy-aware solutions for modern cloud infrastructures.",
+    "summary": "PhD student specializing in Cloud Computing and Green IT, with a strong focus on energy-efficient application deployment and infrastructure optimization. Combining advanced research in sustainable computing with extensive full-stack development experience, I bridge the gap between theoretical innovation and practical implementation. My expertise spans from low-level power management (Intel RAPL) to high-level orchestration systems (Kubernetes), with a proven track record in designing scalable, energy-aware solutions for modern cloud infrastructures.",
     "location": {
       "address": "",
       "postalCode": "",
@@ -30,7 +30,7 @@
   "work": [
     {
       "name": "Inria",
-      "position": "PhD Candidate",
+      "position": "PhD Student",
       "url": "https://www.inria.fr",
       "startDate": "2024-11-01",
       "endDate": "",

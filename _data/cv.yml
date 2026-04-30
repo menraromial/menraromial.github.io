@@ -14,7 +14,7 @@
 
 - title: Research Profile
   type: text
-  content: PhD candidate specializing in Cloud Computing and Green IT, with a strong focus on energy-efficient application deployment and infrastructure optimization. Combining advanced research in sustainable computing with extensive full-stack development experience, I bridge the gap between theoretical innovation and practical implementation. My expertise spans from low-level power management (Intel RAPL) to high-level orchestration systems (Kubernetes), with a proven track record in designing scalable, energy-aware solutions for modern cloud infrastructures.
+  content: PhD student specializing in Cloud Computing and Green IT, with a strong focus on energy-efficient application deployment and infrastructure optimization. Combining advanced research in sustainable computing with extensive full-stack development experience, I bridge the gap between theoretical innovation and practical implementation. My expertise spans from low-level power management (Intel RAPL) to high-level orchestration systems (Kubernetes), with a proven track record in designing scalable, energy-aware solutions for modern cloud infrastructures.
 
 - title: Professional Title
   type: text
@@ -23,7 +23,7 @@
 - title: Experience
   type: time_table
   contents:
-    - title: PhD Candidate
+    - title: PhD Student
       institution: Inria
       year: November 2024 - Present
       description:

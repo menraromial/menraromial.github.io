@@ -17,7 +17,7 @@ profile:
 
 abstract: >
   The author grew up in Pont Mayo Sina, a village in northern Cameroon where there was no electricity
-  and no computer until he arrived at university. He is now a PhD candidate at <a href="https://www.inria.fr/fr/centre-inria-universite-rennes">Inria Rennes</a>, working
+  and no computer until he arrived at university. He is now a PhD student at <a href="https://www.inria.fr/fr/centre-inria-universite-rennes">Inria Rennes</a>, working
   on power management in cloud infrastructure. Engineering graduate of ENSPY. Believer in God, in
   discipline, and in the power of what you say about yourself. He finds the irony of his trajectory
   more poetic than anything else.
@@ -41,7 +41,7 @@ I grew up in Pont Mayo Sina, a village in northern Cameroon with no electricity 
 The first time I ever touched one was the day I walked through the doors of **ENSPY**
 (École Nationale Supérieure Polytechnique de Yaoundé). I never looked back.
 
-Today I am a PhD candidate at **Inria** in Nantes. My thesis:
+Today I am a PhD student at **Inria** in Nantes. My thesis:
 *"Contribution to Power Management in Cloud Infrastructures: from Hardware Limitation to Adaptive Orchestration."*
 From a village with no grid to research on power management at cloud scale. I did not plan the
 symmetry, but I find it fitting.
