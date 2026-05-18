@@ -3,8 +3,8 @@ layout: about
 title: About
 permalink: /
 subtitle: <a href='https://www.imt-atlantique.fr'>IMTA</a>. 4 Rue Alfred Kastler, 44300 Nantes
-description: MENRA W. Romial (Menra Wedwang Romial) - PhD researcher specializing in cloud computing, edge technologies, IoT, Kubernetes, and energy-aware computing. Expert in green cloud infrastructure and sustainable distributed systems.
-keywords: menra, menraromial, menra romial, romial, menra wedwang, wedwang, MENRA W. Romial, cloud computing, edge technologies, IoT, kubernetes, energy-aware computing, researcher
+description: MENRA Romial (Menra Wedwang Romial) - PhD researcher specializing in cloud computing, edge technologies, IoT, Kubernetes, and energy-aware computing. Expert in green cloud infrastructure and sustainable distributed systems.
+keywords: cloud computing, edge computing, IoT, Kubernetes, energy-aware computing, green computing, power management, sustainable systems, distributed systems
 
 profile:
   align: right
@@ -16,12 +16,10 @@ profile:
   #   <p>44300 Nantes</p>
 
 abstract: >
-  The author grew up in Pont Mayo Sina, a village in northern Cameroon where there was no electricity
-  and no computer until he arrived at university. He is now a PhD student at <a href="https://www.inria.fr/fr/centre-inria-universite-rennes">Inria Rennes</a>, working
-  on power management in cloud infrastructure. Engineering graduate of ENSPY. Believer in God, in
-  discipline, and in the power of what you say about yourself. He finds the irony of his trajectory
-  more poetic than anything else.
-abstract_keywords: "Kubernetes · Energy Proportionality · RAPL · Volta · Day-Ahead Markets · Green Cloud"
+  PhD researcher at <a href="https://www.inria.fr/fr/centre-inria-universite-rennes">Inria Rennes</a> specializing in power management in cloud infrastructure,
+  energy-aware computing systems, and sustainable distributed systems. Research focuses on Kubernetes orchestration,
+  efficient server energy management, and optimizing energy consumption based on actual workload demands.
+abstract_keywords: "Kubernetes · Server Energy Management · Workload-Aware Optimization · Cloud Infrastructure · Power Management"
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
@@ -37,24 +35,11 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I grew up in Pont Mayo Sina, a village in northern Cameroon with no electricity and no computer.
-The first time I ever touched one was the day I walked through the doors of **ENSPY**
-(École Nationale Supérieure Polytechnique de Yaoundé). I never looked back.
-
-Today I am a PhD student at **Inria** in Nantes. My thesis:
-*"Contribution to Power Management in Cloud Infrastructures: from Hardware Limitation to Adaptive Orchestration."*
-From a village with no grid to research on power management at cloud scale. I did not plan the
-symmetry, but I find it fitting.
-
-I believe in God. I love nature because I grew up completely inside it. I believe there are no
-idiots, only people who have not found their right frame yet. I believe the words you speak about
-yourself build the life you live: *from the abundance of the heart, the mouth speaks.* Clear vision,
-faith, and disciplined work is not a formula. It is an operating system.
-
-See yourself big. Be the prophet of your own life.
+Data centers consume enormous amounts of energy globally, yet significant waste persists due to inefficient resource utilization and suboptimal orchestration strategies. I am driven by the challenge of designing systems that are both performant and energy-efficient—bridging the gap between server capabilities and software-level decision-making. The intersection of systems programming, distributed computing, and environmental responsibility fascinates me: how can we achieve optimal performance without sacrificing sustainability? This question motivates my research on power management, server energy management, and intelligent resource orchestration.
 
 ---
 
-If you want to talk cloud computing, energy-aware systems, or how someone from a village with no
-electricity ended up caring about megawatts in data centres: I am always up for it.
+If you want to discuss cloud computing, energy-aware systems, Kubernetes, or sustainable computing:
+I am always happy to connect and collaborate.
+
 
