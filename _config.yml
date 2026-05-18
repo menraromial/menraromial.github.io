@@ -3,16 +3,16 @@
 # -----------------------------------------------------------------------------
 
 title: blank # the website title (if blank, full name will be used instead)
-first_name: MENRA
-middle_name: W.
+first_name: Menra
+middle_name: ""
 last_name: Romial
 contact_note: > 
-  You can email me at itsme@menraromial.com.
+  You can email me at itsme[at]menraromial[dot]com.
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  MENRA W. Romial (Menra Wedwang Romial) - Personal website and blog showcasing expertise in cloud computing, edge technologies, IoT, and Kubernetes. Computer science researcher specializing in energy-aware computing, green cloud infrastructure, and sustainable data centers. Explore research insights, technical articles, talks, and innovative projects in distributed systems and energy-efficient orchestration.
+  Menra Romial (Menra Wedwang Romial) - Personal website and blog showcasing expertise in cloud computing, edge technologies, IoT, and Kubernetes. Computer science researcher specializing in energy-aware computing, green cloud infrastructure, and sustainable data centers. Explore research insights, technical articles, talks, and innovative projects in distributed systems and energy-efficient orchestration.
 footer_text: >
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
-keywords: menra, menraromial, menra romial, romial, wedwang, menra wedwang, wedwang romial, menra wedwang romial, MENRA W. Romial, cloud computing, edge technologies, IoT, kubernetes, energy-aware computing, green computing, academic-website, portfolio-website, research, innovation, personal-website, tech-blog, computer science researcher
+keywords: menra, menraromial, menra romial, romial, wedwang, menra wedwang, wedwang romial, menra wedwang romial, Menra W. Romial, cloud computing, edge technologies, IoT, kubernetes, energy-aware computing, green computing, academic-website, portfolio-website, research, innovation, personal-website, tech-blog, computer science researcher
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: mwr_icon.png # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
