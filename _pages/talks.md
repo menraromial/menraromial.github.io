@@ -2,7 +2,7 @@
 title: "Talks"
 layout: default
 permalink: /talks/
-description: Conference talks and presentations by MENRA W. Romial (Menra Wedwang Romial) on cloud computing, Kubernetes, edge technologies, and energy-aware computing.
+description: Conference talks and presentations by MENRA Romial (Menra Wedwang Romial) on cloud computing, Kubernetes, edge technologies, and energy-aware computing.
 keywords: menra talks, romial presentations, menra wedwang, menraromial, cloud computing talks, kubernetes presentations, research talks
 collection: talks
 entries_layout: list
