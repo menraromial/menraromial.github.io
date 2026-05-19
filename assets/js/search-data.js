@@ -18,14 +18,14 @@ ninja.data = [{
           },
         },{id: "nav-talks",
           title: "Talks",
-          description: "Conference talks and presentations by MENRA W. Romial (Menra Wedwang Romial) on cloud computing, Kubernetes, edge technologies, and energy-aware computing.",
+          description: "Conference talks and presentations by MENRA Romial (Menra Wedwang Romial) on cloud computing, Kubernetes, edge technologies, and energy-aware computing.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/talks/";
           },
         },{id: "nav-blog",
           title: "Blog",
-          description: "Technical blog by MENRA W. Romial (Menra Wedwang Romial) covering cloud computing, Kubernetes, edge technologies, IoT, and energy-aware computing.",
+          description: "Technical blog by MENRA Romial (Menra Wedwang Romial) covering cloud computing, Kubernetes, edge technologies, IoT, and energy-aware computing.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/blog/";
@@ -46,7 +46,7 @@ ninja.data = [{
           },
         },{id: "nav-teaching",
           title: "Teaching",
-          description: "Courses taught by MENRA W. Romial at IMT Atlantique.",
+          description: "Courses taught by MENRA Romial at IMT Atlantique.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/teaching/";
