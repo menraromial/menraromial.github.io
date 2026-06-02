@@ -72,10 +72,15 @@ a.plain:hover { background: transparent !important; }
 
 /* ------- Page shell ------- */
 .page {
-  max-width: 960px;
+  width: 100%;
   margin: 0 auto;
-  padding: 28px 48px 120px;
+  padding: 28px 24px 120px;
   position: relative;
+  @media (min-width: 576px)  { max-width: 540px;  padding-left: 0; padding-right: 0; }
+  @media (min-width: 768px)  { max-width: 720px; }
+  @media (min-width: 992px)  { max-width: 960px; }
+  @media (min-width: 1200px) { max-width: 1140px; }
+  @media (min-width: 1400px) { max-width: 1320px; }
 }
 
 /* About page grids */
@@ -102,14 +107,10 @@ a.plain:hover { background: transparent !important; }
   }
 }
 .about-posts-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
   margin-top: 48px;
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
 }
 .about-social-grid {
   display: grid;
@@ -1269,6 +1270,150 @@ footer.sheet {
     .bt { font-family: var(--display); font-size: 17px; font-weight: 600; color: var(--ink); line-height: 1.2; display: block; }
     .ba { font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--ink-2); }
     .mono { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+  }
+}
+
+/* ─── Publications ────────────────────────────────────────── */
+
+.publications {
+  margin-top: 8px;
+
+  h2.bibliography {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border: none;
+    border-top: 1px solid var(--rule);
+    padding: 10px 0 0;
+    margin: 28px 0 0;
+    text-align: left;
+  }
+
+  ol.bibliography {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    > li {
+      padding: 18px 0;
+      border-bottom: 1px dotted var(--rule);
+
+      // Badge venue
+      .abbr abbr {
+        font-family: var(--mono);
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        border-radius: 2px;
+        color: #fff !important;
+        a { color: #fff !important; border: none !important; }
+      }
+
+      .title {
+        font-family: var(--display);
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--ink);
+        line-height: 1.3;
+        margin-bottom: 4px;
+      }
+
+      .author {
+        font-family: var(--serif);
+        font-size: 14px;
+        color: var(--ink-2);
+        margin-bottom: 3px;
+        > em {
+          font-style: normal;
+          font-weight: 600;
+          color: var(--ink);
+          border-bottom: 1px solid var(--ink-3);
+        }
+      }
+
+      .periodical {
+        font-family: var(--serif);
+        font-size: 13.5px;
+        color: var(--ink-2);
+        font-style: italic;
+        em { font-style: italic; }
+      }
+
+      // Buttons — largeur fixe uniforme pour tous (Abs = Bib = HTML = …)
+      .links a.btn {
+        font-family: var(--mono) !important;
+        font-size: 10px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        color: var(--ink) !important;
+        border: 1px solid var(--ink-3) !important;
+        width: 46px !important;
+        padding: 3px 0 !important;
+        display: inline-block !important;
+        border-radius: 2px !important;
+        background: var(--paper) !important;
+        box-shadow: none !important;
+        margin-right: 4px !important;
+        margin-bottom: 4px !important;
+        vertical-align: middle !important;
+        transition: background .12s, border-color .12s;
+        &:hover {
+          background: var(--paper-2) !important;
+          border-color: var(--ink-2) !important;
+        }
+      }
+
+      // Panneaux abstract/bibtex — préfixés "div." pour ne pas affecter les boutons <a>
+      // Le JS ajoute .open sans jamais retirer .hidden
+      div.abstract.hidden,
+      div.bibtex.hidden {
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 !important;
+        margin-top: 0 !important;
+        border-left-width: 0 !important;
+        transition: max-height .3s ease;
+      }
+      div.abstract.hidden.open,
+      div.bibtex.hidden.open {
+        max-height: 200em;
+        padding: 12px 16px !important;
+        margin-top: 10px !important;
+        border-left-width: 3px !important;
+      }
+
+      div.abstract {
+        background: var(--paper-2);
+        border-left: 3px solid var(--accent);
+        font-family: var(--serif);
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--ink-2);
+        font-style: italic;
+        p { margin: 0; text-indent: 0 !important; max-width: none !important; }
+      }
+
+      div.bibtex {
+        pre, figure.highlight {
+          margin: 0;
+          font-family: var(--mono);
+          font-size: 12px;
+          background: var(--paper-2);
+          border: 1px solid var(--rule);
+          border-left: 3px solid var(--accent);
+          padding: 12px 16px;
+          overflow-x: auto;
+          color: var(--ink-2);
+        }
+      }
+    }
   }
 }
 

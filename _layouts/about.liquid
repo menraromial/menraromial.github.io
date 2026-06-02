@@ -94,7 +94,12 @@ layout: default
   <div>
     <div class="section-label">4 &middot; Selected Publications</div>
     <h2 class="sec">Recent work</h2>
-    {% bibliography --query @*[selected=true] --group_by none %}
+    <div class="publications">
+      {% bibliography --query @*[selected=true] --group_by none %}
+    </div>
+    <p class="small muted" style="margin-top: 12px; text-indent: 0 !important;">
+      <a href="{{ '/publications/' | relative_url }}">View all publications →</a>
+    </p>
   </div>
   {% endif %}
 </div>
