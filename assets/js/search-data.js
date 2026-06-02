@@ -30,6 +30,13 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
+        },{id: "nav-publications",
+          title: "Publications",
+          description: "Peer-reviewed papers on energy-aware cloud computing, Kubernetes orchestration, and sustainable distributed systems.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/publications/";
+          },
         },{id: "nav-projects",
           title: "Projects",
           description: "Open artefacts, running experiments, and side-quests.",
