@@ -643,11 +643,10 @@ jekyll_get_json:
 jsonresume:
   - basics
   - work
+  - publications
   - teaching
   - supervision
   - education
-  - publications
-  - projects
   - volunteer
   - awards
   - certificates

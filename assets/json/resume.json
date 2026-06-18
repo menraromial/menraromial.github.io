@@ -73,6 +73,22 @@
     }
   ],
   "volunteer": [],
+  "publications": [
+    {
+      "name": "Understanding Power Limiting Mechanisms in Modern Processors: A Deep Dive into Intel RAPL and Turbo Boost Dynamics",
+      "publisher": "Euro-Par 2026 — Best Paper Award nominee",
+      "releaseDate": "2026-08-01",
+      "url": "/publications/",
+      "summary": "With G. Rosinosky, R.-A. Koutsiamanis, S. Bolle, and J.-M. Menaud. Accepted at Euro-Par 2026 (acceptance rate 26.2%)."
+    },
+    {
+      "name": "Intégration de l'Aspect Énergétique dans Kubernetes",
+      "publisher": "COMPAS 2024 — Conférence francophone en Parallélisme, Architecture et Système",
+      "releaseDate": "2024-07-01",
+      "url": "https://hal.science/hal-05638939",
+      "summary": "With R.-A. Koutsiamanis and J.-M. Menaud. Energy-aware container scheduling in Kubernetes leveraging Intel RAPL."
+    }
+  ],
   "teaching": [
     {
       "course": "Bases de Donnees (Databases)",
@@ -220,7 +236,6 @@
       "icon": ""
     }
   ],
-  "publications": [],
   "skills": [
     {
       "name": "Programming Languages",
