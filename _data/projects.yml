@@ -13,11 +13,11 @@ active:
         url: "#"
 
   - id: "3.2"
-    name: "Wattson"
+    name: "Bridle"
     status: "Ongoing"
     category: research
     description: >
-      A Kubernetes operator for automatic server power profiling. Wattson observes
+      A Kubernetes operator for automatic server power profiling. Bridle observes
       workload behaviour and builds per-node energy models that feed into scheduling
       and capping decisions — no manual characterisation required.
     tags: [Go, Kubernetes, Operator, Profiling]
