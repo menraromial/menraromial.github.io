@@ -5,7 +5,7 @@ title: "Talks"
 
 ## Energy-Aware Kubernetes Orchestration for Grid-Responsive Computing
 
-**STACK Team Seminar** — Arzon, France · October 2025
+**STACK Team Seminar** - Arzon, France · October 2025
 
 A comprehensive approach to adapting Kubernetes workloads to electricity grid fluctuations through constraint-based scheduling and dynamic scaling, addressing the challenges of electricity price volatility and grid stability in cloud computing environments.
 
@@ -17,7 +17,7 @@ Related posts:
 
 ## Integration of the Energy Aspect in Kubernetes
 
-**ComPAS 2024** — Faculty of Medicine, Nantes, France · July 2024
+**ComPAS 2024** - Faculty of Medicine, Nantes, France · July 2024
 
 Presented at the French-speaking conference on computer science focusing on parallelism, architecture, and systems. The talk covered:
 

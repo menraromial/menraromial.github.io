@@ -1,5 +1,5 @@
 ---
-title: "Volunteering at UCC & BDCAT 2025 — My Experience"
+title: "Volunteering at UCC & BDCAT 2025 - My Experience"
 date: "2025-12-04"
 icon: "users"
 ---
@@ -8,7 +8,7 @@ From December 1st to 4th, I had the opportunity to volunteer at the 2025 edition
 
 <!--more-->
 
-Volunteering allowed me to be at the heart of the conference. I helped with attendee check-ins, session logistics, and general coordination throughout the venue. Being behind the scenes gave me a new perspective on how much work and dedication goes into running an international academic event — and it was exciting to contribute to it.
+Volunteering allowed me to be at the heart of the conference. I helped with attendee check-ins, session logistics, and general coordination throughout the venue. Being behind the scenes gave me a new perspective on how much work and dedication goes into running an international academic event - and it was exciting to contribute to it.
 
 Between tasks, I had the chance to attend keynotes, speak with participants, and discover ongoing work in cloud-edge computing, distributed systems, and large-scale data processing. Discussions were rich, the atmosphere was collaborative, and I left every day with something new to think about.
 
