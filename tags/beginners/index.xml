@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Beginners on Menra Romial</title><link>https://menraromial.com/tags/beginners/</link><description>Recent content in Beginners on Menra Romial</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 25 Mar 2025 16:40:16 +0000</lastBuildDate><atom:link href="https://menraromial.com/tags/beginners/index.xml" rel="self" type="application/rss+xml"/><item><title>Setting Up a Kubernetes Cluster with Kubeadm and CRI-O</title><link>https://menraromial.com/posts/kubernetes-with-kubeadm-and-cri.io/</link><pubDate>Tue, 25 Mar 2025 16:40:16 +0000</pubDate><guid>https://menraromial.com/posts/kubernetes-with-kubeadm-and-cri.io/</guid><description>&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before setting up a Kubernetes cluster using Kubeadm and CRI-O, ensure that you meet the following requirements:&lt;/p&gt;
+&lt;h3 id="hardware-requirements"&gt;Hardware Requirements&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;At least &lt;strong&gt;2 GB of RAM&lt;/strong&gt; per node (4 GB recommended for the master node)&lt;/li&gt;
+&lt;li&gt;At least &lt;strong&gt;2 CPUs&lt;/strong&gt; per node&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;20 GB of free disk space&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;A stable &lt;strong&gt;internet connection&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;All nodes should be able to communicate with each other&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="software-requirements"&gt;Software Requirements&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;A supported &lt;strong&gt;Linux distribution&lt;/strong&gt; (Ubuntu 20.04+ or Debian 10+ recommended)&lt;/li&gt;
+&lt;li&gt;User access with &lt;strong&gt;sudo privileges&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Basic understanding of &lt;strong&gt;Linux command-line interface (CLI)&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Knowledge of &lt;strong&gt;networking concepts&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="step-1-configure-kernel-parameters"&gt;Step 1: Configure Kernel Parameters&lt;/h2&gt;
+&lt;p&gt;Kubernetes requires some kernel parameters to be set to allow IPtables to see bridged traffic.&lt;/p&gt;</description></item><item><title>Setting Up a K3s Cluster with a Hello-World Deployment</title><link>https://menraromial.com/posts/setup-k3s-cluster/</link><pubDate>Sun, 07 Jul 2024 14:30:00 +0000</pubDate><guid>https://menraromial.com/posts/setup-k3s-cluster/</guid><description>&lt;p&gt;This tutorial will guide you through setting up a K3s cluster with one master node and two worker nodes, deploying a simple &amp;ldquo;Hello-World&amp;rdquo; application, and utilizing various &lt;code&gt;kubectl&lt;/code&gt; commands to manage and inspect Kubernetes resources.&lt;/p&gt;
+&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Three Linux machines (or VMs) with access to each other.&lt;/li&gt;
+&lt;li&gt;Basic understanding of Linux commands and Kubernetes concepts.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="step-1-installing-k3s"&gt;Step 1: Installing K3s&lt;/h2&gt;
+&lt;h3 id="install-k3s-on-the-master-node"&gt;Install K3s on the Master Node&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;SSH into the Master Node:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh user@master-node-ip
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Install K3s:&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

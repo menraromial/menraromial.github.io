@@ -1,0 +1,418 @@
+<!doctype html><html lang=en><head><title>Guide to Building a Custom Kubernetes Scheduler :: Menra Romial</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Here is a complete, A-to-Z guide in English to develop and deploy your own Kubernetes scheduler using the Scheduling Framework. This guide is practical, detailed, and follows a step-by-step approach from concept to a working deployment in a kubeadm cluster."><meta name=keywords content="menra,romial,menra romial,romial menra,menra wedwang romial,wedwang,menra w. romial,menraromial,cloud computing,kubernetes,energy-aware computing,green computing,green it,power management,intel rapl,distributed systems,phd,inria,imt atlantique"><meta name=robots content="noodp"><link rel=canonical href=https://menraromial.com/posts/guide-building-custom-kubernetes-scheduler/><link rel=stylesheet href=https://menraromial.com/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css><link rel=stylesheet href=https://menraromial.com/css/code.min.d529ea4b2fb8d34328d7d31afc5466d5f7bc2f0bc9abdd98b69385335d7baee4.css><link rel=stylesheet href=https://menraromial.com/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css><link rel=stylesheet href=https://menraromial.com/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css><link rel=stylesheet href=https://menraromial.com/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css><link rel=stylesheet href=https://menraromial.com/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css><link rel=stylesheet href=https://menraromial.com/css/main.min.36833afd348409fc6c3d09d0897c5833d9d5bf1ff31f5e60ea3ee42ce2b1268c.css><link rel=stylesheet href=https://menraromial.com/css/menu.min.3c17467ebeb3d38663dce68f71f519901124fa5cbb4519b2fb0667a21e9aca39.css><link rel=stylesheet href=https://menraromial.com/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css><link rel=stylesheet href=https://menraromial.com/css/post.min.e6dddd258e64c83e05cec0cd49c05216742d42fc8ecbfbe6b67083412b609bd3.css><link rel=stylesheet href=https://menraromial.com/css/syntax.min.a0773cce9310cb6d8ed23e50f005448facf29a53001b57e038828daa466b25c0.css><link rel=stylesheet href=https://menraromial.com/css/terminal.min.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css><link rel=stylesheet href=https://menraromial.com/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css><link rel=stylesheet href=https://menraromial.com/style.css><link rel="shortcut icon" href=https://menraromial.com/favicon.png><link rel=apple-touch-icon href=https://menraromial.com/apple-touch-icon.png><meta name=twitter:card content="summary"><meta name=twitter:site content="@mwrdev_"><meta name=twitter:creator content><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="og:title" content="Guide to Building a Custom Kubernetes Scheduler"><meta property="og:description" content="Here is a complete, A-to-Z guide in English to develop and deploy your own Kubernetes scheduler using the Scheduling Framework. This guide is practical, detailed, and follows a step-by-step approach from concept to a working deployment in a kubeadm cluster."><meta property="og:url" content="https://menraromial.com/posts/guide-building-custom-kubernetes-scheduler/"><meta property="og:site_name" content="Menra Romial"><meta property="og:image" content="https://menraromial.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="627"><meta property="article:section" content="tutorial"><meta property="article:published_time" content="2025-08-24 17:30:00 +0000 UTC"><meta name=author content="Menra Romial"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"\"Guide to Building a Custom Kubernetes Scheduler\"","description":"\"Here is a complete, A-to-Z guide in English to develop and deploy your own Kubernetes scheduler using the Scheduling Framework. This guide is practical, detailed, and follows a step-by-step approach from concept to a working deployment in a kubeadm cluster.\"","url":"https:\/\/menraromial.com\/posts\/guide-building-custom-kubernetes-scheduler\/","datePublished":"2025-08-24","dateModified":"2025-08-24","author":{"@id":"https:\/\/menraromial.com\/#person","@type":"Person","name":"Menra Romial","url":"https:\/\/menraromial.com\/"},"keywords":"\"kubernetes, scheduler, kubeadm, plugin, opensource\""}</script></head><body><div class="container center"><header class=header><div class=header__inner><div class=header__logo><a href=/><div class=logo>MENRA ROMIAL</div></a></div><ul class="menu menu--mobile"><li class=menu__trigger>Menu&nbsp;▾</li><li><ul class=menu__dropdown><li><a href=/cv/>CV</a></li><li><a href=/news/>News</a></li><li><a href=/projects/>Projects</a></li><li><a href=/publications/>Publications</a></li><li><a href=/talks/>Talks</a></li><li><a href=/teaching/>Teaching</a></li></ul></li></ul></div><nav class=navigation-menu><ul class="navigation-menu__inner menu--desktop"><li><a href=/cv/>CV</a></li><li><a href=/news/>News</a></li><li><a href=/projects/>Projects</a></li><li><a href=/publications/>Publications</a></li><li><a href=/talks/>Talks</a></li><li><a href=/teaching/>Teaching</a></li></ul></nav></header><div class=content><article class=post><h1 class=post-title><a href=https://menraromial.com/posts/guide-building-custom-kubernetes-scheduler/>Guide to Building a Custom Kubernetes Scheduler</a></h1><div class=post-meta><time class=post-date>2025-08-24</time><span class=post-reading-time>15 min read (3010 words)</span></div><span class=post-tags>#<a href=https://menraromial.com/tags/kubernetes/>kubernetes</a>&nbsp;
+#<a href=https://menraromial.com/tags/scheduler/>scheduler</a>&nbsp;
+#<a href=https://menraromial.com/tags/kubeadm/>kubeadm</a>&nbsp;
+#<a href=https://menraromial.com/tags/plugin/>plugin</a>&nbsp;
+#<a href=https://menraromial.com/tags/opensource/>opensource</a>&nbsp;</span><div class=post-content><div><p>This guide will walk you through creating a custom scheduler plugin that influences where pods are placed based on custom logic. We will build a simple &ldquo;Network-Aware&rdquo; plugin that prefers to schedule pods on nodes with a specific network label.</p><p><strong>What We Will Build:</strong></p><ul><li><strong>A <code>Filter</code> plugin:</strong> It will only allow pods that request <code>high-speed</code> networking to be scheduled on nodes that are labeled as <code>network-topology=high-speed</code>.</li><li><strong>A <code>Score</code> plugin:</strong> It will give a higher score to nodes with the <code>high-speed</code> label, making them more desirable.</li><li>We will then package this plugin into a new scheduler binary, containerize it, and deploy it to a local Kubernetes cluster.</li></ul><hr><h3 id=part-1-understanding-the-foundations---the-scheduling-framework><strong>Part 1: Understanding the Foundations - The Scheduling Framework</strong><a href=#part-1-understanding-the-foundations---the-scheduling-framework class=hanchor arialabel=Anchor>#</a></h3><p>Before writing any code, it&rsquo;s crucial to understand the &ldquo;why&rdquo; and &ldquo;how&rdquo;.</p><h4 id=what-is-the-kubernetes-scheduler>What is the Kubernetes Scheduler?<a href=#what-is-the-kubernetes-scheduler class=hanchor arialabel=Anchor>#</a></h4><p>The default Kubernetes scheduler (<code>kube-scheduler</code>) is a control plane component that watches for newly created Pods that have no <code>nodeName</code> assigned. For every Pod it discovers, the scheduler becomes responsible for finding the best Node for that Pod to run on. This process involves two main phases:</p><ol><li><strong>Filtering (Predicates):</strong> The scheduler finds the set of feasible Nodes where the Pod <em>can</em> run. For example, if a Pod requests 2 CPUs, all nodes with less than 2 available CPUs are filtered out.</li><li><strong>Scoring (Priorities):</strong> From the list of feasible nodes, the scheduler ranks each node by assigning it a score. It then picks the node with the highest score. For example, it might prefer a node that has fewer running pods.</li></ol><h4 id=the-scheduling-framework-your-entry-point>The Scheduling Framework: Your Entry Point<a href=#the-scheduling-framework-your-entry-point class=hanchor arialabel=Anchor>#</a></h4><p>The Scheduling Framework is a pluggable architecture for the <code>kube-scheduler</code> that makes it easy to add custom logic without forking the entire Kubernetes codebase. It exposes a set of <strong>Extension Points</strong> in the scheduling lifecycle where your custom code (a <strong>Plugin</strong>) can be executed.</p><p><strong>Visualizing the Extension Points:</strong></p><p>Here is the flow of the scheduling process and where the main extension points fit in.</p><pre tabindex=0><code>                  (A Pod is created without a node)
+                                  |
+                                  v
++-------------------------------------------------------------------------+
+|                        SCHEDULING CYCLE (for one Pod)                     |
++-------------------------------------------------------------------------+
+                                  |
+                                  v
+[ QueueSort ] &lt;--- Your plugin can sort pods in the scheduling queue.
+                                  |
+                                  v
++-------------------------------------------------------------------------+
+|                      SCHEDULING ATTEMPT (for one Pod)                     |
++-------------------------------------------------------------------------+
+|                                 |                                       |
+|                                 v                                       |
+| [ PreFilter ] &lt;--- Pre-process info about the Pod before filtering.     |
+|                                 |                                       |
+|          --------------------- FOR EACH NODE ----------------------     |
+|          |                                                        |     |
+|          |    [ Filter ] &lt;--- Can this Pod run on this Node? (Yes/No) |   |
+|          |          (If No, Node is discarded for this Pod)        |     |
+|          |                                                        |     |
+|          ----------------------------------------------------------     |
+|                                 |                                       |
+|                                 v                                       |
+| [ PostFilter ] &lt;- If no nodes are viable, your plugin can take action.  |
+|                                 |                                       |
+|                                 v                                       |
+| [ PreScore ] &lt;--- Pre-process info before scoring viable nodes.         |
+|                                 |                                       |
+|          --------------------- FOR EACH VIABLE NODE ---------------     |
+|          |                                                        |     |
+|          |    [ Score ] &lt;--- Give this Node a score (e.g., 0-100).  |   |
+|          |                                                        |     |
+|          ----------------------------------------------------------     |
+|                                 |                                       |
+|                                 v                                       |
+| [ NormalizeScore ] &lt;- Modify all scores to fit a common scale.          |
+|                                 |                                       |
+|                                 v                                       |
+|                          (Scheduler picks Node with highest score)        |
+|                                 |                                       |
+|                                 v                                       |
++-------------------------------------------------------------------------+
+|                           BINDING CYCLE                                 |
++-------------------------------------------------------------------------+
+|                                 |                                       |
+|                                 v                                       |
+| [ Reserve ] &lt;--- Mark resources as &#34;reserved&#34; on the chosen node.       |
+|                                 |                                       |
+|                                 v                                       |
+| [ Permit ] &lt;--- Approve or deny the binding. Can delay binding.         |
+|                                 |                                       |
+|                                 v                                       |
+| [ PreBind ] &lt;--- Actions to take right before the Pod is bound.         |
+|                                 |                                       |
+|                                 v                                       |
+| [ Bind ] &lt;--- The actual binding of the Pod to the Node.                |
+|                                 |                                       |
+|                                 v                                       |
+| [ PostBind ] &lt;--- Actions to take after the binding is successful.      |
+|                                 |                                       |
++-------------------------------------------------------------------------+
+</code></pre><p>Our plugin will focus on the <strong><code>Filter</code></strong> and <strong><code>Score</code></strong> extension points.</p><hr><h3 id=part-2-setting-up-the-professional-development-environment><strong>Part 2: Setting Up the Professional Development Environment</strong><a href=#part-2-setting-up-the-professional-development-environment class=hanchor arialabel=Anchor>#</a></h3><p>This is where we align with the project&rsquo;s standards.</p><h4 id=prerequisites>Prerequisites:<a href=#prerequisites class=hanchor arialabel=Anchor>#</a></h4><ol><li><strong>Go:</strong> Version 1.19+ (the <code>scheduler-plugins</code> project specifies its version in the <code>go.mod</code> file).</li><li><strong>Docker:</strong> To build container images. Make sure the Docker daemon is running.</li><li><strong>kubectl:</strong> The Kubernetes command-line tool.</li><li><strong><code>kind</code></strong>: Our local Kubernetes cluster.</li></ol><h4 id=step-1-clone-the-scheduler-plugins-repository>Step 1: Clone the <code>scheduler-plugins</code> Repository<a href=#step-1-clone-the-scheduler-plugins-repository class=hanchor arialabel=Anchor>#</a></h4><p>We will use the official repository not just as a template, but as our direct development environment. This is the standard practice.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git clone https://github.com/kubernetes-sigs/scheduler-plugins.git
+</span></span><span style=display:flex><span>cd scheduler-plugins
+</span></span></code></pre></div><h4 id=step-2-explore-the-makefile>Step 2: Explore the <code>Makefile</code><a href=#step-2-explore-the-makefile class=hanchor arialabel=Anchor>#</a></h4><p>The <code>Makefile</code> in this repository is the heart of the development workflow. Instead of running raw <code>go</code> or <code>docker</code> commands, we will use <code>make</code> targets. This ensures consistency and correctness.</p><p>Key targets we will use:</p><ul><li><code>make verify</code>: Runs formatters and linters to ensure code quality. <strong>Always run this before committing.</strong></li><li><code>make unit-test</code>: Runs all unit tests in the repository.</li><li><code>make local-image</code>: <strong>This is crucial.</strong> It builds a scheduler container image for your local architecture, gives it a standard local name (<code>localhost:5000/...</code>), and loads it directly into your local Docker daemon. Perfect for testing with <code>kind</code>.</li><li><code>make build</code>: Compiles the Go binaries (<code>kube-scheduler</code> and <code>controller</code>) into the <code>/bin</code> directory.</li></ul><hr><h3 id=part-3-developing-our-custom-plugin><strong>Part 3: Developing Our Custom Plugin</strong><a href=#part-3-developing-our-custom-plugin class=hanchor arialabel=Anchor>#</a></h3><p>The core logic remains the same, but the process around it will be more rigorous.</p><h4 id=step-1-create-the-plugin-directory-and-file>Step 1: Create the Plugin Directory and File<a href=#step-1-create-the-plugin-directory-and-file class=hanchor arialabel=Anchor>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir -p pkg/networkspeed
+</span></span><span style=display:flex><span>touch pkg/networkspeed/networkspeed.go
+</span></span></code></pre></div><h4 id=step-2-write-the-plugin-code>Step 2: Write the Plugin Code<a href=#step-2-write-the-plugin-code class=hanchor arialabel=Anchor>#</a></h4><p>Place the same Go code from the previous guide into <code>pkg/networkspeed/networkspeed.go</code>. This code implements the <code>Filter</code> and <code>Score</code> extension points.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// pkg/networkspeed/networkspeed.go</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>networkspeed</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;context&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>v1</span> <span style=color:#e6db74>&#34;k8s.io/api/core/v1&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;k8s.io/apimachinery/pkg/runtime&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;k8s.io/klog/v2&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;k8s.io/kubernetes/pkg/scheduler/framework&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Define plugin name</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>Name</span> = <span style=color:#e6db74>&#34;Networkspeed&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> (
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Annotation key on a Pod to specify network preference.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>PodNetworkAnnotation</span> = <span style=color:#e6db74>&#34;my-network-preference&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Label key on a Node to specify the type of network it has.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>NodeNetworkLabel</span> = <span style=color:#e6db74>&#34;network-topology&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Value for high-speed network preference.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>HighSpeedNetwork</span> = <span style=color:#e6db74>&#34;high-speed&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Networkspeed is a plugin that filters and scores nodes based on network labels.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Networkspeed</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>handle</span> <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Handle</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Ensure our plugin implements the necessary interfaces.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>_</span> <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>FilterPlugin</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Networkspeed</span>{}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>_</span> <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>ScorePlugin</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Networkspeed</span>{}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Name returns the name of the plugin.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>na</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Networkspeed</span>) <span style=color:#a6e22e>Name</span>() <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>Name</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// New is the factory function that creates a new instance of the plugin.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// This is called by the scheduler framework when it initializes.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span>  <span style=color:#a6e22e>New</span>(<span style=color:#a6e22e>_</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>obj</span> <span style=color:#a6e22e>runtime</span>.<span style=color:#a6e22e>Object</span>, <span style=color:#a6e22e>handle</span> <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Handle</span>) (<span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Plugin</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>klog</span>.<span style=color:#a6e22e>V</span>(<span style=color:#ae81ff>3</span>).<span style=color:#a6e22e>Infof</span>(<span style=color:#e6db74>&#34;Creating new Networkspeed plugin&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Networkspeed</span>{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>handle</span>: <span style=color:#a6e22e>handle</span>,
+</span></span><span style=display:flex><span>	}, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ----------------- FILTERING LOGIC -----------------</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Filter is called by the framework for each node to see if the pod can be scheduled on it.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>na</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Networkspeed</span>) <span style=color:#a6e22e>Filter</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>state</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>CycleState</span>, <span style=color:#a6e22e>pod</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>v1</span>.<span style=color:#a6e22e>Pod</span>, <span style=color:#a6e22e>nodeInfo</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>NodeInfo</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Status</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>klog</span>.<span style=color:#a6e22e>V</span>(<span style=color:#ae81ff>3</span>).<span style=color:#a6e22e>Infof</span>(<span style=color:#e6db74>&#34;Filtering pod %v for node %v&#34;</span>, <span style=color:#a6e22e>pod</span>.<span style=color:#a6e22e>Name</span>, <span style=color:#a6e22e>nodeInfo</span>.<span style=color:#a6e22e>Node</span>().<span style=color:#a6e22e>Name</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 1. Get the pod&#39;s network preference from its annotations.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>podNetworkPreference</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>pod</span>.<span style=color:#a6e22e>Annotations</span>[<span style=color:#a6e22e>PodNetworkAnnotation</span>]
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// If the pod doesn&#39;t have the annotation, it has no special network needs.</span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// So, it can run on any node. We allow it.</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>NewStatus</span>(<span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Success</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 2. If the pod requests a high-speed network...</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>podNetworkPreference</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>HighSpeedNetwork</span> {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// ...check if the node has the required label.</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>nodeLabels</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>nodeInfo</span>.<span style=color:#a6e22e>Node</span>().<span style=color:#a6e22e>GetLabels</span>()
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>nodeNetworkType</span>, <span style=color:#a6e22e>labelExists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>nodeLabels</span>[<span style=color:#a6e22e>NodeNetworkLabel</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>labelExists</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>nodeNetworkType</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>HighSpeedNetwork</span> {
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// The node has the required label. The pod can run here.</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>klog</span>.<span style=color:#a6e22e>V</span>(<span style=color:#ae81ff>3</span>).<span style=color:#a6e22e>Infof</span>(<span style=color:#e6db74>&#34;Node %v has the required &#39;%s&#39; label. Allowing pod %v.&#34;</span>, <span style=color:#a6e22e>nodeInfo</span>.<span style=color:#a6e22e>Node</span>().<span style=color:#a6e22e>Name</span>, <span style=color:#a6e22e>HighSpeedNetwork</span>, <span style=color:#a6e22e>pod</span>.<span style=color:#a6e22e>Name</span>)
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>NewStatus</span>(<span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Success</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>		} <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// The node does not have the label. The pod cannot run here.</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>klog</span>.<span style=color:#a6e22e>V</span>(<span style=color:#ae81ff>3</span>).<span style=color:#a6e22e>Infof</span>(<span style=color:#e6db74>&#34;Node %v does not have the required &#39;%s&#39; label. Filtering out.&#34;</span>, <span style=color:#a6e22e>nodeInfo</span>.<span style=color:#a6e22e>Node</span>().<span style=color:#a6e22e>Name</span>, <span style=color:#a6e22e>HighSpeedNetwork</span>)
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>NewStatus</span>(<span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Unschedulable</span>, <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprintf</span>(<span style=color:#e6db74>&#34;Node %s lacks required network label&#34;</span>, <span style=color:#a6e22e>nodeInfo</span>.<span style=color:#a6e22e>Node</span>().<span style=color:#a6e22e>Name</span>))
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// For any other annotation value, we don&#39;t apply any special filtering.</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>NewStatus</span>(<span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Success</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ----------------- SCORING LOGIC -----------------</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Score is called for each node that passed the Filter phase.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// It returns a score for the node, with higher scores being better.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>na</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Networkspeed</span>) <span style=color:#a6e22e>Score</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>state</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>CycleState</span>, <span style=color:#a6e22e>pod</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>v1</span>.<span style=color:#a6e22e>Pod</span>, <span style=color:#a6e22e>nodeName</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>int64</span>, <span style=color:#f92672>*</span><span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Status</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>klog</span>.<span style=color:#a6e22e>V</span>(<span style=color:#ae81ff>3</span>).<span style=color:#a6e22e>Infof</span>(<span style=color:#e6db74>&#34;Scoring node %v for pod %v&#34;</span>, <span style=color:#a6e22e>nodeName</span>, <span style=color:#a6e22e>pod</span>.<span style=color:#a6e22e>Name</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>nodeInfo</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>na</span>.<span style=color:#a6e22e>handle</span>.<span style=color:#a6e22e>SnapshotSharedLister</span>().<span style=color:#a6e22e>NodeInfos</span>().<span style=color:#a6e22e>Get</span>(<span style=color:#a6e22e>nodeName</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>AsStatus</span>(<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;getting node %s from snapshot: %w&#34;</span>, <span style=color:#a6e22e>nodeName</span>, <span style=color:#a6e22e>err</span>))
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>nodeLabels</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>nodeInfo</span>.<span style=color:#a6e22e>Node</span>().<span style=color:#a6e22e>GetLabels</span>()
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>podNetworkPreference</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>pod</span>.<span style=color:#a6e22e>Annotations</span>[<span style=color:#a6e22e>PodNetworkAnnotation</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// If the pod wants a high-speed network and the node has it, give it the highest score.</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>ok</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>podNetworkPreference</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>HighSpeedNetwork</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>nodeNetworkType</span>, <span style=color:#a6e22e>labelExists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>nodeLabels</span>[<span style=color:#a6e22e>NodeNetworkLabel</span>]; <span style=color:#a6e22e>labelExists</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>nodeNetworkType</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>HighSpeedNetwork</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>klog</span>.<span style=color:#a6e22e>V</span>(<span style=color:#ae81ff>3</span>).<span style=color:#a6e22e>Infof</span>(<span style=color:#e6db74>&#34;Node %v matches high-speed preference. Giving max score (100).&#34;</span>, <span style=color:#a6e22e>nodeName</span>)
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>100</span>, <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>NewStatus</span>(<span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Success</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// For all other cases, give a minimal score. The scheduler will still use other plugins</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// (like least-allocated) to make a final decision.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>klog</span>.<span style=color:#a6e22e>V</span>(<span style=color:#ae81ff>3</span>).<span style=color:#a6e22e>Infof</span>(<span style=color:#e6db74>&#34;Node %v does not match high-speed preference. Giving min score (10).&#34;</span>, <span style=color:#a6e22e>nodeName</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>10</span>, <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>NewStatus</span>(<span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>Success</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ScoreExtensions returns a ScoreExtensions interface if the plugin implements one.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>na</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Networkspeed</span>) <span style=color:#a6e22e>ScoreExtensions</span>() <span style=color:#a6e22e>framework</span>.<span style=color:#a6e22e>ScoreExtensions</span> {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// We don&#39;t need to normalize scores, so we return nil.</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=step-3-register-the-plugin>Step 3: Register the Plugin<a href=#step-3-register-the-plugin class=hanchor arialabel=Anchor>#</a></h4><p>This step is also the same. We must tell the main binary about our new plugin.</p><p>Edit <code>cmd/scheduler/main.go</code> and add our plugin to the registry.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// cmd/scheduler/main.go</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// ... other imports</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;k8s.io/component-base/cli&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;k8s.io/kubernetes/cmd/kube-scheduler/app&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// IMPORT YOUR PLUGIN&#39;S PACKAGE</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;sigs.k8s.io/scheduler-plugins/pkg/networkspeed&#34;</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// ... other plugin imports</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Register all plugins.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>command</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>NewSchedulerCommand</span>(
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>WithPlugin</span>(<span style=color:#a6e22e>networkspeed</span>.<span style=color:#a6e22e>Name</span>, <span style=color:#a6e22e>networkspeed</span>.<span style=color:#a6e22e>New</span>), <span style=color:#75715e>// &lt;-- ADD THIS LINE</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>WithPlugin</span>(<span style=color:#a6e22e>coscheduling</span>.<span style=color:#a6e22e>Name</span>, <span style=color:#a6e22e>coscheduling</span>.<span style=color:#a6e22e>New</span>),
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// ... other plugins</span>
+</span></span><span style=display:flex><span>	)
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// ...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><hr><h3 id=part-4-verifying-building-and-packaging><strong>Part 4: Verifying, Building, and Packaging</strong><a href=#part-4-verifying-building-and-packaging class=hanchor arialabel=Anchor>#</a></h3><p>This section is completely revamped to use the official <code>Makefile</code>.</p><h4 id=step-1-verify-your-code-quality>Step 1: Verify Your Code Quality<a href=#step-1-verify-your-code-quality class=hanchor arialabel=Anchor>#</a></h4><p>Before you even think about building, run the verification scripts. This catches formatting errors, dependency issues, and other common problems.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>make verify
+</span></span></code></pre></div><p>If this command fails, fix the issues it reports (e.g., run <code>go fmt ./...</code>) and try again. This is a standard prerequisite for contributing to open-source projects.</p><h4 id=step-2-build-the-local-container-image>Step 2: Build the Local Container Image<a href=#step-2-build-the-local-container-image class=hanchor arialabel=Anchor>#</a></h4><p>This is the most significant improvement. Forget manually setting registry and image names. The <code>local-image</code> target is designed specifically for this workflow.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>make local-image
+</span></span></code></pre></div><p><strong>What does this command do?</strong></p><ol><li>It compiles your Go code, including the new <code>networkspeed</code> plugin, into a <code>kube-scheduler</code> binary.</li><li>It builds a container image using Docker.</li><li>It automatically sets the platform to your local machine&rsquo;s architecture (e.g., <code>linux/amd64</code> or <code>linux/arm64</code>).</li><li>It tags the image with a convenient name for local development: <code>localhost:5000/scheduler-plugins/kube-scheduler:v0.0.0</code>.</li><li>It uses the <code>--load</code> flag with <code>docker buildx</code> to ensure the final image is available in your local Docker daemon, ready for <code>kind</code> to use.</li></ol><p>After it finishes, you can confirm the image exists:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker images | grep scheduler-plugins
+</span></span></code></pre></div><p>You should see <code>localhost:5000/scheduler-plugins/kube-scheduler</code>.</p><hr><h3 id=part-5--production-grade-deployment-on-vms><strong>Part 5 : Production-Grade Deployment on VMs</strong><a href=#part-5--production-grade-deployment-on-vms class=hanchor arialabel=Anchor>#</a></h3><p>We will provision two Virtual Machines (one control-plane, one worker) and bootstrap a Kubernetes cluster using the <code>kubeadm</code> tool.</p><h4 id=prerequisites-for-this-section>Prerequisites for this Section:<a href=#prerequisites-for-this-section class=hanchor arialabel=Anchor>#</a></h4><ul><li><strong>VirtualBox and Vagrant:</strong> For easily provisioning and managing local VMs.</li><li><strong>Sufficient System Resources:</strong> At least 4 CPUs and 8GB of RAM available for the VMs.</li></ul><h4 id=step-1-provision-the-virtual-machines>Step 1: Provision the Virtual Machines<a href=#step-1-provision-the-virtual-machines class=hanchor arialabel=Anchor>#</a></h4><p>We&rsquo;ll use a <code>Vagrantfile</code> to define our two-node cluster. Create a file named <code>Vagrantfile</code> with the following content:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#75715e># Vagrantfile</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>Vagrant</span><span style=color:#f92672>.</span>configure(<span style=color:#e6db74>&#34;2&#34;</span>) <span style=color:#66d9ef>do</span> <span style=color:#f92672>|</span>config<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>  config<span style=color:#f92672>.</span>vm<span style=color:#f92672>.</span>box <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;ubuntu/jammy64&#34;</span>
+</span></span><span style=display:flex><span>  config<span style=color:#f92672>.</span>vm<span style=color:#f92672>.</span>provider <span style=color:#e6db74>&#34;virtualbox&#34;</span> <span style=color:#66d9ef>do</span> <span style=color:#f92672>|</span>v<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>    v<span style=color:#f92672>.</span>memory <span style=color:#f92672>=</span> <span style=color:#ae81ff>4096</span>
+</span></span><span style=display:flex><span>    v<span style=color:#f92672>.</span>cpus <span style=color:#f92672>=</span> <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  config<span style=color:#f92672>.</span>vm<span style=color:#f92672>.</span>define <span style=color:#e6db74>&#34;k8s-control-plane&#34;</span> <span style=color:#66d9ef>do</span> <span style=color:#f92672>|</span>control<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>    control<span style=color:#f92672>.</span>vm<span style=color:#f92672>.</span>hostname <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;k8s-control-plane&#34;</span>
+</span></span><span style=display:flex><span>    control<span style=color:#f92672>.</span>vm<span style=color:#f92672>.</span>network <span style=color:#e6db74>&#34;private_network&#34;</span>, <span style=color:#e6db74>ip</span>: <span style=color:#e6db74>&#34;192.168.56.10&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  config<span style=color:#f92672>.</span>vm<span style=color:#f92672>.</span>define <span style=color:#e6db74>&#34;k8s-worker-01&#34;</span> <span style=color:#66d9ef>do</span> <span style=color:#f92672>|</span>worker<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>    worker<span style=color:#f92672>.</span>vm<span style=color:#f92672>.</span>hostname <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;k8s-worker-01&#34;</span>
+</span></span><span style=display:flex><span>    worker<span style=color:#f92672>.</span>vm<span style=color:#f92672>.</span>network <span style=color:#e6db74>&#34;private_network&#34;</span>, <span style=color:#e6db74>ip</span>: <span style=color:#e6db74>&#34;192.168.56.11&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><p>Now, bring up the machines:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>vagrant up
+</span></span></code></pre></div><h4 id=step-2-install-container-runtime-and-kubernetes-tools-on-both-vms>Step 2: Install Container Runtime and Kubernetes Tools on Both VMs<a href=#step-2-install-container-runtime-and-kubernetes-tools-on-both-vms class=hanchor arialabel=Anchor>#</a></h4><p>Execute these commands on <strong>both</strong> the <code>k8s-control-plane</code> and <code>k8s-worker-01</code> VMs. You can connect using <code>vagrant ssh k8s-control-plane</code> and <code>vagrant ssh k8s-worker-01</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># SSH into each VM and run the following:</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. Install prerequisites and containerd</span>
+</span></span><span style=display:flex><span>sudo apt-get update
+</span></span><span style=display:flex><span>sudo apt-get install -y apt-transport-https ca-certificates curl
+</span></span><span style=display:flex><span>sudo mkdir -p /etc/apt/keyrings
+</span></span><span style=display:flex><span>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;deb [arch=</span><span style=color:#66d9ef>$(</span>dpkg --print-architecture<span style=color:#66d9ef>)</span><span style=color:#e6db74> signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu </span><span style=color:#66d9ef>$(</span>lsb_release -cs<span style=color:#66d9ef>)</span><span style=color:#e6db74> stable&#34;</span> | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+</span></span><span style=display:flex><span>sudo apt-get update
+</span></span><span style=display:flex><span>sudo apt-get install -y containerd.io
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. Configure containerd and enable required kernel modules</span>
+</span></span><span style=display:flex><span>sudo mkdir -p /etc/containerd
+</span></span><span style=display:flex><span>sudo containerd config default | sudo tee /etc/containerd/config.toml
+</span></span><span style=display:flex><span>sudo sed -i <span style=color:#e6db74>&#39;s/SystemdCgroup = false/SystemdCgroup = true/&#39;</span> /etc/containerd/config.toml
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>overlay
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>br_netfilter
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>sudo modprobe overlay
+</span></span><span style=display:flex><span>sudo modprobe br_netfilter
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>net.bridge.bridge-nf-call-ip6tables = 1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>net.bridge.bridge-nf-call-iptables = 1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>net.ipv4.ip_forward = 1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>sudo sysctl --system
+</span></span><span style=display:flex><span>sudo systemctl restart containerd
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. Disable swap</span>
+</span></span><span style=display:flex><span>sudo swapoff -a
+</span></span><span style=display:flex><span>sudo sed -i <span style=color:#e6db74>&#39;/ swap / s/^\(.*\)$/#\1/g&#39;</span> /etc/fstab
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 4. Install kubeadm, kubelet, and kubectl</span>
+</span></span><span style=display:flex><span>sudo apt-get update
+</span></span><span style=display:flex><span>curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main&#34;</span> | sudo tee /etc/apt/sources.list.d/kubernetes.list
+</span></span><span style=display:flex><span>sudo apt-get update
+</span></span><span style=display:flex><span>sudo apt-get install -y kubelet kubeadm kubectl
+</span></span><span style=display:flex><span>sudo apt-mark hold kubelet kubeadm kubectl
+</span></span></code></pre></div><h4 id=step-3-initialize-the-control-plane-node>Step 3: Initialize the Control-Plane Node<a href=#step-3-initialize-the-control-plane-node class=hanchor arialabel=Anchor>#</a></h4><p>Run this command <strong>only on the <code>k8s-control-plane</code> VM</strong>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># On k8s-control-plane</span>
+</span></span><span style=display:flex><span>sudo kubeadm init --pod-network-cidr<span style=color:#f92672>=</span>10.244.0.0/16 --apiserver-advertise-address<span style=color:#f92672>=</span>192.168.56.10
+</span></span></code></pre></div><p>This command will take a few minutes. At the end, it will output two important things:</p><ol><li>Commands to set up <code>kubectl</code> for the <code>vagrant</code> user.</li><li>A <code>kubeadm join</code> command with a token. <strong>Copy this join command and save it.</strong></li></ol><p>Run the <code>kubectl</code> setup commands on the control-plane node:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># On k8s-control-plane</span>
+</span></span><span style=display:flex><span>mkdir -p $HOME/.kube
+</span></span><span style=display:flex><span>sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+</span></span><span style=display:flex><span>sudo chown <span style=color:#66d9ef>$(</span>id -u<span style=color:#66d9ef>)</span>:<span style=color:#66d9ef>$(</span>id -g<span style=color:#66d9ef>)</span> $HOME/.kube/config
+</span></span></code></pre></div><h4 id=step-4-install-a-cni-network-plugin>Step 4: Install a CNI Network Plugin<a href=#step-4-install-a-cni-network-plugin class=hanchor arialabel=Anchor>#</a></h4><p>The cluster nodes will not be <code>Ready</code> until a CNI is installed. From the control-plane node, install Calico:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># On k8s-control-plane</span>
+</span></span><span style=display:flex><span>kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+</span></span></code></pre></div><h4 id=step-5-join-the-worker-node>Step 5: Join the Worker Node<a href=#step-5-join-the-worker-node class=hanchor arialabel=Anchor>#</a></h4><p>Now, SSH into the <code>k8s-worker-01</code> VM and run the <code>kubeadm join</code> command that you saved from Step 3. It will look something like this (your token and hash will be different):</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># On k8s-worker-01</span>
+</span></span><span style=display:flex><span>sudo kubeadm join 192.168.56.10:6443 --token abcdef.1234567890abcdef <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>	--discovery-token-ca-cert-hash sha256:1234...cdef
+</span></span></code></pre></div><p>After a minute, verify that both nodes are <code>Ready</code> from the control-plane node:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># On k8s-control-plane</span>
+</span></span><span style=display:flex><span>kubectl get nodes
+</span></span></code></pre></div><h4 id=step-6-provision-the-static-configuration-on-the-control-plane>Step 6: Provision the Static Configuration on the Control-Plane<a href=#step-6-provision-the-static-configuration-on-the-control-plane class=hanchor arialabel=Anchor>#</a></h4><p>This is the critical step. We must place our custom scheduler&rsquo;s configuration file at the exact path <code>/etc/kubernetes/config/scheduler-config.yaml</code> on the <code>k8s-control-plane</code> VM.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Run this from your local machine (not inside a VM)</span>
+</span></span><span style=display:flex><span>vagrant ssh k8s-control-plane -- -t <span style=color:#e6db74>&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  sudo mkdir -p /etc/kubernetes/config &amp;&amp; \
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  sudo bash -c &#34;cat &gt; /etc/kubernetes/config/scheduler-config.yaml&#34; &lt;&lt;EOF
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>apiVersion: kubescheduler.config.k8s.io/v1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>kind: KubeSchedulerConfiguration
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>leaderElection:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  leaderElect: false
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>clientConnection:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  kubeconfig: &#34;/etc/kubernetes/scheduler.conf&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>profiles:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  - schedulerName: my-custom-scheduler
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    plugins:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>      multiPoint:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        enabled:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          - name: &#34;Networkspeed&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Verify the file was created correctly</span>
+</span></span><span style=display:flex><span>vagrant ssh k8s-control-plane -- <span style=color:#e6db74>&#34;sudo cat /etc/kubernetes/config/scheduler-config.yaml&#34;</span>
+</span></span></code></pre></div><h4 id=step-7-load-the-custom-scheduler-image-onto-the-cluster-nodes>Step 7: Load the Custom Scheduler Image onto the Cluster Nodes<a href=#step-7-load-the-custom-scheduler-image-onto-the-cluster-nodes class=hanchor arialabel=Anchor>#</a></h4><p>The container image we built exists only on our local machine. We need to transfer it to our VMs.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 1. On your local machine, save the Docker image to a tar file</span>
+</span></span><span style=display:flex><span>docker save localhost:5000/scheduler-plugins/kube-scheduler:v0.0.0 &gt; scheduler.tar
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. Copy the tar file to both VMs</span>
+</span></span><span style=display:flex><span>vagrant scp scheduler.tar k8s-control-plane:/home/vagrant/scheduler.tar
+</span></span><span style=display:flex><span>vagrant scp scheduler.tar k8s-worker-01:/home/vagrant/scheduler.tar
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. SSH into EACH VM and load the image into containerd</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># On k8s-control-plane:</span>
+</span></span><span style=display:flex><span>vagrant ssh k8s-control-plane -- <span style=color:#e6db74>&#34;sudo ctr -n=k8s.io images import /home/vagrant/scheduler.tar&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># On k8s-worker-01:</span>
+</span></span><span style=display:flex><span>vagrant ssh k8s-worker-01 -- <span style=color:#e6db74>&#34;sudo ctr -n=k8s.io images import /home/vagrant/scheduler.tar&#34;</span>
+</span></span></code></pre></div><h4 id=step-8-deploy-the-custom-scheduler>Step 8: Deploy the Custom Scheduler<a href=#step-8-deploy-the-custom-scheduler class=hanchor arialabel=Anchor>#</a></h4><p>Create the final <code>deploy-kubeadm.yaml</code> manifest on your local machine. This file is identical to the previous &ldquo;correct&rdquo; version, as it&rsquo;s designed to run in a real cluster environment.</p><p><code>deploy-kubeadm.yaml</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ServiceAccount</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>my-custom-scheduler</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>kube-system</span>
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ClusterRoleBinding</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>my-custom-scheduler-as-kube-scheduler</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>subjects</span>:
+</span></span><span style=display:flex><span>- <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ServiceAccount</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>my-custom-scheduler</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>kube-system</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>roleRef</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ClusterRole</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>system:kube-scheduler</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>my-custom-scheduler</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>kube-system</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>my-custom-scheduler</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>replicas</span>: <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>my-custom-scheduler</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>template</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>my-custom-scheduler</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>serviceAccountName</span>: <span style=color:#ae81ff>my-custom-scheduler</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>nodeSelector</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>node-role.kubernetes.io/control-plane</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>tolerations</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>effect</span>: <span style=color:#ae81ff>NoSchedule</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>key</span>: <span style=color:#ae81ff>node-role.kubernetes.io/control-plane</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>my-custom-scheduler-ctr</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>image</span>: <span style=color:#ae81ff>localhost:5000/scheduler-plugins/kube-scheduler:v0.0.0</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>imagePullPolicy</span>: <span style=color:#ae81ff>IfNotPresent</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>args</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>/bin/kube-scheduler</span>
+</span></span><span style=display:flex><span>            - --<span style=color:#ae81ff>authentication-kubeconfig=/etc/kubernetes/scheduler.conf</span>
+</span></span><span style=display:flex><span>            - --<span style=color:#ae81ff>authorization-kubeconfig=/etc/kubernetes/scheduler.conf</span>
+</span></span><span style=display:flex><span>            - --<span style=color:#ae81ff>config=/etc/kubernetes/config/scheduler-config.yaml</span>
+</span></span><span style=display:flex><span>            - -<span style=color:#ae81ff>v=3</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>volumeMounts</span>:
+</span></span><span style=display:flex><span>          - <span style=color:#f92672>mountPath</span>: <span style=color:#ae81ff>/etc/kubernetes</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>name</span>: <span style=color:#ae81ff>etckubernetes</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>readOnly</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>etckubernetes</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>hostPath</span>:
+</span></span><span style=display:flex><span>          <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/etc/kubernetes</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>type</span>: <span style=color:#ae81ff>Directory</span>
+</span></span></code></pre></div><p>Now, apply this manifest to your new <code>kubeadm</code> cluster. You can copy this file to the control-plane node or configure <code>kubectl</code> on your host to point to the new cluster. The simplest is to run it from the control-plane:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Copy the YAML to the control plane</span>
+</span></span><span style=display:flex><span>vagrant scp deploy-kubeadm.yaml k8s-control-plane:/home/vagrant/
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Apply it from within the control plane VM</span>
+</span></span><span style=display:flex><span>vagrant ssh k8s-control-plane -- <span style=color:#e6db74>&#34;kubectl apply -f deploy-kubeadm.yaml&#34;</span>
+</span></span></code></pre></div><p>Verify the scheduler pod is running on the control-plane node:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>vagrant ssh k8s-control-plane -- <span style=color:#e6db74>&#34;kubectl get pods -n kube-system -l app=my-custom-scheduler -o wide&#34;</span>
+</span></span></code></pre></div><hr><h3 id=part-6-testing-the-custom-scheduler><strong>Part 6: Testing the Custom Scheduler</strong><a href=#part-6-testing-the-custom-scheduler class=hanchor arialabel=Anchor>#</a></h3><p>The testing process is identical, but you will run the commands from your <code>k8s-control-plane</code> VM where <code>kubectl</code> is configured.</p><ol><li><strong>Label the worker node:</strong><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    <span style=color:#75715e># On k8s-control-plane VM</span>
+</span></span><span style=display:flex><span>    kubectl label node k8s-worker-01 network-topology<span style=color:#f92672>=</span>high-speed
+</span></span></code></pre></div></li><li><strong>Create and apply <code>test-pod.yaml</code>:</strong><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>    <span style=color:#75715e># test-pod.yaml</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Pod</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>high-speed-pod</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>annotations</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>my-network-preference</span>: <span style=color:#e6db74>&#34;high-speed&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>schedulerName</span>: <span style=color:#ae81ff>my-custom-scheduler</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>nginx</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>nginx</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># On k8s-control-plane VM, apply the pod</span>
+</span></span><span style=display:flex><span>kubectl apply -f test-pod.yaml
+</span></span></code></pre></div></li><li><strong>Verify the pod placement:</strong><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># On k8s-control-plane VM</span>
+</span></span><span style=display:flex><span>kubectl get pod high-speed-pod -o wide
+</span></span></code></pre></div>The pod should be running on the <code>k8s-worker-01</code> node.</li></ol><p>You have now successfully built a custom scheduler and deployed it to a realistic, multi-node <code>kubeadm</code> cluster.</p><p><strong>Your Professional Next Steps:</strong></p><ol><li><strong>Write Unit Tests:</strong> Create a <code>pkg/networkspeed/networkspeed_test.go</code> file. The repository has many examples. Once written, you can run them with <code>make unit-test</code>.</li><li><strong>Run Integration Tests:</strong> The project has a framework for integration tests that spin up real API servers. You can add one for your plugin and run it via <code>make integration-test</code>.</li><li><strong>Pushing to a Real Registry:</strong> When you are ready to share your scheduler, you can use the <code>push-images</code> target. This requires setting environment variables:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Example for pushing to Docker Hub</span>
+</span></span><span style=display:flex><span>export REGISTRY<span style=color:#f92672>=</span>docker.io/your-username
+</span></span><span style=display:flex><span>export RELEASE_VERSION<span style=color:#f92672>=</span>v0.1.0
+</span></span><span style=display:flex><span>make push-images 
+</span></span></code></pre></div>This will build and push a properly tagged image (e.g., <code>docker.io/your-username/kube-scheduler:v0.1.0</code>) to a remote registry.</li><li><strong>Contribute Back:</strong> If you&rsquo;ve built a generally useful plugin, you can contribute it back to the <code>scheduler-plugins</code> project! Following this workflow (<code>make verify</code>, adding tests) is the first step to a successful Pull Request.</li></ol></div></div><div class=pagination><div class=pagination__title><span class=pagination__title-h>Read other posts</span><hr></div><div class=pagination__buttons><a href=https://menraromial.com/posts/building-a-kubernetes-controller-with-kubebuilder-from-scratch/ class="button inline prev">&lt; [<span class=button__text>Building a Kubernetes Controller with Kubebuilder from Scratch</span>]
+</a>::
+<a href=https://menraromial.com/posts/master-ci-ci-pipeline-locally/ class="button inline next">[<span class=button__text>Master the CI/CD Pipeline Locally</span>] ></a></div></div></article></div><footer class=footer><div class=footer__inner><div class=socials><a class=socials__link href=https://github.com/menraromial title=GitHub aria-label=GitHub target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a>
+<a class=socials__link href=https://www.linkedin.com/in/menraromial title=LinkedIn aria-label=LinkedIn target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4V9h4v1.34A6 6 0 0116 9z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+<a class=socials__link href=https://x.com/mwrdev_ title="X (Twitter)" aria-label="X (Twitter)" target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932zM17.61 20.644h2.039L6.486 3.24H4.298z"/></svg></a>
+<a class=socials__link href=https://medium.com/@menraromial title=Medium aria-label=Medium target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.54 12a6.8 6.8.0 01-6.77 6.82A6.8 6.8.0 010 12a6.8 6.8.0 016.77-6.82A6.8 6.8.0 0113.54 12zm7.42.0c0 3.54-1.51 6.42-3.38 6.42-1.87.0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.87 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75s-1.19-2.58-1.19-5.75.53-5.75 1.19-5.75S24 8.83 24 12z"/></svg></a>
+<a class=socials__link href=https://orcid.org/0009-0007-0943-8593 title=ORCID aria-label=ORCID target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.372.0.0 5.372.0 12s5.372 12 12 12 12-5.372 12-12S18.628.0 12 0zM7.369 4.378c.525.0.947.431.947.947s-.422.947-.947.947a.95.95.0 01-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562.0h3.9c3.712.0 5.344 2.653 5.344 5.025.0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272.0 4.022-2.484 4.022-3.722.0-2.016-1.284-3.722-4.097-3.722h-2.222z"/></svg></a>
+<a class=socials__link href=mailto:itsme@menraromial.com title=Email aria-label=Email><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a></div><div class=copyright><span>© 2026 Menra Romial :: Powered by <a href=https://gohugo.io>Hugo</a></span>
+<span>:: <a href=https://github.com/panr/hugo-theme-terminal target=_blank>Theme</a> made by <a href=https://github.com/panr target=_blank>panr</a></span></div></div></footer><script type=text/javascript src=/bundle.min.js></script></div></body></html>

@@ -1,0 +1,905 @@
+<!doctype html><html lang=en><head><title>Master the CI/CD Pipeline Locally :: Menra Romial</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Welcome to this comprehensive course on DevOps culture and tooling. The goal is to guide you, step-by-step, from theory to practice, empowering you to build, secure, and automate a full Continuous Integration and Continuous Deployment (CI/CD) pipeline."><meta name=keywords content="menra,romial,menra romial,romial menra,menra wedwang romial,wedwang,menra w. romial,menraromial,cloud computing,kubernetes,energy-aware computing,green computing,green it,power management,intel rapl,distributed systems,phd,inria,imt atlantique"><meta name=robots content="noodp"><link rel=canonical href=https://menraromial.com/posts/master-ci-ci-pipeline-locally/><link rel=stylesheet href=https://menraromial.com/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css><link rel=stylesheet href=https://menraromial.com/css/code.min.d529ea4b2fb8d34328d7d31afc5466d5f7bc2f0bc9abdd98b69385335d7baee4.css><link rel=stylesheet href=https://menraromial.com/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css><link rel=stylesheet href=https://menraromial.com/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css><link rel=stylesheet href=https://menraromial.com/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css><link rel=stylesheet href=https://menraromial.com/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css><link rel=stylesheet href=https://menraromial.com/css/main.min.36833afd348409fc6c3d09d0897c5833d9d5bf1ff31f5e60ea3ee42ce2b1268c.css><link rel=stylesheet href=https://menraromial.com/css/menu.min.3c17467ebeb3d38663dce68f71f519901124fa5cbb4519b2fb0667a21e9aca39.css><link rel=stylesheet href=https://menraromial.com/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css><link rel=stylesheet href=https://menraromial.com/css/post.min.e6dddd258e64c83e05cec0cd49c05216742d42fc8ecbfbe6b67083412b609bd3.css><link rel=stylesheet href=https://menraromial.com/css/syntax.min.a0773cce9310cb6d8ed23e50f005448facf29a53001b57e038828daa466b25c0.css><link rel=stylesheet href=https://menraromial.com/css/terminal.min.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css><link rel=stylesheet href=https://menraromial.com/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css><link rel=stylesheet href=https://menraromial.com/style.css><link rel="shortcut icon" href=https://menraromial.com/favicon.png><link rel=apple-touch-icon href=https://menraromial.com/apple-touch-icon.png><meta name=twitter:card content="summary"><meta name=twitter:site content="@mwrdev_"><meta name=twitter:creator content><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="og:title" content="Master the CI/CD Pipeline Locally"><meta property="og:description" content="Welcome to this comprehensive course on DevOps culture and tooling. The goal is to guide you, step-by-step, from theory to practice, empowering you to build, secure, and automate a full Continuous Integration and Continuous Deployment (CI/CD) pipeline."><meta property="og:url" content="https://menraromial.com/posts/master-ci-ci-pipeline-locally/"><meta property="og:site_name" content="Menra Romial"><meta property="og:image" content="https://menraromial.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="627"><meta property="article:section" content="course"><meta property="article:published_time" content="2025-08-20 10:30:00 +0000 UTC"><meta name=author content="Menra Romial"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"\"Master the CI/CD Pipeline Locally\"","description":"\"Welcome to this comprehensive course on DevOps culture and tooling. The goal is to guide you, step-by-step, from theory to practice, empowering you to build, secure, and automate a full Continuous Integration and Continuous Deployment (CI/CD) pipeline.\"","url":"https:\/\/menraromial.com\/posts\/master-ci-ci-pipeline-locally\/","datePublished":"2025-08-20","dateModified":"2025-08-20","author":{"@id":"https:\/\/menraromial.com\/#person","@type":"Person","name":"Menra Romial","url":"https:\/\/menraromial.com\/"},"keywords":"\"kubernetes, docker, ansible, terraform, jenkin, gitea\""}</script></head><body><div class="container center"><header class=header><div class=header__inner><div class=header__logo><a href=/><div class=logo>MENRA ROMIAL</div></a></div><ul class="menu menu--mobile"><li class=menu__trigger>Menu&nbsp;▾</li><li><ul class=menu__dropdown><li><a href=/cv/>CV</a></li><li><a href=/news/>News</a></li><li><a href=/projects/>Projects</a></li><li><a href=/publications/>Publications</a></li><li><a href=/talks/>Talks</a></li><li><a href=/teaching/>Teaching</a></li></ul></li></ul></div><nav class=navigation-menu><ul class="navigation-menu__inner menu--desktop"><li><a href=/cv/>CV</a></li><li><a href=/news/>News</a></li><li><a href=/projects/>Projects</a></li><li><a href=/publications/>Publications</a></li><li><a href=/talks/>Talks</a></li><li><a href=/teaching/>Teaching</a></li></ul></nav></header><div class=content><article class=post><h1 class=post-title><a href=https://menraromial.com/posts/master-ci-ci-pipeline-locally/>Master the CI/CD Pipeline Locally</a></h1><div class=post-meta><time class=post-date>2025-08-20</time><span class=post-reading-time>31 min read (6559 words)</span></div><span class=post-tags>#<a href=https://menraromial.com/tags/kubernetes/>kubernetes</a>&nbsp;
+#<a href=https://menraromial.com/tags/docker/>docker</a>&nbsp;
+#<a href=https://menraromial.com/tags/ansible/>ansible</a>&nbsp;
+#<a href=https://menraromial.com/tags/terraform/>terraform</a>&nbsp;
+#<a href=https://menraromial.com/tags/jenkin/>jenkin</a>&nbsp;
+#<a href=https://menraromial.com/tags/gitea/>gitea</a>&nbsp;</span><div class=post-content><div><p>Welcome to this comprehensive course on DevOps culture and tooling. The goal is to guide you, step-by-step, from theory to practice, empowering you to build, secure, and automate a full Continuous Integration and Continuous Deployment (CI/CD) pipeline.</p><p><strong>Course Philosophy:</strong>
+Everything we learn will be put into practice in a <strong>100% local lab environment</strong>, running on your own machine using Docker. You will not need any cloud accounts or paid services. Every concept is illustrated with hands-on workshops and concrete examples.</p><h2 id=course-navigation><strong>Course Navigation</strong><a href=#course-navigation class=hanchor arialabel=Anchor>#</a></h2><ul><li><a href=/posts/master-ci-ci-pipeline-locally/#module-00-introduction-to-devops--lab-setup>Module 00: Introduction to DevOps & Lab Setup</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-01-source-code-management-with-gitea>Module 01: Source Code Management with Gitea</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-02-containerization-with-docker>Module 02: Containerization with Docker</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-03-continuous-integration-ci-with-jenkins>Module 03: Continuous Integration (CI) with Jenkins</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-04-orchestration-with-kubernetes-via-kind>Module 04: Orchestration with Kubernetes (via Kind)</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-05-continuous-deployment-cd-to-kubernetes>Module 05: Continuous Deployment (CD) to Kubernetes</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-06-reverse-proxy--load-balancing-nginx-ingress>Module 06: Reverse Proxy & Load Balancing (Nginx Ingress)</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-07-infrastructure-as-code-iac-with-terraform>Module 07: Infrastructure as Code (IaC) with Terraform</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-08-configuration-management-with-ansible>Module 08: Configuration Management with Ansible</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-09-integrating-security-devsecops>Module 09: Integrating Security (DevSecOps)</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-10-monitoring--observability>Module 10: Monitoring & Observability</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-11-final-project---the-complete-a-to-z-pipeline>Module 11: Final Project - The Complete A-to-Z Pipeline</a></li><li><a href=/posts/master-ci-ci-pipeline-locally/#module-12-conclusion--next-steps>Module 12: Conclusion & Next Steps</a></li></ul><h2 id=module-00-introduction-to-devops--lab-setup><strong>Module 00: Introduction to DevOps & Lab Setup</strong><a href=#module-00-introduction-to-devops--lab-setup class=hanchor arialabel=Anchor>#</a></h2><h3 id=what-is-devops>What is DevOps?<a href=#what-is-devops class=hanchor arialabel=Anchor>#</a></h3><p>DevOps is not a tool, but a <strong>culture</strong> and a <strong>philosophy</strong>. It&rsquo;s a portmanteau of &ldquo;Development&rdquo; (Dev) and &ldquo;Operations&rdquo; (Ops). The goal is to break down the silos between development teams, who want to deliver new features quickly, and operations teams, who want to ensure production stability.</p><p>The pillars of DevOps are based on the <strong>C.A.L.M.S</strong> model:</p><ul><li><strong>C</strong>ulture: Fostering collaboration, sharing, and trust.</li><li><strong>A</strong>utomation: Automating everything that is repetitive (tests, builds, deployments).</li><li><strong>L</strong>ean: Optimizing processes, eliminating waste, and delivering value quickly.</li><li><strong>M</strong>easurement: Collecting metrics to understand and improve the system.</li><li><strong>S</strong>haring: Sharing knowledge, tools, and responsibilities.</li></ul><h3 id=our-local-lab-architecture>Our Local Lab Architecture<a href=#our-local-lab-architecture class=hanchor arialabel=Anchor>#</a></h3><p>We will use <code>docker-compose</code> to orchestrate our lab services. This will allow us to easily start and stop all the necessary tools, which will communicate over a shared Docker network.</p><pre class=mermaid>graph TD
+    subgraph &#34;Your Host Machine&#34;
+        subgraph &#34;Docker Network &#39;devops-net&#39;&#34;
+            Gitea[Gitea&lt;br&gt;git.lab.local:3000]
+            Jenkins[Jenkins&lt;br&gt;jenkins.lab.local:8080]
+            Registry[Docker Registry&lt;br&gt;registry.lab.local:5000]
+        end
+        subgraph &#34;Kubernetes Cluster (Kind)&#34;
+            K8sControl[Control Plane]
+            K8sWorker[Worker Node]
+            App[Deployed Application]
+        end
+        Jenkins -- Pull/Clone --&gt; Gitea
+        Jenkins -- Build &amp; Push --&gt; Registry
+        Jenkins -- Deploy --&gt; K8sControl
+        K8sWorker -- Pull Image --&gt; Registry
+        K8sControl -- Manages --&gt; K8sWorker
+        K8sWorker -- Runs --&gt; App
+    end
+    User[User] -- Access via Browser --&gt; Services</pre><h3 id=prerequisites>Prerequisites<a href=#prerequisites class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Docker</strong> and <strong>Docker Compose</strong> installed.</li><li>A text editor (e.g., VS Code).</li><li>A terminal.</li><li>Basic knowledge of the Linux command line.</li><li><strong>Kind</strong> and <strong>kubectl</strong> installed for the Kubernetes module.</li></ul><h3 id=workshop-launching-the-lab-with-an-automated-script>Workshop: Launching the Lab with an Automated Script<a href=#workshop-launching-the-lab-with-an-automated-script class=hanchor arialabel=Anchor>#</a></h3><p>To make setting up our lab environment as simple as possible, we will use a shell script. This script embodies the DevOps principle of automation. It will perform prerequisite checks, build our custom Jenkins image, start all services, and verify that everything is running correctly, providing a smooth start to the course.</p><h4 id=step-1-create-the-project-directory-structure>Step 1: Create the Project Directory Structure<a href=#step-1-create-the-project-directory-structure class=hanchor arialabel=Anchor>#</a></h4><p>First, create a root folder for our project, for example, <code>devops-course-lab</code>. All subsequent files and folders will be created inside this one.</p><h4 id=step-2-create-the-custom-jenkins-image-definition>Step 2: Create the Custom Jenkins Image Definition<a href=#step-2-create-the-custom-jenkins-image-definition class=hanchor arialabel=Anchor>#</a></h4><p>Our lab requires a Jenkins container that can execute Docker commands. The official Jenkins image doesn&rsquo;t include the Docker CLI, so we must build our own.</p><ul><li>Inside <code>devops-course-lab</code>, create a new folder named <code>jenkins-image</code>.</li><li>Inside <code>jenkins-image</code>, create a file named <code>Dockerfile</code>.</li></ul><p><strong><code>jenkins-image/Dockerfile</code>:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-dockerfile data-lang=dockerfile><span style=display:flex><span><span style=color:#75715e># Start from the official Jenkins image</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>FROM</span> <span style=color:#e6db74>jenkins/jenkins:lts</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Switch to the root user to install packages</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>USER</span> <span style=color:#e6db74>root</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Install necessary dependencies and the Docker CLI</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>RUN</span> apt-get update <span style=color:#f92672>&amp;&amp;</span> apt-get install -y lsb-release curl gpg<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>RUN</span> curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>RUN</span> echo <span style=color:#e6db74>&#34;deb [arch=</span><span style=color:#66d9ef>$(</span>dpkg --print-architecture<span style=color:#66d9ef>)</span><span style=color:#e6db74> signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian </span><span style=color:#66d9ef>$(</span>lsb_release -cs<span style=color:#66d9ef>)</span><span style=color:#e6db74> stable&#34;</span> | tee /etc/apt/sources.list.d/docker.list &gt; /dev/null<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>RUN</span> apt-get update <span style=color:#f92672>&amp;&amp;</span> apt-get install -y docker-ce-cli<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># --- THE FIX IS HERE ---</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># 1. Create the &#39;docker&#39; group</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#    The installation of docker-ce-cli doesn&#39;t create it, so we do it manually.</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>RUN</span> groupadd docker<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># 2. Add the &#39;jenkins&#39; user to the &#39;docker&#39; group</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#    This allows the jenkins user to communicate with the Docker socket.</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>RUN</span> usermod -aG docker jenkins<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Switch back to the jenkins user</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>USER</span> <span style=color:#e6db74>jenkins</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span></code></pre></div><h4 id=step-3-define-the-lab-services-with-docker-compose>Step 3: Define the Lab Services with Docker Compose<a href=#step-3-define-the-lab-services-with-docker-compose class=hanchor arialabel=Anchor>#</a></h4><p>At the root of the <code>devops-course-lab</code> folder, create your <code>docker-compose.yml</code> file. This file defines all the services needed for our course.</p><p><strong><code>docker-compose.yml</code>:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>version</span>: <span style=color:#e6db74>&#39;3.8&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>services</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>gitea</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>image</span>: <span style=color:#ae81ff>gitea/gitea:latest</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>container_name</span>: <span style=color:#ae81ff>gitea</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>environment</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>USER_UID=1000</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>USER_GID=1000</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>GITEA__database__DB_TYPE=sqlite3</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>GITEA__database__PATH=/data/gitea/gitea.db</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>GITEA__server__DOMAIN=localhost</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>GITEA__server__HTTP_PORT=3000</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>GITEA__server__ROOT_URL=http://localhost:3000/</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>GITEA__security__INSTALL_LOCK=true</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>GITEA__security__SECRET_KEY=changeme</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>GITEA__security__INTERNAL_TOKEN=changeme</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>restart</span>: <span style=color:#ae81ff>unless-stopped</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>gitea-data:/data</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>/etc/timezone:/etc/timezone:ro</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>/etc/localtime:/etc/localtime:ro</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;3000:3000&#34;</span>
+</span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;2222:22&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>devops-net</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>jenkins</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>build</span>: <span style=color:#ae81ff>./jenkins-image</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>container_name</span>: <span style=color:#ae81ff>jenkins</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>privileged</span>: <span style=color:#66d9ef>true</span> <span style=color:#75715e># Required for Docker-in-Docker</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>user</span>: <span style=color:#ae81ff>root</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;8080:8080&#34;</span>
+</span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;50000:50000&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>./jenkins_home:/var/jenkins_home</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>/var/run/docker.sock:/var/run/docker.sock</span> <span style=color:#75715e># Mount the Docker socket</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>devops-net</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>registry</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>image</span>: <span style=color:#ae81ff>registry:2</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>container_name</span>: <span style=color:#ae81ff>registry2</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;5002:5000&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>./registry_data:/var/lib/registry</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>restart</span>: <span style=color:#ae81ff>always</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>devops-net</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>gitea-data</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>jenkins_home</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>registry_data</span>:
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span><span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>devops-net</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>devops-net</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>driver</span>: <span style=color:#ae81ff>bridge</span>
+</span></span></code></pre></div><h4 id=step-4-create-the-automated-startup-script>Step 4: Create the Automated Startup Script<a href=#step-4-create-the-automated-startup-script class=hanchor arialabel=Anchor>#</a></h4><p>This script is the main entry point for starting, stopping, and managing the lab. Create a new file named <code>start-lab.sh</code> at the root of your <code>devops-course-lab</code> directory.</p><p><strong><code>start-lab.sh</code>:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Startup Script for the DevOps CI/CD Lab</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This script configures and starts all necessary services for the course.</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>set -e
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;🚀 Starting the DevOps CI/CD Lab&#34;</span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;========================================&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Colors for output</span>
+</span></span><span style=display:flex><span>RED<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;\033[0;31m&#39;</span>
+</span></span><span style=display:flex><span>GREEN<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;\033[0;32m&#39;</span>
+</span></span><span style=display:flex><span>YELLOW<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;\033[1;33m&#39;</span>
+</span></span><span style=display:flex><span>BLUE<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;\033[0;34m&#39;</span>
+</span></span><span style=display:flex><span>NC<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;\033[0m&#39;</span> <span style=color:#75715e># No Color</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 1. Prerequisite Checks ---</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;\n</span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>1. Checking prerequisites...</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> ! command -v docker &amp;&gt; /dev/null; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>RED<span style=color:#e6db74>}</span><span style=color:#e6db74>❌ Docker is not installed or not in your PATH.</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    exit <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Function to find and use the correct docker compose command</span>
+</span></span><span style=display:flex><span>compose_cmd<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> command -v docker-compose &amp;&gt; /dev/null; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>        docker-compose <span style=color:#e6db74>&#34;</span>$@<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>elif</span> docker compose version &amp;&gt; /dev/null; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>        docker compose <span style=color:#e6db74>&#34;</span>$@<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>        echo -e <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>RED<span style=color:#e6db74>}</span><span style=color:#e6db74>❌ Docker Compose is not installed.</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>        echo -e <span style=color:#e6db74>&#34;Please install the Docker Compose V2 plugin or the standalone docker-compose.&#34;</span>
+</span></span><span style=display:flex><span>        exit <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> ! docker info &amp;&gt; /dev/null; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>RED<span style=color:#e6db74>}</span><span style=color:#e6db74>❌ Docker daemon is not running or not accessible.</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    exit <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;✅ </span><span style=color:#e6db74>${</span>GREEN<span style=color:#e6db74>}</span><span style=color:#e6db74>Docker and Docker Compose are available.</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Allow arguments to be passed to docker-compose, like &#39;logs&#39; or &#39;down&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;</span>$#<span style=color:#e6db74>&#34;</span> -gt <span style=color:#ae81ff>0</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    compose_cmd <span style=color:#e6db74>&#34;</span>$@<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    exit <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 2. Clean Up Existing Resources ---</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;\n</span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>2. Cleaning up existing resources...</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>compose_cmd ps -q<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;🧹 Shutting down existing services...&#34;</span>
+</span></span><span style=display:flex><span>    compose_cmd down --remove-orphans
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;✅ </span><span style=color:#e6db74>${</span>GREEN<span style=color:#e6db74>}</span><span style=color:#e6db74>Cleanup complete.</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 3. Build and Start Services ---</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;\n</span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>3. Building and starting services...</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;📦 Building custom Jenkins image (this may take a few minutes on first run)...&#34;</span>
+</span></span><span style=display:flex><span>compose_cmd build --no-cache
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;🚀 Starting services in detached mode...&#34;</span>
+</span></span><span style=display:flex><span>compose_cmd up -d
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 4. Verifying Service Health ---</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;\n</span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>4. Verifying service status...</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;⏳ Waiting for services to initialize (this can take up to a minute)...&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>check_service<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    local service_name<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    local container_name<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$2<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    local url<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$3<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    local max_attempts<span style=color:#f92672>=</span><span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>    local attempt<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    echo -n -e <span style=color:#e6db74>&#34;🔍 Verifying </span>$service_name<span style=color:#e6db74>...&#34;</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>while</span> <span style=color:#f92672>[</span> $attempt -le $max_attempts <span style=color:#f92672>]</span>; <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>        http_status<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>curl -s -o /dev/null -L -w <span style=color:#e6db74>&#34;%{http_code}&#34;</span> <span style=color:#e6db74>&#34;</span>$url<span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;</span>$http_status<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;200&#34;</span> <span style=color:#f92672>]</span> <span style=color:#f92672>||</span> <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;</span>$http_status<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;302&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>            echo -e <span style=color:#e6db74>&#34; </span><span style=color:#e6db74>${</span>GREEN<span style=color:#e6db74>}</span><span style=color:#e6db74>Online.</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>        echo -n <span style=color:#e6db74>&#34;.&#34;</span>
+</span></span><span style=display:flex><span>        sleep <span style=color:#ae81ff>5</span>
+</span></span><span style=display:flex><span>        attempt<span style=color:#f92672>=</span><span style=color:#66d9ef>$((</span>attempt <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span><span style=color:#66d9ef>))</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>done</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34; </span><span style=color:#e6db74>${</span>RED<span style=color:#e6db74>}</span><span style=color:#e6db74>Offline.</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;❌ </span><span style=color:#e6db74>${</span>RED<span style=color:#e6db74>}</span>$service_name<span style=color:#e6db74> did not become available. Check logs with: ./start-lab.sh logs </span>$container_name<span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Verify key services</span>
+</span></span><span style=display:flex><span>SERVICES_OK<span style=color:#f92672>=</span>true
+</span></span><span style=display:flex><span><span style=color:#75715e># Gitea can be slow to start, so we wait a bit before checking</span>
+</span></span><span style=display:flex><span>sleep <span style=color:#ae81ff>15</span> 
+</span></span><span style=display:flex><span>check_service <span style=color:#e6db74>&#34;Gitea&#34;</span> <span style=color:#e6db74>&#34;gitea&#34;</span> <span style=color:#e6db74>&#34;http://localhost:3000&#34;</span> <span style=color:#f92672>||</span> SERVICES_OK<span style=color:#f92672>=</span>false
+</span></span><span style=display:flex><span>check_service <span style=color:#e6db74>&#34;Jenkins&#34;</span> <span style=color:#e6db74>&#34;jenkins&#34;</span> <span style=color:#e6db74>&#34;http://localhost:8080/login&#34;</span> <span style=color:#f92672>||</span> SERVICES_OK<span style=color:#f92672>=</span>false
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># --- 5. Final Status and Information ---</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;\n</span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>5. Final lab status:</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>compose_cmd ps
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;</span>$SERVICES_OK<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>=</span> true <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;\n🎉 </span><span style=color:#e6db74>${</span>GREEN<span style=color:#e6db74>}</span><span style=color:#e6db74>Lab started successfully!</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;\n</span><span style=color:#e6db74>${</span>BLUE<span style=color:#e6db74>}</span><span style=color:#e6db74>📋 Access Information:</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;┌──────────────┬─────────────────────────┬──────────────────────────────────┐&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;│ </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>Service</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>       │ </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>URL</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>                      │ </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>Notes</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>                               │&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;├──────────────┼─────────────────────────┼──────────────────────────────────┤&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;│ Gitea        │ http://localhost:3000   │ Create admin user on first visit │&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;│ Jenkins      │ http://localhost:8080   │ Get initial password from log    │&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;│ Docker Registry │ localhost:5000          │ For image pushes from pipeline   │&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;└──────────────┴─────────────────────────┴──────────────────────────────────┘&#34;</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;\n</span><span style=color:#e6db74>${</span>BLUE<span style=color:#e6db74>}</span><span style=color:#e6db74>🎯 Next Steps:</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;1. Open your browser and set up an admin account on Gitea: </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>http://localhost:3000</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;2. Log in to Jenkins: </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>http://localhost:8080</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;   - Get the initial password with: </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;3. Configure Docker to trust the insecure registry (see course notes).&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;4. Begin Module 1: Source Code Management.&#34;</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;\n❌ </span><span style=color:#e6db74>${</span>RED<span style=color:#e6db74>}</span><span style=color:#e6db74>One or more services failed to start correctly.</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    echo -e <span style=color:#e6db74>&#34;Please check the logs for errors.&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;\n</span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>💡 Useful Commands:</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;- View all logs:      </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>./start-lab.sh logs</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;- View specific log:  </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>./start-lab.sh logs jenkins</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;- Stop the lab:       </span><span style=color:#e6db74>${</span>YELLOW<span style=color:#e6db74>}</span><span style=color:#e6db74>./start-lab.sh down</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;\n========================================&#34;</span>
+</span></span><span style=display:flex><span>echo -e <span style=color:#e6db74>&#34;🎓 </span><span style=color:#e6db74>${</span>GREEN<span style=color:#e6db74>}</span><span style=color:#e6db74>Happy DevOps Learning!</span><span style=color:#e6db74>${</span>NC<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span></code></pre></div><h4 id=step-5-make-the-script-executable-and-launch-the-lab>Step 5: Make the Script Executable and Launch the Lab<a href=#step-5-make-the-script-executable-and-launch-the-lab class=hanchor arialabel=Anchor>#</a></h4><p>Before running the script, you must give it execution permissions.</p><ol><li><p><strong>Make the script executable:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>chmod +x start-lab.sh
+</span></span></code></pre></div></li><li><p><strong>Launch the lab:</strong>
+Now, you can start the entire lab with one simple command:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>./start-lab.sh
+</span></span></code></pre></div><p>The script will guide you through the process, check for prerequisites, build the Jenkins image, start all containers, and verify their status. If successful, it will provide you with all the URLs and information you need to begin the course.</p></li><li><p>Launch the lab:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker-compose up -d
+</span></span></code></pre></div></li><li><p><strong>Docker Configuration for Local Registry (VERY IMPORTANT)</strong>:
+Our registry is insecure (HTTP). We need to tell Docker to trust it. Edit (or create) the file <code>/etc/docker/daemon.json</code> (on Linux/Mac) and add:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;insecure-registries&#34;</span> : [<span style=color:#e6db74>&#34;localhost:5000&#34;</span>, <span style=color:#e6db74>&#34;registry:5000&#34;</span>]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><blockquote><p><strong>Note:</strong> <code>registry:5000</code> is necessary so that containers <em>inside</em> the Docker network (like Jenkins or Kubernetes/Kind) can access the registry by its service name.</p></blockquote><p>Then restart the Docker service: <code>sudo systemctl restart docker</code>.</p></li></ol><h4 id=step-6-configure-docker-for-the-local-registry>Step 6: Configure Docker for the Local Registry<a href=#step-6-configure-docker-for-the-local-registry class=hanchor arialabel=Anchor>#</a></h4><p>One final manual step is required. Our local Docker Registry is insecure (HTTP), so you must configure your Docker daemon to trust it.</p><ul><li>Edit (or create) the Docker daemon configuration file. It is usually located at <code>/etc/docker/daemon.json</code> on Linux/Mac.</li><li>Add the following content:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;insecure-registries&#34;</span> : [<span style=color:#e6db74>&#34;localhost:5000&#34;</span>, <span style=color:#e6db74>&#34;registry:5000&#34;</span>]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></li><li>Save the file and <strong>restart your Docker daemon</strong>. On most Linux systems, this is done with <code>sudo systemctl restart docker</code>.</li></ul><p>You are now fully set up and ready to begin the course!</p><h3 id=sources--further-reading>Sources & Further Reading<a href=#sources--further-reading class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Book:</strong> <em>The Phoenix Project</em> by Gene Kim, Kevin Behr, and George Spafford.</li><li><strong>Documentation:</strong> <a href=https://docs.docker.com/compose/>Docker Compose Overview</a></li></ul><hr><h2 id=module-01-source-code-management-with-gitea><strong>Module 01: Source Code Management with Gitea</strong><a href=#module-01-source-code-management-with-gitea class=hanchor arialabel=Anchor>#</a></h2><p>Every DevOps project starts with code. A version control system like Git is essential. Gitea is a lightweight alternative to GitLab or GitHub, perfect for our lab.</p><h3 id=key-concepts>Key Concepts<a href=#key-concepts class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Git:</strong> A distributed version control system.</li><li><strong>Repository:</strong> A folder containing your project and its Git history.</li><li><strong>Commit / Branch / Merge:</strong> The basic Git operations for saving, isolating, and combining work.</li><li><strong>Webhook:</strong> A mechanism that allows Gitea to notify another service (Jenkins) when an event occurs (e.g., a <code>push</code>).</li></ul><h3 id=workshop-configure-gitea-and-create-our-project>Workshop: Configure Gitea and Create Our Project<a href=#workshop-configure-gitea-and-create-our-project class=hanchor arialabel=Anchor>#</a></h3><ol><li><p><strong>Access and Configuration:</strong></p><ul><li>Open your browser to <code>http://localhost:3000</code>.</li><li>Follow the installation wizard.<ul><li>Database Type: <code>SQLite3</code>.</li><li><strong>Gitea Base URL:</strong> <code>http://gitea:3000</code> (important for internal Docker communication).</li><li>Create your admin account.</li></ul></li></ul></li><li><p><strong>Create a New Repository:</strong></p><ul><li>Log in, click the <code>+</code> icon -> &ldquo;New Repository&rdquo;.</li><li>Repository Name: <code>hello-devops</code>.</li><li>Click &ldquo;Create Repository&rdquo;.</li></ul></li><li><p><strong>Create Our Base Application:</strong></p><ul><li>In a new folder on your machine, create a file named <code>app.py</code>:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> flask <span style=color:#f92672>import</span> Flask
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> os
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>app <span style=color:#f92672>=</span> Flask(__name__)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>hello</span>():
+</span></span><span style=display:flex><span>    <span style=color:#75715e># An environment variable to demonstrate configuration</span>
+</span></span><span style=display:flex><span>    version <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>environ<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;APP_VERSION&#39;</span>, <span style=color:#e6db74>&#39;v1.0&#39;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Hello, DevOps World! This is version: </span><span style=color:#e6db74>{</span>version<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;__main__&#39;</span>:
+</span></span><span style=display:flex><span>    app<span style=color:#f92672>.</span>run(host<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;0.0.0.0&#39;</span>, port<span style=color:#f92672>=</span><span style=color:#ae81ff>5000</span>)
+</span></span></code></pre></div></li></ul></li><li><p><strong>Push the Code to Gitea:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Replace &lt;your_user&gt; with your Gitea username</span>
+</span></span><span style=display:flex><span>git init
+</span></span><span style=display:flex><span>git add app.py
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;Initial commit&#34;</span>
+</span></span><span style=display:flex><span>git branch -M main
+</span></span><span style=display:flex><span>git remote add origin http://localhost:3000/&lt;your_user&gt;/hello-devops.git
+</span></span><span style=display:flex><span>git push -u origin main
+</span></span></code></pre></div></li></ol><h3 id=sources--further-reading-1>Sources & Further Reading<a href=#sources--further-reading-1 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://docs.gitea.io/>Gitea Documentation</a></li><li><strong>Tutorial:</strong> <a href=https://git-scm.com/book/en/v2>Pro Git Book</a></li></ul><hr><h2 id=module-02-containerization-with-docker><strong>Module 02: Containerization with Docker</strong><a href=#module-02-containerization-with-docker class=hanchor arialabel=Anchor>#</a></h2><p>Docker allows us to &ldquo;package&rdquo; an application and its dependencies into a <strong>container</strong>. This ensures the application will run the same way everywhere.</p><h3 id=key-concepts-1>Key Concepts<a href=#key-concepts-1 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Docker Image:</strong> A read-only template (the &ldquo;recipe&rdquo;).</li><li><strong>Docker Container:</strong> A runnable instance of an image (the &ldquo;prepared dish&rdquo;).</li><li><strong>Dockerfile:</strong> A text file containing instructions to build an image.</li><li><strong>Docker Registry:</strong> An image storage service (like our local registry).</li></ul><pre class=mermaid>graph TD
+    A[Dockerfile] -- docker build --&gt; B(Docker Image);
+    B -- docker run --&gt; C{Container};
+    B -- docker push --&gt; D[Docker Registry];
+    D -- docker pull --&gt; B;</pre><h3 id=workshop-dockerizing-our-application>Workshop: Dockerizing Our Application<a href=#workshop-dockerizing-our-application class=hanchor arialabel=Anchor>#</a></h3><ol><li><p><strong>Create the <code>Dockerfile</code>:</strong> At the root of your <code>hello-devops</code> project, create this file:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-dockerfile data-lang=dockerfile><span style=display:flex><span><span style=color:#75715e># Use a lightweight base image</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>FROM</span> <span style=color:#e6db74>python:3.9-slim</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Set the working directory</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>WORKDIR</span> <span style=color:#e6db74>/app</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Install dependencies</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>COPY</span> requirements.txt .<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>RUN</span> pip install --no-cache-dir -r requirements.txt<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Copy the application code</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>COPY</span> app.py .<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Expose the application port</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>EXPOSE</span> <span style=color:#e6db74>5000</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Command to start the application</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>CMD</span> [<span style=color:#e6db74>&#34;gunicorn&#34;</span>, <span style=color:#e6db74>&#34;--bind&#34;</span>, <span style=color:#e6db74>&#34;0.0.0.0:5000&#34;</span>, <span style=color:#e6db74>&#34;app:app&#34;</span>]<span style=color:#960050;background-color:#1e0010>
+</span></span></span></code></pre></div></li><li><p><strong>Create <code>requirements.txt</code>:</strong></p><pre tabindex=0><code>Flask==2.1.2
+gunicorn==20.1.0
+Werkzeug==2.3.7
+</code></pre><blockquote><p><strong>Note:</strong> We use <code>gunicorn</code>, a robust WSGI server, which is more suitable for &ldquo;production&rdquo; than Flask&rsquo;s built-in development server.</p></blockquote></li><li><p><strong>Build and Test the Image:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Build the image</span>
+</span></span><span style=display:flex><span>docker build -t localhost:5000/hello-devops:1.0 .
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Run a container to test it</span>
+</span></span><span style=display:flex><span>docker run -d --name test-app -p 8001:5000 -e APP_VERSION<span style=color:#f92672>=</span>v1.0-test localhost:5000/hello-devops:1.0
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Check your browser at http://localhost:8001</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Stop and remove the test container</span>
+</span></span><span style=display:flex><span>docker stop test-app <span style=color:#f92672>&amp;&amp;</span> docker rm test-app
+</span></span></code></pre></div></li><li><p><strong>Push the Image to Our Local Registry:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker push localhost:5000/hello-devops:1.0
+</span></span></code></pre></div></li><li><p><strong>Push the New Files to Gitea:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git add Dockerfile requirements.txt
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: Add Dockerfile for the application&#34;</span>
+</span></span><span style=display:flex><span>git push origin main
+</span></span></code></pre></div></li></ol><h3 id=sources--further-reading-2>Sources & Further Reading<a href=#sources--further-reading-2 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://docs.docker.com/get-started/>Docker Get Started</a></li><li><strong>Best Practices:</strong> <a href=https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>Best practices for writing Dockerfiles</a></li></ul><hr><h2 id=module-03-continuous-integration-ci-with-jenkins><strong>Module 03: Continuous Integration (CI) with Jenkins</strong><a href=#module-03-continuous-integration-ci-with-jenkins class=hanchor arialabel=Anchor>#</a></h2><p>Continuous Integration (CI) automates the building and testing of code with every change. Jenkins is the perfect tool to orchestrate this process.</p><h3 id=key-concepts-2>Key Concepts<a href=#key-concepts-2 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Pipeline:</strong> A set of steps (build, test, push) executed by Jenkins.</li><li><strong>Jenkinsfile:</strong> The definition of the pipeline as code, versioned with the application.</li><li><strong>Agent:</strong> A machine (or container) where Jenkins executes tasks.</li></ul><h3 id=workshop-create-a-ci-pipeline-with-jenkins>Workshop: Create a CI Pipeline with Jenkins<a href=#workshop-create-a-ci-pipeline-with-jenkins class=hanchor arialabel=Anchor>#</a></h3><ol><li><p><strong>Initial Jenkins Setup:</strong></p><ul><li>Access Jenkins: <code>http://localhost:8080</code>.</li><li>Get the initial admin password: <code>docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword</code>.</li><li>Install suggested plugins and create your user.</li><li><strong>Install the <code>Docker Pipeline</code> and <code>Gitea</code> plugins</strong> via &ldquo;Manage Jenkins&rdquo; > &ldquo;Manage Plugins&rdquo;.</li></ul></li><li><p><strong>Create the <code>Jenkinsfile</code>:</strong>
+At the root of your <code>hello-devops</code> project, create a <code>Jenkinsfile</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=display:flex><span>pipeline <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    agent any
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    environment <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        REGISTRY_URL <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;registry:5000&#39;</span> <span style=color:#75715e>// Jenkins communicates via Docker service name
+</span></span></span><span style=display:flex><span>        IMAGE_NAME <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;hello-devops&#34;</span>
+</span></span><span style=display:flex><span>        IMAGE_TAG <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;build-${env.BUILD_NUMBER}&#34;</span> <span style=color:#75715e>// Use build number for a unique tag
+</span></span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    stages <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Checkout&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                checkout scm
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Build &amp; Push Docker Image&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                script <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 1. Build the image and store the resulting &#39;Image&#39; object in a variable
+</span></span></span><span style=display:flex><span>                    <span style=color:#66d9ef>def</span> customImage <span style=color:#f92672>=</span> docker<span style=color:#f92672>.</span><span style=color:#a6e22e>build</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}&#34;</span><span style=color:#f92672>,</span> <span style=color:#e6db74>&#34;.&#34;</span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 2. Call the .push() method on the &#39;Image&#39; object
+</span></span></span><span style=display:flex><span>                    customImage<span style=color:#f92672>.</span><span style=color:#a6e22e>push</span><span style=color:#f92672>()</span>
+</span></span><span style=display:flex><span>                <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    post <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        always <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Clean up the image on the Jenkins agent to save space
+</span></span></span><span style=display:flex><span>            echo <span style=color:#e6db74>&#34;Cleaning up local Docker image...&#34;</span>
+</span></span><span style=display:flex><span>            sh <span style=color:#e6db74>&#34;docker rmi ${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG} || true&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div></li><li><p><strong>Push the <code>Jenkinsfile</code> to Gitea:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git add Jenkinsfile
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;ci: Add Jenkinsfile for CI pipeline&#34;</span>
+</span></span><span style=display:flex><span>git push origin main
+</span></span></code></pre></div></li><li><p><strong>Create the Pipeline in Jenkins:</strong></p><ul><li>&ldquo;New Item&rdquo; > Name: <code>hello-devops-pipeline</code> > Type: <code>Pipeline</code> > OK.</li><li>In the &ldquo;Pipeline&rdquo; section, choose &ldquo;Pipeline script from SCM&rdquo;.</li><li>SCM: <code>Git</code>.</li><li>Repository URL: <code>http://gitea:3000/&lt;your_user>/hello-devops.git</code>.</li><li>Script Path: <code>Jenkinsfile</code>.</li><li>Save.</li></ul></li><li><p><strong>Run and Automate:</strong></p><ul><li>Click &ldquo;Build Now&rdquo; to test it.</li><li><strong>Configure the Webhook in Gitea:</strong><ul><li>Repository Settings > Webhooks > Add Webhook > Gitea.</li><li>Target URL: <code>http://jenkins:8080/gitea-webhook/post</code>.</li><li>Add the webhook.</li></ul></li><li>Now, every <code>git push</code> will automatically trigger a build!</li></ul></li></ol><h3 id=sources--further-reading-3>Sources & Further Reading<a href=#sources--further-reading-3 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://www.jenkins.io/doc/book/pipeline/>Jenkins User Handbook - Pipeline</a></li></ul><hr><h2 id=module-04-orchestration-with-kubernetes-via-kind><strong>Module 04: Orchestration with Kubernetes (via Kind)</strong><a href=#module-04-orchestration-with-kubernetes-via-kind class=hanchor arialabel=Anchor>#</a></h2><p>Kubernetes (K8s) is a container orchestration system. It automates the deployment, scaling, and management of containerized applications. <strong>Kind (Kubernetes in Docker)</strong> lets us create a local K8s cluster using Docker containers as &ldquo;nodes&rdquo;.</p><h3 id=key-concepts-3>Key Concepts<a href=#key-concepts-3 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Cluster:</strong> A set of machines (nodes) that run containerized applications.</li><li><strong>Node:</strong> A worker machine (VM or physical) in a cluster.</li><li><strong>Pod:</strong> The smallest deployable unit in K8s. A pod holds one or more containers.</li><li><strong>Deployment:</strong> An object that manages a set of replicated pods, ensuring a certain number are always running.</li><li><strong>Service:</strong> An abstraction that exposes a set of pods as a network service with a stable IP address and port.</li><li><strong>kubectl:</strong> The command-line tool for interacting with a K8s cluster.</li></ul><h3 id=workshop-create-a-local-cluster-and-deploy-manually>Workshop: Create a Local Cluster and Deploy Manually<a href=#workshop-create-a-local-cluster-and-deploy-manually class=hanchor arialabel=Anchor>#</a></h3><ol><li><p><strong>Prerequisites:</strong> Ensure you have installed <code>kind</code> and <code>kubectl</code>.</p><ul><li><a href=https://kind.sigs.k8s.io/docs/user/quick-start/#installation>Install Kind</a></li><li><a href=https://kubernetes.io/docs/tasks/tools/install-kubectl/>Install kubectl</a></li></ul></li><li><p><strong>Create a Kind Configuration File:</strong>
+Create a file named <code>kind-config.yaml</code>. This configuration is crucial for allowing the Kind cluster to communicate with our local Docker registry.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Cluster</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>kind.x-k8s.io/v1alpha4</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Allows the Kind cluster to connect to our lab&#39;s network</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>containerdConfigPatches</span>:
+</span></span><span style=display:flex><span>- |-<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  [plugins.&#34;io.containerd.grpc.v1.cri&#34;.registry.mirrors.&#34;registry:5000&#34;]
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    endpoint = [&#34;http://registry:5000&#34;]</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>nodes</span>:
+</span></span><span style=display:flex><span>- <span style=color:#f92672>role</span>: <span style=color:#ae81ff>control-plane</span>
+</span></span><span style=display:flex><span>- <span style=color:#f92672>role</span>: <span style=color:#ae81ff>worker</span>
+</span></span></code></pre></div></li><li><p><strong>Launch the Kind Cluster:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Create the cluster</span>
+</span></span><span style=display:flex><span>kind create cluster --config kind-config.yaml
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Connect the cluster to our lab&#39;s network</span>
+</span></span><span style=display:flex><span>docker network connect devops-net kind-control-plane
+</span></span><span style=display:flex><span>docker network connect devops-net kind-worker
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Verify that the nodes are ready</span>
+</span></span><span style=display:flex><span>kubectl get nodes
+</span></span></code></pre></div></li><li><p><strong>Create Kubernetes Deployment Manifests:</strong>
+In your <code>hello-devops</code> project, create a <code>k8s</code> folder. Inside, create <code>deployment.yaml</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># k8s/deployment.yaml</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-deployment</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>replicas</span>: <span style=color:#ae81ff>2</span> <span style=color:#75715e># We want 2 instances of our app</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>hello-devops</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>template</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>hello-devops</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-container</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># IMPORTANT: We use the internal registry URL</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>registry:5000/hello-devops:1.0 </span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>5000</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>env</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>APP_VERSION</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#34;v1.0-k8s&#34;</span>
+</span></span></code></pre></div></li><li><p><strong>Create a Service to Expose the Deployment:</strong>
+Create <code>service.yaml</code> in the <code>k8s</code> folder.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># k8s/service.yaml</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>type</span>: <span style=color:#ae81ff>NodePort</span> <span style=color:#75715e># Exposes the service on a port of each node</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>hello-devops</span> <span style=color:#75715e># Targets pods with this label</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>  - <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>TCP</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>port</span>: <span style=color:#ae81ff>80</span> <span style=color:#75715e># Port of the service inside the cluster</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>targetPort</span>: <span style=color:#ae81ff>5000</span> <span style=color:#75715e># Port of the containers</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>nodePort</span>: <span style=color:#ae81ff>30007</span> <span style=color:#75715e># External port to access the service</span>
+</span></span></code></pre></div></li><li><p><strong>Deploy to the Cluster:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Apply the manifests</span>
+</span></span><span style=display:flex><span>kubectl apply -f k8s/deployment.yaml
+</span></span><span style=display:flex><span>kubectl apply -f k8s/service.yaml
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Check the deployment</span>
+</span></span><span style=display:flex><span>kubectl get deployments
+</span></span><span style=display:flex><span>kubectl get pods
+</span></span><span style=display:flex><span>kubectl get services
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Access the application</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># The service is exposed on port 30007 of each node.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># The node&#39;s IP is localhost since Kind runs on our machine.</span>
+</span></span><span style=display:flex><span>curl http://localhost:30007 
+</span></span></code></pre></div><p>You should see <code>Hello, DevOps World! This is version: v1.0-k8s</code>.</p></li><li><p><strong>Push the Manifests to Gitea:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git add k8s/
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: Add Kubernetes manifests&#34;</span>
+</span></span><span style=display:flex><span>git push origin main
+</span></span></code></pre></div></li></ol><h3 id=sources--further-reading-4>Sources & Further Reading<a href=#sources--further-reading-4 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://kubernetes.io/docs/home/>Kubernetes Documentation</a></li><li><strong>Documentation:</strong> <a href=https://kind.sigs.k8s.io/docs/user/quick-start/>Kind Quick Start</a></li></ul><hr><h2 id=module-05-continuous-deployment-cd-to-kubernetes><strong>Module 05: Continuous Deployment (CD) to Kubernetes</strong><a href=#module-05-continuous-deployment-cd-to-kubernetes class=hanchor arialabel=Anchor>#</a></h2><p>Now that our CI pipeline builds and pushes the image, the next step is to automatically deploy this new image to our Kubernetes cluster. This is Continuous Deployment (CD).</p><h3 id=key-concepts-4>Key Concepts<a href=#key-concepts-4 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Continuous Deployment:</strong> The practice of automating the deployment of new application versions to production (or in our case, our local cluster).</li><li><strong>Kubernetes Credentials:</strong> Jenkins needs permission to talk to our K8s cluster. We will use the <code>kubeconfig</code> file.</li></ul><h3 id=workshop-extend-the-jenkins-pipeline-for-deployment>Workshop: Extend the Jenkins Pipeline for Deployment<a href=#workshop-extend-the-jenkins-pipeline-for-deployment class=hanchor arialabel=Anchor>#</a></h3><ol><li><p><strong>Prepare Credentials for Jenkins:</strong></p><ul><li>The <code>kubeconfig</code> file contains the connection information for your cluster. It&rsquo;s usually located at <code>~/.kube/config</code>.</li><li><strong>In Jenkins:</strong> Go to &ldquo;Manage Jenkins&rdquo; > &ldquo;Manage Credentials&rdquo;.</li><li>&ldquo;Add Credentials&rdquo; > Kind: <code>Secret file</code>.</li><li>Upload your <code>~/.kube/config</code> file.</li><li>ID: <code>kubeconfig-kind</code>.</li><li>Save.</li></ul></li><li><p><strong>Install <code>kubectl</code> on the Jenkins Agent:</strong>
+Our base Jenkins container doesn&rsquo;t have <code>kubectl</code>. The easiest way is to install it at the start of the pipeline.</p></li><li><p><strong>Update the <code>Jenkinsfile</code>:</strong>
+Modify your <code>Jenkinsfile</code> to add a new deployment stage.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=display:flex><span>pipeline <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    agent any
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    environment <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        REGISTRY_URL <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;registry:5000&#39;</span>
+</span></span><span style=display:flex><span>        IMAGE_NAME <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;hello-devops&#34;</span>
+</span></span><span style=display:flex><span>        IMAGE_TAG <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;build-${env.BUILD_NUMBER}&#34;</span>
+</span></span><span style=display:flex><span>        KUBECONFIG_CREDENTIAL_ID <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;kubeconfig-kind&#39;</span>
+</span></span><span style=display:flex><span>        K8S_DEPLOYMENT_NAME <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;hello-devops-deployment&#39;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    stages <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Checkout&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span> <span style=color:#75715e>/* ... */</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Build &amp; Push Docker Image&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                script <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>def</span> customImage <span style=color:#f92672>=</span> docker<span style=color:#f92672>.</span><span style=color:#a6e22e>build</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}&#34;</span><span style=color:#f92672>,</span> <span style=color:#e6db74>&#34;.&#34;</span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>                    customImage<span style=color:#f92672>.</span><span style=color:#a6e22e>push</span><span style=color:#f92672>()</span>
+</span></span><span style=display:flex><span>                <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Install Kubectl&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                sh <span style=color:#e6db74>&#39;&#39;&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                if ! command -v kubectl &amp;&gt; /dev/null
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                then
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                    echo &#34;Kubectl not found. Installing...&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                    curl -LO &#34;https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                fi
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                kubectl version --client
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                &#39;&#39;&#39;</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Deploy to Kubernetes&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// Use the kubeconfig credentials
+</span></span></span><span style=display:flex><span>                withCredentials<span style=color:#f92672>([</span>file<span style=color:#f92672>(</span>credentialsId: KUBECONFIG_CREDENTIAL_ID<span style=color:#f92672>,</span> variable: <span style=color:#e6db74>&#39;KUBECONFIG_FILE&#39;</span><span style=color:#f92672>)])</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                    script <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// Set the environment variable so kubectl uses this file
+</span></span></span><span style=display:flex><span>                        sh <span style=color:#e6db74>&#34;export KUBECONFIG=${KUBECONFIG_FILE}&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// Update the deployment&#39;s image with the new version
+</span></span></span><span style=display:flex><span>                        <span style=color:#75715e>// Add --record to keep track of the command
+</span></span></span><span style=display:flex><span>                        sh <span style=color:#e6db74>&#34;kubectl set image deployment/${K8S_DEPLOYMENT_NAME} hello-devops-container=${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG} --record&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// Wait for the deployment to complete
+</span></span></span><span style=display:flex><span>                        sh <span style=color:#e6db74>&#34;kubectl rollout status deployment/${K8S_DEPLOYMENT_NAME}&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                        echo <span style=color:#e6db74>&#34;Deployment successful!&#34;</span>
+</span></span><span style=display:flex><span>                    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>                <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>    post <span style=color:#f92672>{</span> <span style=color:#75715e>/* ... */</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><blockquote><p><strong>Note:</strong> The <code>kubectl set image</code> command is a simple, imperative way to update an image. In more advanced scenarios, tools like Helm or Kustomize are used for a more declarative approach.</p></blockquote></li><li><p><strong>Push the Changes and Watch the Magic:</strong></p><ul><li><code>git add Jenkinsfile</code></li><li><code>git commit -m "ci: Add CD stage to deploy to Kubernetes"</code></li><li><code>git push origin main</code></li></ul><p>The webhook will trigger Jenkins. Watch the pipeline: it will build, push the image, install kubectl, and then update your K8s deployment with the brand-new image!</p></li><li><p><strong>Verification:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Watch the pods, you&#39;ll see the old ones terminate and new ones start</span>
+</span></span><span style=display:flex><span>kubectl get pods -w
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Check the deployment history</span>
+</span></span><span style=display:flex><span>kubectl rollout history deployment/hello-devops-deployment
+</span></span></code></pre></div></li></ol><hr><h2 id=module-06-reverse-proxy--load-balancing-nginx-ingress><strong>Module 06: Reverse Proxy & Load Balancing (Nginx Ingress)</strong><a href=#module-06-reverse-proxy--load-balancing-nginx-ingress class=hanchor arialabel=Anchor>#</a></h2><p>Currently, we access our service via a <code>NodePort</code> (e.g., <code>30007</code>), which isn&rsquo;t ideal. A <strong>reverse proxy</strong> acts as an entry point to your cluster. It receives requests and forwards them to the appropriate services.</p><h3 id=key-concepts-5>Key Concepts<a href=#key-concepts-5 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Reverse Proxy:</strong> A server that sits in front of web servers and forwards client requests to the appropriate server. It can handle SSL, compression, caching, etc.</li><li><strong>Load Balancing:</strong> Distributing incoming traffic across multiple servers (or pods) to improve performance and availability.</li><li><strong>Ingress Controller (Kubernetes):</strong> A specific type of reverse proxy for Kubernetes that manages external access to cluster services, usually via HTTP/HTTPS.</li></ul><h3 id=architecture-with-an-ingress-controller>Architecture with an Ingress Controller<a href=#architecture-with-an-ingress-controller class=hanchor arialabel=Anchor>#</a></h3><pre class=mermaid>graph LR
+    User -- http://hello.devops.local --&gt; IngressController(Nginx Ingress Controller&lt;br&gt;on K8s node port 80/443);
+    IngressController -- Routing Rule --&gt; Service[hello-devops-service];
+    Service -- Forwards to --&gt; Pod1[Pod hello-devops];
+    Service -- Forwards to --&gt; Pod2[Pod hello-devops];</pre><h3 id=workshop-deploy-an-nginx-ingress>Workshop: Deploy an Nginx Ingress<a href=#workshop-deploy-an-nginx-ingress class=hanchor arialabel=Anchor>#</a></h3><ol><li><p><strong>Install the Nginx Ingress Controller on Kind:</strong>
+Kind has specific documentation for this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Wait for the ingress controller pods to be ready</span>
+</span></span><span style=display:flex><span>kubectl wait --namespace ingress-nginx <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>  --for<span style=color:#f92672>=</span>condition<span style=color:#f92672>=</span>ready pod <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>  --selector<span style=color:#f92672>=</span>app.kubernetes.io/component<span style=color:#f92672>=</span>controller <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>  --timeout<span style=color:#f92672>=</span>90s
+</span></span></code></pre></div></li><li><p><strong>Modify our Kubernetes Service:</strong>
+The <code>NodePort</code> type is no longer needed. We&rsquo;ll change it to <code>ClusterIP</code> (the default type), which is only accessible from within the cluster. Modify <code>k8s/service.yaml</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># k8s/service.yaml</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#75715e># type: ClusterIP (can be omitted as it&#39;s the default)</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>hello-devops</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>  - <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>TCP</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>port</span>: <span style=color:#ae81ff>80</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>targetPort</span>: <span style=color:#ae81ff>5000</span>
+</span></span></code></pre></div></li><li><p><strong>Create an Ingress Resource:</strong>
+Create <code>k8s/ingress.yaml</code>. This is the rule that tells Nginx how to route traffic.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># k8s/ingress.yaml</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>networking.k8s.io/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Ingress</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-ingress</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>rules</span>:
+</span></span><span style=display:flex><span>  - <span style=color:#f92672>host</span>: <span style=color:#e6db74>&#34;hello.devops.local&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>http</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>paths</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>pathType</span>: <span style=color:#ae81ff>Prefix</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>backend</span>:
+</span></span><span style=display:flex><span>          <span style=color:#f92672>service</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-service</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>port</span>:
+</span></span><span style=display:flex><span>              <span style=color:#f92672>number</span>: <span style=color:#ae81ff>80</span>
+</span></span></code></pre></div></li><li><p><strong>Modify Your Local <code>hosts</code> File:</strong>
+To make your browser aware that <code>hello.devops.local</code> points to your local cluster, add this line to your <code>/etc/hosts</code> file (on Linux/Mac) or <code>C:\Windows\System32\drivers\etc\hosts</code> (on Windows).</p><pre tabindex=0><code>127.0.0.1 hello.devops.local
+</code></pre></li><li><p><strong>Deploy and Test:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Apply the service changes and the new ingress</span>
+</span></span><span style=display:flex><span>kubectl apply -f k8s/service.yaml
+</span></span><span style=display:flex><span>kubectl apply -f k8s/ingress.yaml
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Check that the ingress is created</span>
+</span></span><span style=display:flex><span>kubectl get ingress
+</span></span></code></pre></div><p>Open your browser to <code>http://hello.devops.local</code>. It works! Nginx received the request and forwarded it to your service.</p></li><li><p><strong>Push to Gitea:</strong>
+Don&rsquo;t forget to version your new manifests!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git add k8s/
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: Add Nginx Ingress for clean routing&#34;</span>
+</span></span><span style=display:flex><span>git push origin main
+</span></span></code></pre></div></li></ol><h3 id=sources--further-reading-5>Sources & Further Reading<a href=#sources--further-reading-5 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://kubernetes.io/docs/concepts/services-networking/ingress/>Kubernetes Ingress</a></li><li><strong>Documentation:</strong> <a href=https://kubernetes.github.io/ingress-nginx/>Nginx Ingress Controller</a></li></ul><hr><h2 id=module-07-infrastructure-as-code-iac-with-terraform><strong>Module 07: Infrastructure as Code (IaC) with Terraform</strong><a href=#module-07-infrastructure-as-code-iac-with-terraform class=hanchor arialabel=Anchor>#</a></h2><p>Infrastructure as Code (IaC) is the management and provisioning of infrastructure (servers, networks, etc.) through configuration files, rather than manual configuration. Terraform is the leading tool in this space.</p><h3 id=key-concepts-6>Key Concepts<a href=#key-concepts-6 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Provider:</strong> A plugin that allows Terraform to interact with a specific API (AWS, Docker, Kubernetes&mldr;).</li><li><strong>Resource:</strong> A block of code that describes an infrastructure component (e.g., a Docker network, a container).</li><li><strong>State File:</strong> A file (usually <code>terraform.tfstate</code>) where Terraform records the state of the infrastructure it manages.</li><li><strong>Plan:</strong> The <code>terraform plan</code> command shows what Terraform will create, modify, or destroy.</li><li><strong>Apply:</strong> The <code>terraform apply</code> command executes the actions from the plan.</li></ul><h3 id=workshop-manage-our-docker-network-with-terraform>Workshop: Manage Our Docker Network with Terraform<a href=#workshop-manage-our-docker-network-with-terraform class=hanchor arialabel=Anchor>#</a></h3><p>Instead of letting <code>docker-compose</code> create our <code>devops-net</code> network, we&rsquo;ll manage it with Terraform to illustrate the IaC concept.</p><ol><li><p><strong>Prerequisites:</strong> <a href=https://learn.hashicorp.com/tutorials/terraform/install-cli>Install Terraform</a>.</p></li><li><p><strong>Create Terraform Files:</strong>
+At the root of your <code>devops-course-lab</code> project, create a <code>terraform</code> folder. Inside, create <code>main.tf</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-terraform data-lang=terraform><span style=display:flex><span><span style=color:#75715e># terraform/main.tf
+</span></span></span><span style=display:flex><span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Declare required providers
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>terraform</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>required_providers</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>docker</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>source</span>  <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;kreuzwerker/docker&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>version</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;~&gt; 2.16.0&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}<span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Configure the Docker provider
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>provider</span> <span style=color:#e6db74>&#34;docker&#34;</span> {}<span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Define a resource of type &#34;Docker network&#34;
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>resource</span> <span style=color:#e6db74>&#34;docker_network&#34;</span> <span style=color:#e6db74>&#34;devops_network&#34;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>name</span>   <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;devops-net&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>driver</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;bridge&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></li><li><p><strong>Modify <code>docker-compose.yml</code>:</strong>
+We need to tell <code>docker-compose</code> to use the external network that Terraform will create.
+Modify your <code>docker-compose.yml</code> at the root of <code>devops-course-lab</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># ... (services)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>devops-net</span>:
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Indicates that this network is external and already created</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>external</span>: <span style=color:#66d9ef>true</span>
+</span></span></code></pre></div></li><li><p><strong>Run Terraform:</strong></p><ul><li>Stop and remove your current containers and networks to start fresh:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># In the devops-course-lab folder</span>
+</span></span><span style=display:flex><span>docker-compose down
+</span></span><span style=display:flex><span>docker network rm devops-net
+</span></span></code></pre></div></li><li>Navigate into the <code>terraform</code> folder and run the commands:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Initialize Terraform and download the Docker provider</span>
+</span></span><span style=display:flex><span>terraform init
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Show what Terraform is going to do</span>
+</span></span><span style=display:flex><span>terraform plan
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Apply the changes (answer &#34;yes&#34;)</span>
+</span></span><span style=display:flex><span>terraform apply
+</span></span></code></pre></div></li></ul><p>Terraform has now created the <code>devops-net</code> network.</p></li><li><p><strong>Relaunch the Lab:</strong>
+Return to the root of <code>devops-course-lab</code> and restart <code>docker-compose</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker-compose up -d
+</span></span></code></pre></div><p>The containers will start and attach to the Terraform-managed network!</p></li></ol><h3 id=sources--further-reading-6>Sources & Further Reading<a href=#sources--further-reading-6 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://learn.hashicorp.com/tutorials/terraform/infrastructure-as-code>Introduction to Terraform</a></li><li><strong>Provider:</strong> <a href=https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs>Terraform Docker Provider</a></li></ul><hr><h2 id=module-08-configuration-management-with-ansible><strong>Module 08: Configuration Management with Ansible</strong><a href=#module-08-configuration-management-with-ansible class=hanchor arialabel=Anchor>#</a></h2><p>While Terraform is excellent for <em>provisioning</em> infrastructure (creating servers), Ansible is excellent for <em>configuring</em> it (installing software, managing config files, etc.).</p><h3 id=key-concepts-7>Key Concepts<a href=#key-concepts-7 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Inventory:</strong> A list of servers (hosts) that Ansible should manage.</li><li><strong>Playbook:</strong> A YAML file that describes a set of tasks to execute on the hosts.</li><li><strong>Task:</strong> A single action that Ansible executes (e.g., install a package, copy a file).</li><li><strong>Module:</strong> A tool that Ansible uses to accomplish a task (e.g., <code>apt</code>, <code>copy</code>, <code>service</code>).</li><li><strong>Agentless:</strong> Ansible does not require an agent on the target machines. It typically connects via SSH.</li></ul><h3 id=workshop-use-ansible-to-configure-a-file-on-our-jenkins-container>Workshop: Use Ansible to Configure a File on our Jenkins Container<a href=#workshop-use-ansible-to-configure-a-file-on-our-jenkins-container class=hanchor arialabel=Anchor>#</a></h3><p>We will simulate server configuration by using Ansible to create a file inside the Jenkins container.</p><ol><li><p><strong>Prerequisites:</strong> <a href=https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html>Install Ansible</a>.</p></li><li><p><strong>Create Ansible Files:</strong>
+At the root of <code>devops-course-lab</code>, create an <code>ansible</code> folder.</p><ul><li><p><strong>Create an inventory <code>inventory.ini</code>:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e># ansible/inventory.ini</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[jenkins_server]</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Target the container directly by its name using the docker connection</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>jenkins ansible_connection</span><span style=color:#f92672>=</span><span style=color:#e6db74>docker</span>
+</span></span></code></pre></div></li><li><p><strong>Create a playbook <code>configure-jenkins.yml</code>:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>    <span style=color:#75715e># ansible/configure-jenkins.yml</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Configure Jenkins Container</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>hosts</span>: <span style=color:#ae81ff>jenkins_server</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>become</span>: <span style=color:#66d9ef>yes</span> <span style=color:#75715e># To execute tasks as root</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>tasks</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Create a welcome message file</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>copy</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>content</span>: <span style=color:#e6db74>&#34;This file was created by Ansible on {{ ansible_date_time.iso8601 }}.&#34;</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>dest</span>: <span style=color:#ae81ff>/var/jenkins_home/ansible_managed.txt</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>owner</span>: <span style=color:#ae81ff>jenkins</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>group</span>: <span style=color:#ae81ff>jenkins</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>mode</span>: <span style=color:#e6db74>&#39;0644&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Ensure a package is installed (example)</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>apt</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>name</span>: <span style=color:#ae81ff>cowsay</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>state</span>: <span style=color:#ae81ff>present</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>update_cache</span>: <span style=color:#66d9ef>yes</span>
+</span></span></code></pre></div></li></ul></li><li><p><strong>Run the Ansible Playbook:</strong>
+In your terminal, from the <code>ansible</code> folder:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># The command to run the playbook</span>
+</span></span><span style=display:flex><span>ansible-playbook -i inventory.ini configure-jenkins.yml
+</span></span></code></pre></div></li><li><p><strong>Verify the Result:</strong>
+Connect to the Jenkins container and check that the file was created and the package is installed.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Check the file</span>
+</span></span><span style=display:flex><span>docker exec jenkins cat /var/jenkins_home/ansible_managed.txt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Check the installed package</span>
+</span></span><span style=display:flex><span>docker exec jenkins cowsay <span style=color:#e6db74>&#34;Ansible was here!&#34;</span>
+</span></span></code></pre></div><p>You&rsquo;ll see the welcome message and the ASCII cow!</p></li></ol><h3 id=sources--further-reading-7>Sources & Further Reading<a href=#sources--further-reading-7 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://docs.ansible.com/ansible/latest/index.html>Ansible Documentation</a></li><li><strong>Connection Plugin:</strong> <a href=https://docs.ansible.com/ansible/latest/collections/community/docker/docker_connection.html>Ansible Docker Connection</a></li></ul><hr><h2 id=module-09-integrating-security-devsecops><strong>Module 09: Integrating Security (DevSecOps)</strong><a href=#module-09-integrating-security-devsecops class=hanchor arialabel=Anchor>#</a></h2><p>DevSecOps is an extension of the DevOps culture that aims to integrate security into every stage of the software lifecycle. The idea is to &ldquo;<strong>Shift Left</strong>,&rdquo; meaning security is integrated as early as possible in the development process, rather than being a final check before production.</p><h3 id=key-concepts-8>Key Concepts<a href=#key-concepts-8 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Shift Left:</strong> Detecting and fixing security flaws early in the cycle (during coding, building), where it is cheapest and fastest.</li><li><strong>SAST (Static Application Security Testing):</strong> Analyzing source code without executing it to find vulnerabilities (e.g., SQL injections, hardcoded passwords).</li><li><strong>SCA (Software Composition Analysis):</strong> Analyzing the project&rsquo;s open-source dependencies to find known vulnerabilities (CVEs).</li><li><strong>Container Image Scanning:</strong> Analyzing the final Docker image to find vulnerabilities in OS packages and libraries.</li></ul><h3 id=secure-pipeline-architecture>Secure Pipeline Architecture<a href=#secure-pipeline-architecture class=hanchor arialabel=Anchor>#</a></h3><pre class=mermaid>graph TD
+    subgraph &#34;Jenkins Pipeline&#34;
+        direction LR
+        A[Checkout] --&gt; B[SAST&lt;br&gt;SonarQube];
+        B --&gt; C[Build Image];
+        C --&gt; D[SCA &amp; Image Scan&lt;br&gt;Trivy];
+        D --&gt; E{Push to Registry};
+        E --&gt; F[Deploy to K8s];
+    end
+    Dev[git push] --&gt; A;
+    B -- Sends report --&gt; SonarQubeUI[SonarQube UI];
+    D -- Shows flaws --&gt; Console[Jenkins Console];</pre><h3 id=workshop-securing-our-cicd-pipeline>Workshop: Securing our CI/CD Pipeline<a href=#workshop-securing-our-cicd-pipeline class=hanchor arialabel=Anchor>#</a></h3><h4 id=1-add-sonarqube-to-the-lab>1. Add SonarQube to the Lab<a href=#1-add-sonarqube-to-the-lab class=hanchor arialabel=Anchor>#</a></h4><p>SonarQube is a leading platform for code quality and security analysis.
+Add these services to your <code>docker-compose.yml</code> file and restart with <code>docker-compose up -d</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e>#... inside the services section:</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sonarqube</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>image</span>: <span style=color:#ae81ff>sonarqube:lts-community</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>container_name</span>: <span style=color:#ae81ff>sonarqube</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#34;9000:9000&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>environment</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>sonar.jdbc.url=jdbc:postgresql://sonardb:5432/sonar</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>sonar.jdbc.username=sonar</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>sonar.jdbc.password=sonar</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>sonarqube_conf:/opt/sonarqube/conf</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>sonarqube_data:/opt/sonarqube/data</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>sonarqube_extensions:/opt/sonarqube/extensions</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>sonarqube_logs:/opt/sonarqube/logs</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>devops-net</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>depends_on</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>sonardb</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sonardb</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>image</span>: <span style=color:#ae81ff>postgres:12</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>container_name</span>: <span style=color:#ae81ff>sonardb</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>environment</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>POSTGRES_USER=sonar</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>POSTGRES_PASSWORD=sonar</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>POSTGRES_DB=sonar</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>postgresql:/var/lib/postgresql</span>
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>postgresql_data:/var/lib/postgresql/data</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>devops-net</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#... at the end of the file, add the volumes:</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>volumes</span>:
+</span></span><span style=display:flex><span>  <span style=color:#75715e>#... (jenkins_home, etc.)</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sonarqube_conf</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sonarqube_data</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sonarqube_extensions</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sonarqube_logs</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>postgresql</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>postgresql_data</span>:
+</span></span></code></pre></div><h4 id=2-configure-sonarqube-and-jenkins>2. Configure SonarQube and Jenkins<a href=#2-configure-sonarqube-and-jenkins class=hanchor arialabel=Anchor>#</a></h4><ol><li><p><strong>SonarQube:</strong></p><ul><li>Access <code>http://localhost:9000</code> (it might take a few minutes to start).</li><li>Log in with <code>admin</code> / <code>admin</code>. Change the password.</li><li>Go to &ldquo;Administration&rdquo; > &ldquo;Projects&rdquo; > &ldquo;Management&rdquo; and create a project manually. Name it <code>hello-devops</code>.</li><li>Go to your profile (top right) > &ldquo;My Account&rdquo; > &ldquo;Security&rdquo;. Generate a token, name it <code>jenkins-token</code>, and copy it.</li></ul></li><li><p><strong>Jenkins:</strong></p><ul><li>Install the <strong>SonarQube Scanner</strong> plugin.</li><li>Go to &ldquo;Manage Jenkins&rdquo; > &ldquo;Configure System&rdquo;. In the &ldquo;SonarQube servers&rdquo; section, add a server:<ul><li>Name: <code>sonarqube</code></li><li>Server URL: <code>http://sonarqube:9000</code></li><li>Server authentication token: &ldquo;Add&rdquo; > &ldquo;Jenkins&rdquo; > Kind: <code>Secret text</code>, paste your token, ID: <code>sonarqube-token</code>.</li></ul></li><li>Go to &ldquo;Manage Jenkins&rdquo; > &ldquo;Global Tool Configuration&rdquo;. Under &ldquo;SonarQube Scanner&rdquo;, &ldquo;Add SonarQube Scanner&rdquo;, and choose automatic installation.</li></ul></li></ol><h4 id=3-update-the-application-and-pipeline>3. Update the Application and Pipeline<a href=#3-update-the-application-and-pipeline class=hanchor arialabel=Anchor>#</a></h4><ol><li><p><strong>Add a SonarQube configuration file:</strong>
+At the root of your <code>hello-devops</code> project, create a file named <code>sonar-project.properties</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-properties data-lang=properties><span style=display:flex><span><span style=color:#a6e22e>sonar.projectKey</span><span style=color:#f92672>=</span><span style=color:#e6db74>hello-devops</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>sonar.projectName</span><span style=color:#f92672>=</span><span style=color:#e6db74>hello-devops</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>sonar.projectVersion</span><span style=color:#f92672>=</span><span style=color:#e6db74>1.0</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>sonar.sources</span><span style=color:#f92672>=</span><span style=color:#e6db74>.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>sonar.python.version</span><span style=color:#f92672>=</span><span style=color:#e6db74>3.9</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>sonar.sourceEncoding</span><span style=color:#f92672>=</span><span style=color:#e6db74>UTF-8</span>
+</span></span></code></pre></div></li><li><p><strong>Modify the <code>Jenkinsfile</code> to add security stages:</strong>
+We will add a stage for SonarQube (SAST) and one for Trivy (Image Scanning).</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=display:flex><span>pipeline <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    agent any
+</span></span><span style=display:flex><span>    tools <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Ensure the SonarQube Scanner tool is available
+</span></span></span><span style=display:flex><span>        <span style=color:#75715e>// Name must match the one in Global Tool Configuration
+</span></span></span><span style=display:flex><span>        sonarqube <span style=color:#e6db74>&#39;SonarQubeScanner&#39;</span> 
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>    environment <span style=color:#f92672>{</span> <span style=color:#75715e>/* ... */</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    stages <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Checkout&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span> <span style=color:#75715e>/* ... */</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// NEW STAGE: SAST
+</span></span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Static Code Analysis&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                script <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// Use the SonarQube configuration defined in Jenkins
+</span></span></span><span style=display:flex><span>                    withSonarQubeEnv<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;sonarqube&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// &#39;scannerHome&#39; is injected by the plugin
+</span></span></span><span style=display:flex><span>                        sh <span style=color:#e6db74>&#34;${scannerHome}/bin/sonar-scanner&#34;</span>
+</span></span><span style=display:flex><span>                    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>                <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// NEW STAGE: Quality Gate
+</span></span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;SonarQube Quality Gate&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// Wait for the analysis result and fail the pipeline if the Quality Gate is not passed
+</span></span></span><span style=display:flex><span>                timeout<span style=color:#f92672>(</span>time: <span style=color:#ae81ff>1</span><span style=color:#f92672>,</span> unit: <span style=color:#e6db74>&#39;HOURS&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                    waitForQualityGate abortPipeline: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>                <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Build &amp; Push Docker Image&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span> <span style=color:#75715e>/* ... */</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// NEW STAGE: IMAGE SCANNING
+</span></span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Vulnerability Scan (Image)&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                script <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// Use the official Trivy image to scan our image
+</span></span></span><span style=display:flex><span>                    <span style=color:#75715e>// Fail the pipeline if a CRITICAL vulnerability is found
+</span></span></span><span style=display:flex><span>                    sh <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                    aquasec/trivy:latest image --exit-code 1 --severity CRITICAL ${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>                <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Deploy to Kubernetes&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span> <span style=color:#75715e>/* ... */</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>    post <span style=color:#f92672>{</span> <span style=color:#75715e>/* ... */</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div></li></ol><h4 id=4-push-changes-and-analyze>4. Push Changes and Analyze<a href=#4-push-changes-and-analyze class=hanchor arialabel=Anchor>#</a></h4><ol><li><code>git add sonar-project.properties Jenkinsfile</code></li><li><code>git commit -m "feat(ci): Integrate SonarQube and Trivy scans"</code></li><li><code>git push origin main</code></li></ol><p>Observe the new pipeline. You can now go to <code>http://localhost:9000</code> to see the full code analysis report, and check the Jenkins console for Trivy&rsquo;s vulnerability report.</p><h3 id=sources--further-reading-8>Sources & Further Reading<a href=#sources--further-reading-8 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-jenkins/>SonarQube Scanner for Jenkins</a></li><li><strong>Documentation:</strong> <a href=https://aquasecurity.github.io/trivy/v0.25.3/integrations/ci/jenkins/>Trivy - CI Integration</a></li></ul><hr><h2 id=module-10-monitoring--observability><strong>Module 10: Monitoring & Observability</strong><a href=#module-10-monitoring--observability class=hanchor arialabel=Anchor>#</a></h2><p>Deploying is good, but knowing what&rsquo;s happening is better. Monitoring and observability allow us to watch the health and performance of our application and infrastructure.</p><h3 id=key-concepts-9>Key Concepts<a href=#key-concepts-9 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Monitoring:</strong> Collecting, processing, and displaying quantitative data about a system. It answers the question: &ldquo;Is the system working?&rdquo;.</li><li><strong>Observability:</strong> The ability to understand a system&rsquo;s internal state from its external outputs. It answers the question: &ldquo;Why isn&rsquo;t the system working?&rdquo;.</li><li><strong>The 3 Pillars of Observability:</strong><ol><li><strong>Metrics:</strong> Numerical measurements aggregated over time intervals (e.g., CPU usage, requests per second). Tool: <strong>Prometheus</strong>.</li><li><strong>Logs:</strong> Records of discrete, timestamped events (e.g., application error, user request). Tool: <strong>Loki</strong>.</li><li><strong>Traces:</strong> A representation of a request&rsquo;s journey through the different services of a microservices architecture.</li></ol></li></ul><h3 id=our-monitoring-stack-architecture-the-prom-stack>Our Monitoring Stack Architecture (The &ldquo;Prom Stack&rdquo;)<a href=#our-monitoring-stack-architecture-the-prom-stack class=hanchor arialabel=Anchor>#</a></h3><pre class=mermaid>graph TD
+    subgraph &#34;Kubernetes Cluster&#34;
+        Prometheus[Prometheus] -- Scrapes --&gt; AppMetrics(App Pod&lt;br&gt;/metrics);
+        Prometheus -- Scrapes --&gt; KubeMetrics[Kube-State-Metrics];
+        Promtail[Promtail Agent] -- Collects Logs --&gt; AppLogs(App Pod Logs);
+        Promtail -- Sends Logs --&gt; Loki[Loki];
+    end
+    Grafana[Grafana] -- Queries --&gt; Prometheus;
+    Grafana -- Queries --&gt; Loki;
+    User[User] -- Visualizes --&gt; Grafana;</pre><h3 id=workshop-set-up-prometheus-loki-and-grafana>Workshop: Set up Prometheus, Loki, and Grafana<a href=#workshop-set-up-prometheus-loki-and-grafana class=hanchor arialabel=Anchor>#</a></h3><h4 id=1-instrument-the-application-to-expose-metrics>1. Instrument the Application to Expose Metrics<a href=#1-instrument-the-application-to-expose-metrics class=hanchor arialabel=Anchor>#</a></h4><p>Our application needs to expose a <code>/metrics</code> endpoint that Prometheus can read.</p><ol><li><p><strong>Update <code>requirements.txt</code>:</strong></p><pre tabindex=0><code>Flask==2.1.2
+gunicorn==20.1.0
+prometheus-client==0.14.1
+Werkzeug==2.3.7
+</code></pre></li><li><p><strong>Modify <code>app.py</code>:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> flask <span style=color:#f92672>import</span> Flask, Response
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> os
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> prometheus_client <span style=color:#f92672>import</span> Counter, generate_latest, REGISTRY
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>app <span style=color:#f92672>=</span> Flask(__name__)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Create a counter for HTTP requests</span>
+</span></span><span style=display:flex><span>http_requests_total <span style=color:#f92672>=</span> Counter(<span style=color:#e6db74>&#39;http_requests_total&#39;</span>, <span style=color:#e6db74>&#39;Total number of HTTP requests&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>hello</span>():
+</span></span><span style=display:flex><span>    http_requests_total<span style=color:#f92672>.</span>inc() <span style=color:#75715e># Increment the counter on each request</span>
+</span></span><span style=display:flex><span>    version <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>environ<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;APP_VERSION&#39;</span>, <span style=color:#e6db74>&#39;v2.0&#39;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;&lt;h1&gt;Hello from the new automated pipeline!&lt;/h1&gt;&lt;p&gt;Version: </span><span style=color:#e6db74>{</span>version<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/p&gt;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/metrics&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>metrics</span>():
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Expose metrics in the Prometheus format</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> Response(generate_latest(REGISTRY), mimetype<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;text/plain&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;__main__&#39;</span>:
+</span></span><span style=display:flex><span>    app<span style=color:#f92672>.</span>run(host<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;0.0.0.0&#39;</span>, port<span style=color:#f92672>=</span><span style=color:#ae81ff>5000</span>)
+</span></span></code></pre></div></li></ol><h4 id=2-deploy-the-monitoring-stack-in-kubernetes>2. Deploy the Monitoring Stack in Kubernetes<a href=#2-deploy-the-monitoring-stack-in-kubernetes class=hanchor arialabel=Anchor>#</a></h4><p>Manually installing each component is complex. We&rsquo;ll use community Helm charts, which greatly simplify this process. You&rsquo;ll need to <a href=https://helm.sh/docs/intro/install/>install Helm</a> first.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Add the Prometheus Community Helm repo</span>
+</span></span><span style=display:flex><span>helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+</span></span><span style=display:flex><span>helm repo update
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Install kube-prometheus-stack (includes Prometheus, Grafana, Alertmanager...)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># into a dedicated &#39;monitoring&#39; namespace</span>
+</span></span><span style=display:flex><span>kubectl create namespace monitoring
+</span></span><span style=display:flex><span>helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Install Loki and Promtail</span>
+</span></span><span style=display:flex><span>helm repo add grafana https://grafana.github.io/helm-charts
+</span></span><span style=display:flex><span>helm repo update
+</span></span><span style=display:flex><span>helm install loki grafana/loki-stack --namespace monitoring
+</span></span></code></pre></div><h4 id=3-configure-prometheus-to-scrape-our-application>3. Configure Prometheus to Scrape Our Application<a href=#3-configure-prometheus-to-scrape-our-application class=hanchor arialabel=Anchor>#</a></h4><p>The <code>kube-prometheus-stack</code> uses <code>ServiceMonitor</code> resources to automatically discover services to scrape.</p><ol><li><p><strong>Update your <code>k8s/service.yaml</code></strong> to add a name to the port, which is required by the <code>ServiceMonitor</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>    <span style=color:#75715e># k8s/service.yaml</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Service</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-service</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>hello-devops</span> <span style=color:#75715e># Important label for discovery</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>hello-devops</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>http</span> <span style=color:#75715e># Name the port</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>TCP</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>port</span>: <span style=color:#ae81ff>80</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>targetPort</span>: <span style=color:#ae81ff>5000</span>
+</span></span></code></pre></div></li><li><p><strong>Create a <code>k8s/servicemonitor.yaml</code> manifest:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>    <span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>monitoring.coreos.com/v1</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ServiceMonitor</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-monitor</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>default</span> <span style=color:#75715e># Make sure it&#39;s in the same namespace as your service</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>release</span>: <span style=color:#ae81ff>prometheus</span> <span style=color:#75715e># This label is crucial for Prometheus to find it</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>hello-devops</span> <span style=color:#75715e># Target services with this label</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>endpoints</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>port</span>: <span style=color:#ae81ff>http</span> <span style=color:#75715e># Scrape the port named &#39;http&#39;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/metrics</span> <span style=color:#75715e># On this path</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>interval</span>: <span style=color:#ae81ff>15s</span> <span style=color:#75715e># Every 15 seconds</span>
+</span></span></code></pre></div></li></ol><h4 id=4-access-grafana-and-visualize>4. Access Grafana and Visualize<a href=#4-access-grafana-and-visualize class=hanchor arialabel=Anchor>#</a></h4><ol><li><code>git add .</code> and <code>git commit/push</code> to deploy your instrumented application and new manifests.</li><li>Expose Grafana on your local machine:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl --namespace monitoring port-forward svc/prometheus-grafana 8082:80
+</span></span></code></pre></div></li><li>Open <code>http://localhost:8082</code>.<ul><li>Login: <code>admin</code>.</li><li>Password: <code>prom-operator</code> (default, should be changed). You can retrieve it with <code>kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo</code>.</li></ul></li><li><strong>Explore:</strong><ul><li>Go to &ldquo;Dashboards&rdquo;. There are already pre-configured dashboards for Kubernetes!</li><li>Go to &ldquo;Explore&rdquo;. Choose the &ldquo;Prometheus&rdquo; data source. Type <code>http_requests_total</code> and run. You&rsquo;ll see your application&rsquo;s counter!</li><li>Change the data source to &ldquo;Loki&rdquo;. In the &ldquo;Log browser&rdquo;, select <code>app="hello-devops"</code>. You&rsquo;ll see your application&rsquo;s logs directly in Grafana.</li></ul></li></ol><h3 id=sources--further-reading-9>Sources & Further Reading<a href=#sources--further-reading-9 class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Documentation:</strong> <a href=https://github.com/prometheus/client_python>prometheus-client for Python</a></li><li><strong>Stack:</strong> <a href=https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack>kube-prometheus-stack</a></li><li><strong>Stack:</strong> <a href=https://github.com/grafana/helm-charts/tree/main/charts/loki-stack>Loki Helm Chart</a></li></ul><hr><h2 id=module-11-final-project---the-complete-a-to-z-pipeline><strong>Module 11: Final Project - The Complete A-to-Z Pipeline</strong><a href=#module-11-final-project---the-complete-a-to-z-pipeline class=hanchor arialabel=Anchor>#</a></h2><p>Let&rsquo;s recap everything we&rsquo;ve learned by creating a complete workflow. The goal is to simulate a developer making a change and seeing it automatically propagate all the way to our Kubernetes environment, passing security checks along the way.</p><h3 id=the-scenario>The Scenario<a href=#the-scenario class=hanchor arialabel=Anchor>#</a></h3><p>A developer needs to change the application&rsquo;s message and update the version number. After they push their code, the CI/CD/CS (Continuous Security) chain must automatically:</p><ol><li>Verify the code&rsquo;s quality and security with SonarQube.</li><li>Build a new Docker image with a unique tag.</li><li>Scan the image for vulnerabilities with Trivy.</li><li>If all checks pass, push the image to our local registry.</li><li>Deploy the application to Kubernetes using a declarative approach.</li><li>All of this must happen without any manual intervention after the <code>git push</code>.</li></ol><h3 id=final-workflow-architecture>Final Workflow Architecture<a href=#final-workflow-architecture class=hanchor arialabel=Anchor>#</a></h3><pre class=mermaid>graph TD
+    A[Developer&lt;br&gt;git push] --&gt; B{Gitea};
+    B -- Webhook --&gt; C[Jenkins];
+    C -- git clone --&gt; B;
+    C -- SAST Scan --&gt; SonarQube;
+    C -- docker build --&gt; D(Image v2.0);
+    C -- Image Scan --&gt; Trivy;
+    D -- docker push --&gt; E[Local Registry];
+    C -- kubectl apply --&gt; F{Kubernetes Cluster};
+    F -- docker pull --&gt; E;
+    F -- Deploys --&gt; G[New Pods&lt;br&gt;with image v2.0];
+    H[User] -- http://hello.devops.local --&gt; I[Nginx Ingress];
+    I --&gt; G;</pre><h3 id=workshop-the-final-push>Workshop: The Final Push<a href=#workshop-the-final-push class=hanchor arialabel=Anchor>#</a></h3><ol><li><p><strong>Improve the <code>Jenkinsfile</code> for Declarative Deployment:</strong>
+Our <code>kubectl set image</code> command is good, but it doesn&rsquo;t apply other changes from our manifests. A better practice is to apply the manifest files directly.</p><p>Modify the <code>Deploy to Kubernetes</code> stage in your <code>Jenkinsfile</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=display:flex><span><span style=color:#75715e>// ...
+</span></span></span><span style=display:flex><span>        stage<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;Deploy to Kubernetes&#39;</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            steps <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                withCredentials<span style=color:#f92672>([</span>file<span style=color:#f92672>(</span>credentialsId: KUBECONFIG_CREDENTIAL_ID<span style=color:#f92672>,</span> variable: <span style=color:#e6db74>&#39;KUBECONFIG_FILE&#39;</span><span style=color:#f92672>)])</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                    script <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>                        sh <span style=color:#e6db74>&#34;export KUBECONFIG=${KUBECONFIG_FILE}&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// 1. Replace the image tag placeholder in the manifest
+</span></span></span><span style=display:flex><span>                        <span style=color:#75715e>// We use sed to replace a placeholder we&#39;re about to add
+</span></span></span><span style=display:flex><span>                        sh <span style=color:#e6db74>&#34;sed -i &#39;s|IMAGE_TAG_PLACEHOLDER|${IMAGE_TAG}|g&#39; k8s/deployment.yaml&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// 2. Apply all manifests from the k8s folder
+</span></span></span><span style=display:flex><span>                        sh <span style=color:#e6db74>&#34;kubectl apply -f k8s/&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// 3. Wait for the deployment
+</span></span></span><span style=display:flex><span>                        sh <span style=color:#e6db74>&#34;kubectl rollout status deployment/${K8S_DEPLOYMENT_NAME}&#34;</span>
+</span></span><span style=display:flex><span>                        echo <span style=color:#e6db74>&#34;Deployment successful!&#34;</span>
+</span></span><span style=display:flex><span>                    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>                <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ...
+</span></span></span></code></pre></div></li><li><p><strong>Update <code>deployment.yaml</code> with a Placeholder:</strong>
+Change the image line in <code>k8s/deployment.yaml</code> so <code>sed</code> can replace it.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># k8s/deployment.yaml (final modification)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ...</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>hello-devops-container</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Here&#39;s our placeholder!</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>registry:5000/hello-devops:IMAGE_TAG_PLACEHOLDER</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ...</span>
+</span></span></code></pre></div></li><li><p><strong>Commit and Push:</strong>
+This is the moment of truth. Gather all your changes and push them.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;refactor(ci): Use declarative deploy and update app to v2.0&#34;</span>
+</span></span><span style=display:flex><span>git push origin main
+</span></span></code></pre></div></li><li><p><strong>Observe and Verify:</strong></p><ul><li>Go to Jenkins and watch the pipeline run through all the stages: SAST, build, image scan, deploy.</li><li>Once finished, open <code>http://hello.devops.local</code> in your browser.</li><li>You should see your new application message!</li><li>You can also verify the image used by the pods:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl get pods -o jsonpath<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;{.items[0].spec.containers[0].image}&#39;</span>
+</span></span></code></pre></div>This will display something like <code>registry:5000/hello-devops:build-X</code>.</li></ul></li></ol><p><strong>Congratulations! You have set up and executed a complete, secure, and observable CI/CD pipeline, from code to production, entirely on your local machine.</strong></p><hr><h2 id=module-12-conclusion--next-steps><strong>Module 12: Conclusion & Next Steps</strong><a href=#module-12-conclusion--next-steps class=hanchor arialabel=Anchor>#</a></h2><p>You have come a long way, from basic code management to a fully automated continuous deployment pipeline. You have gained practical skills in the most fundamental tools of the DevOps ecosystem.</p><h3 id=what-youve-accomplished>What You&rsquo;ve Accomplished:<a href=#what-youve-accomplished class=hanchor arialabel=Anchor>#</a></h3><ul><li><strong>Set up a local DevOps lab</strong> with Docker Compose.</li><li><strong>Versioned an application</strong> with Gitea.</li><li><strong>Containerized the application</strong> with Docker.</li><li><strong>Created a Continuous Integration (CI) pipeline</strong> with Jenkins that builds and stores artifacts.</li><li><strong>Deployed a local Kubernetes cluster</strong> with Kind.</li><li><strong>Implemented Continuous Deployment (CD)</strong> to automatically push changes to Kubernetes.</li><li><strong>Exposed your application professionally</strong> with an Nginx Ingress.</li><li><strong>Understood the principles of Infrastructure as Code</strong> with Terraform.</li><li><strong>Discovered configuration management</strong> with Ansible.</li><li><strong>Integrated security into the pipeline</strong> (<strong>DevSecOps</strong>) with SonarQube and Trivy.</li><li><strong>Set up a professional-grade monitoring and logging stack</strong> with Prometheus, Grafana, and Loki.</li></ul></div></div><div class=pagination><div class=pagination__title><span class=pagination__title-h>Read other posts</span><hr></div><div class=pagination__buttons><a href=https://menraromial.com/posts/guide-building-custom-kubernetes-scheduler/ class="button inline prev">&lt; [<span class=button__text>Guide to Building a Custom Kubernetes Scheduler</span>]
+</a>::
+<a href=https://menraromial.com/posts/kubernetes-with-kubeadm-and-cri.io/ class="button inline next">[<span class=button__text>Setting Up a Kubernetes Cluster with Kubeadm and CRI-O</span>] ></a></div></div></article></div><footer class=footer><div class=footer__inner><div class=socials><a class=socials__link href=https://github.com/menraromial title=GitHub aria-label=GitHub target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a>
+<a class=socials__link href=https://www.linkedin.com/in/menraromial title=LinkedIn aria-label=LinkedIn target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4V9h4v1.34A6 6 0 0116 9z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+<a class=socials__link href=https://x.com/mwrdev_ title="X (Twitter)" aria-label="X (Twitter)" target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932zM17.61 20.644h2.039L6.486 3.24H4.298z"/></svg></a>
+<a class=socials__link href=https://medium.com/@menraromial title=Medium aria-label=Medium target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.54 12a6.8 6.8.0 01-6.77 6.82A6.8 6.8.0 010 12a6.8 6.8.0 016.77-6.82A6.8 6.8.0 0113.54 12zm7.42.0c0 3.54-1.51 6.42-3.38 6.42-1.87.0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.87 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75s-1.19-2.58-1.19-5.75.53-5.75 1.19-5.75S24 8.83 24 12z"/></svg></a>
+<a class=socials__link href=https://orcid.org/0009-0007-0943-8593 title=ORCID aria-label=ORCID target=_blank rel=noopener><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.372.0.0 5.372.0 12s5.372 12 12 12 12-5.372 12-12S18.628.0 12 0zM7.369 4.378c.525.0.947.431.947.947s-.422.947-.947.947a.95.95.0 01-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562.0h3.9c3.712.0 5.344 2.653 5.344 5.025.0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272.0 4.022-2.484 4.022-3.722.0-2.016-1.284-3.722-4.097-3.722h-2.222z"/></svg></a>
+<a class=socials__link href=mailto:itsme@menraromial.com title=Email aria-label=Email><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a></div><div class=copyright><span>© 2026 Menra Romial :: Powered by <a href=https://gohugo.io>Hugo</a></span>
+<span>:: <a href=https://github.com/panr/hugo-theme-terminal target=_blank>Theme</a> made by <a href=https://github.com/panr target=_blank>panr</a></span></div></div></footer><script type=text/javascript src=/bundle.min.js></script><script type=module>
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      themeVariables: {
+        darkMode: false,
+        background: "#fff7f1",
+        primaryColor: "#ffe4da",
+        primaryTextColor: "#45372B",
+        primaryBorderColor: "#ff6347",
+        lineColor: "#ff6347",
+        fontFamily: "'Fira Code', monospace"
+      }
+    });
+  </script></div></body></html>
