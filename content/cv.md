@@ -1,5 +1,5 @@
 ---
-description: "Curriculum vitae of Menra Romial (Menra Wedwang Romial) — PhD student in cloud computing and Green IT at Inria / IMT Atlantique."
+description: "Curriculum vitae of Menra Romial (Menra Wedwang Romial) - PhD student in cloud computing and Green IT at Inria / IMT Atlantique."
 title: "CV"
 ---
 
