@@ -1,0 +1,6 @@
+<a href="{{ if $.Site.Params.Logo.LogoHomeLink }}{{ $.Site.Params.Logo.LogoHomeLink }}{{ else }}{{ $.Site.BaseURL }}{{ end }}">
+  <div class="logo logo--image">
+    <img class="logo__mark" src="{{ "img/logo.svg" | relURL }}" alt="Menra Romial logo" width="32" height="32">
+    <span class="logo__text">{{ with $.Site.Params.Logo.logoText }}{{ . }}{{ else }}Terminal{{ end }}</span>
+  </div>
+</a>
