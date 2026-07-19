@@ -1,0 +1,62 @@
+<meta name="author" content="Menra Romial">
+{{ with site.Params.googleSiteVerification }}
+  <meta name="google-site-verification" content="{{ . }}">
+{{ end }}
+
+{{ if .IsHome }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "{{ site.BaseURL }}#person",
+      "name": "Menra Romial",
+      "alternateName": ["Romial Menra", "Menra Wedwang Romial", "Wedwang Romial", "Menra W. Romial", "menraromial"],
+      "url": "{{ site.BaseURL }}",
+      "image": "{{ "img/prof_pic.jpg" | absURL }}",
+      "jobTitle": "PhD Student in Computer Science",
+      "description": "PhD student specializing in power management in cloud infrastructure, energy-aware computing systems, and sustainable distributed systems.",
+      "email": "mailto:itsme@menraromial.com",
+      "affiliation": [
+        { "@type": "Organization", "name": "Inria", "url": "https://www.inria.fr" },
+        { "@type": "Organization", "name": "IMT Atlantique", "url": "https://www.imt-atlantique.fr" }
+      ],
+      "knowsAbout": ["Cloud Computing", "Kubernetes", "Energy-Aware Computing", "Green IT", "Distributed Systems", "Power Management", "Intel RAPL", "Sustainable Computing"],
+      "sameAs": [
+        "https://github.com/menraromial",
+        "https://www.linkedin.com/in/menraromial",
+        "https://x.com/mwrdev_",
+        "https://medium.com/@menraromial",
+        "https://orcid.org/0009-0007-0943-8593",
+        "https://hal.science/hal-05638939"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "{{ site.BaseURL }}#website",
+      "url": "{{ site.BaseURL }}",
+      "name": "Menra Romial",
+      "description": {{ site.Params.Subtitle | jsonify }},
+      "publisher": { "@id": "{{ site.BaseURL }}#person" }
+    }
+  ]
+}
+</script>
+{{ end }}
+
+{{ if and .IsPage (eq .Type "posts") }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ .Title | jsonify }},
+  "description": {{ .Description | default .Summary | plainify | jsonify }},
+  "url": "{{ .Permalink }}",
+  "datePublished": "{{ .Date.Format "2006-01-02" }}",
+  "dateModified": "{{ .Lastmod.Format "2006-01-02" }}",
+  "author": { "@id": "{{ site.BaseURL }}#person", "@type": "Person", "name": "Menra Romial", "url": "{{ site.BaseURL }}" },
+  "keywords": {{ delimit (.Params.tags | default slice) ", " | jsonify }}
+}
+</script>
+{{ end }}

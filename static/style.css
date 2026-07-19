@@ -1,0 +1,219 @@
+/* Site-wide overrides and components for the terminal theme.
+   Loaded on every page by the theme (static/style.css hook). */
+
+/* ---- Color scheme: official "Tomato" preset from https://panr.github.io/terminal-css/ ---- */
+
+:root {
+  --background: #fff7f1;
+  --foreground: #45372B;
+  --accent: #ff6347;
+}
+
+/* ---- Icons ---- */
+
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  color: var(--accent);
+}
+
+.home-section__title .icon,
+.news-full__title .icon {
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.35rem;
+}
+
+/* ---- Social links ---- */
+
+.socials {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.socials__link {
+  display: inline-flex;
+  border: none;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  transition: color 0.15s ease;
+}
+
+.socials__link:hover {
+  color: var(--accent);
+}
+
+.socials__link .icon {
+  width: 1.3em;
+  height: 1.3em;
+  color: inherit;
+}
+
+.footer .socials {
+  justify-content: center;
+  margin: 0 0 0.6rem;
+}
+
+/* ---- Mermaid diagrams ---- */
+
+pre.mermaid {
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: center;
+  overflow-x: auto;
+}
+
+pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---- Home sections ---- */
+
+.home-section {
+  margin-top: 3rem;
+}
+
+.home-section__title {
+  border-bottom: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  padding-bottom: 0.4rem;
+}
+
+.home-section__more {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-weight: bold;
+}
+
+.home-section .posts {
+  width: 100%;
+}
+
+.home-section .post.on-list:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* ---- News ---- */
+
+.news-item {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  margin: 0.6rem 0;
+}
+
+.news-item__date {
+  flex-shrink: 0;
+  min-width: 5.5rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+.news-full {
+  border-bottom: 1px dashed color-mix(in srgb, var(--foreground) 25%, transparent);
+  padding: 1.2rem 0;
+}
+
+.news-full:last-of-type {
+  border-bottom: none;
+}
+
+.news-full__meta time {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+.news-full__title {
+  margin: 0.3rem 0 0.6rem;
+  font-size: 1.15rem;
+}
+
+/* ---- Publications ---- */
+
+.pub {
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-left: 4px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+}
+
+.pub__badge {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--background);
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 0.15rem 0.55rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pub__award {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--accent);
+  border: 1px dashed var(--accent);
+  padding: 0.1rem 0.5rem;
+  border-radius: 2px;
+}
+
+.pub__title {
+  margin: 0.6rem 0 0.4rem;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.pub__authors {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.pub__authors strong {
+  color: var(--accent);
+}
+
+.pub__venue {
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.7;
+  margin-top: 0.2rem;
+}
+
+.pub__links {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.pub__abstract {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.pub__abstract summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.pub__abstract > div {
+  margin-top: 0.4rem;
+  padding-left: 0.8rem;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  opacity: 0.85;
+}
+
+.pub-year {
+  border-bottom: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  padding-bottom: 0.3rem;
+}
+
+.pub-orcid {
+  margin-top: 2rem;
+}

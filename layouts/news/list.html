@@ -1,0 +1,23 @@
+{{ define "main" }}
+  <div class="index-content">
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+  </div>
+
+  {{ range .Pages }}
+    <article class="news-full">
+      <div class="news-full__meta">
+        <time>{{ .Date.Format "January 2, 2006" }}</time>
+      </div>
+      <h2 class="news-full__title">{{ with .Params.icon }}{{ partial "icon.html" . }} {{ end }}<a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      <div class="news-full__content">
+        {{ if .Truncated }}
+          {{ .Summary }}
+          <div><a class="read-more button inline" href="{{ .RelPermalink }}">[{{ $.Site.Params.ReadMore }}]</a></div>
+        {{ else }}
+          {{ .Content }}
+        {{ end }}
+      </div>
+    </article>
+  {{ end }}
+{{ end }}

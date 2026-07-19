@@ -1,0 +1,5 @@
+<div class="socials">
+  {{ range site.Params.socials }}
+    <a class="socials__link" href="{{ .url }}" title="{{ .title }}" aria-label="{{ .title }}"{{ if not (hasPrefix .url "mailto:") }} target="_blank" rel="noopener"{{ end }}>{{ partial "icon.html" .name }}</a>
+  {{ end }}
+</div>
