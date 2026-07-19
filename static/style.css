@@ -9,27 +9,6 @@
   --accent: #ff6347;
 }
 
-/* ---- Header logo with monogram ---- */
-
-.logo--image {
-  background: transparent;
-  padding: 0;
-  gap: 8px;
-}
-
-.logo__mark {
-  display: block;
-  width: 32px;
-  height: 32px;
-}
-
-.logo__text {
-  background: var(--accent);
-  color: var(--background);
-  font-weight: bold;
-  padding: 5px 10px;
-}
-
 /* ---- Icons ---- */
 
 .icon {

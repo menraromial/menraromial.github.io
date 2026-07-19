@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 627" width="1200" height="627">
+  <rect width="1200" height="627" fill="#fff7f1"/>
+
+  <!-- terminal window -->
+  <g>
+    <!-- frame -->
+    <rect x="220" y="122" width="760" height="384" rx="18" fill="#fff7f1" stroke="#45372B" stroke-width="5"/>
+    <!-- title bar -->
+    <path d="M220 140 a18 18 0 0 1 18 -18 h724 a18 18 0 0 1 18 18 v36 h-760 Z" fill="#45372B"/>
+    <!-- window dots -->
+    <circle cx="256" cy="149" r="8" fill="#ff6347"/>
+    <circle cx="284" cy="149" r="8" fill="#fff7f1"/>
+    <circle cx="312" cy="149" r="8" fill="none" stroke="#fff7f1" stroke-width="2.5"/>
+
+    <!-- command line -->
+    <text x="276" y="300" font-family="'Fira Code', ui-monospace, monospace" font-size="52" font-weight="600" fill="#ff6347">&gt;</text>
+    <text x="322" y="300" font-family="'Fira Code', ui-monospace, monospace" font-size="52" font-weight="500" fill="#45372B">menra romial</text>
+    <!-- block cursor -->
+    <rect x="712" y="258" width="30" height="54" rx="4" fill="#ff6347"/>
+
+    <!-- small icons, bottom right of the terminal body -->
+    <g fill="none" stroke="#ff6347" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <!-- server rack -->
+      <g transform="translate(742,408)">
+        <rect x="0" y="0" width="44" height="52" rx="6"/>
+        <line x1="0" y1="17" x2="44" y2="17"/>
+        <line x1="0" y1="34" x2="44" y2="34"/>
+        <circle cx="10" cy="9"  r="2.2" fill="#ff6347" stroke="none"/>
+        <circle cx="10" cy="26" r="2.2" fill="#ff6347" stroke="none"/>
+        <circle cx="10" cy="43" r="2.2" fill="#ff6347" stroke="none"/>
+      </g>
+      <!-- ship's wheel (helm) -->
+      <g transform="translate(844,434)">
+        <circle cx="0" cy="0" r="21"/>
+        <circle cx="0" cy="0" r="7.5"/>
+        <g>
+          <line x1="0" y1="-21" x2="0" y2="-30"/>
+          <line x1="0" y1="21" x2="0" y2="30"/>
+          <line x1="-21" y1="0" x2="-30" y2="0"/>
+          <line x1="21" y1="0" x2="30" y2="0"/>
+          <line x1="-14.85" y1="-14.85" x2="-21.2" y2="-21.2"/>
+          <line x1="14.85" y1="-14.85" x2="21.2" y2="-21.2"/>
+          <line x1="-14.85" y1="14.85" x2="-21.2" y2="21.2"/>
+          <line x1="14.85" y1="14.85" x2="21.2" y2="21.2"/>
+        </g>
+        <g stroke-width="3">
+          <line x1="0" y1="-7.5" x2="0" y2="7.5" transform="rotate(45)"/>
+          <line x1="0" y1="-7.5" x2="0" y2="7.5" transform="rotate(-45)"/>
+        </g>
+      </g>
+      <!-- leaf -->
+      <g transform="translate(908,408)">
+        <path d="M2 52 C0 30 12 8 40 4 C44 28 32 48 6 52 Z"/>
+        <path d="M8 46 L33 13"/>
+      </g>
+    </g>
+  </g>
+</svg>
