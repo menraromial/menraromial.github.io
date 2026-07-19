@@ -49,7 +49,7 @@ The framework is organized as a hierarchy, which you navigate using the tools.
 
 <img src="/img/posts/rapl_domains.png" alt="RAPL domains diagram showing package, core, uncore, and DRAM" style="max-width:100%;height:auto;display:block;margin:0 auto;">
 
-_Figure — RAPL domains: package, core, uncore, and DRAM._
+_Figure - RAPL domains: package, core, uncore, and DRAM._
 
 *   **Control Type:** The top-level driver. This will be `intel-rapl` on Intel systems.
 *   **Zone:** A device or a part of a device that can be power-managed. Common zones are:
