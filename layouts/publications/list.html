@@ -1,0 +1,16 @@
+{{ define "main" }}
+  <div class="index-content">
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+  </div>
+
+  {{ $pubs := where site.RegularPages "Section" "publications" }}
+  {{ range $pubs.GroupByDate "2006" }}
+    <h2 class="pub-year">{{ .Key }}</h2>
+    {{ range .Pages }}
+      {{ partial "publication.html" . }}
+    {{ end }}
+  {{ end }}
+
+  <p class="pub-orcid">See also my <a href="https://orcid.org/0009-0007-0943-8593" target="_blank" rel="noopener">ORCID profile</a>.</p>
+{{ end }}

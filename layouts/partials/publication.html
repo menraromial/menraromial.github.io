@@ -1,0 +1,28 @@
+<article class="pub">
+  <span class="pub__badge">{{ .Params.venueShort }} {{ .Params.year }}</span>
+  {{ with .Params.award }}<span class="pub__award">🏆 {{ . }}</span>{{ end }}
+  <h3 class="pub__title">{{ .Title }}</h3>
+  <div class="pub__authors">
+    {{- $authors := slice -}}
+    {{- range .Params.authors -}}
+      {{- if eq . "Romial Menra" -}}
+        {{- $authors = $authors | append (printf "<strong>%s</strong>" .) -}}
+      {{- else -}}
+        {{- $authors = $authors | append . -}}
+      {{- end -}}
+    {{- end -}}
+    {{ delimit $authors ", " | safeHTML }}
+  </div>
+  <div class="pub__venue">{{ .Params.venue }}{{ with .Params.note }} · {{ . }}{{ end }}</div>
+  {{ with .Params.links }}
+    <div class="pub__links">
+      {{ range . }}<a href="{{ .url }}" target="_blank" rel="noopener">[{{ .label }}]</a> {{ end }}
+    </div>
+  {{ end }}
+  {{ with .Content }}
+    <details class="pub__abstract">
+      <summary>Abstract</summary>
+      <div>{{ . }}</div>
+    </details>
+  {{ end }}
+</article>

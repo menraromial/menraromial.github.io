@@ -1,0 +1,87 @@
+baseurl = "https://menraromial.com/"
+languageCode = "en-us"
+title = "Menra Romial"
+theme = "terminal"
+pagination.pagerSize = 5
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[params]
+  contentTypeName = "posts"
+  showMenuItems = 6
+  fullWidthTheme = false
+  centerTheme = true
+  showLastUpdated = false
+  readingTime = true
+
+[languages]
+  [languages.en]
+    title = "Menra Romial"
+    copyright = ""
+    [languages.en.params]
+      subtitle = "Menra Romial (Romial Menra) - PhD student at Inria / IMT Atlantique working on energy-aware cloud computing, Kubernetes orchestration and sustainable distributed systems."
+      keywords = "menra, romial, menra romial, romial menra, menra wedwang romial, wedwang, menra w. romial, menraromial, cloud computing, kubernetes, energy-aware computing, green computing, green it, power management, intel rapl, distributed systems, phd, inria, imt atlantique"
+      menuMore = "Show more"
+      readMore = "Read more"
+      readOtherPosts = "Read other posts"
+      [languages.en.params.logo]
+        logoText = "MENRA ROMIAL"
+        logoHomeLink = "/"
+
+      [languages.en.params.twitter]
+        site = "@mwrdev_"
+        creator = "@mwrdev_"
+
+      [[languages.en.params.socials]]
+        name = "github"
+        title = "GitHub"
+        url = "https://github.com/menraromial"
+      [[languages.en.params.socials]]
+        name = "linkedin"
+        title = "LinkedIn"
+        url = "https://www.linkedin.com/in/menraromial"
+      [[languages.en.params.socials]]
+        name = "x"
+        title = "X (Twitter)"
+        url = "https://x.com/mwrdev_"
+      [[languages.en.params.socials]]
+        name = "medium"
+        title = "Medium"
+        url = "https://medium.com/@menraromial"
+      [[languages.en.params.socials]]
+        name = "orcid"
+        title = "ORCID"
+        url = "https://orcid.org/0009-0007-0943-8593"
+      [[languages.en.params.socials]]
+        name = "mail"
+        title = "Email"
+        url = "mailto:itsme@menraromial.com"
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        identifier = "publications"
+        name = "Publications"
+        url = "/publications/"
+      [[languages.en.menu.main]]
+        identifier = "talks"
+        name = "Talks"
+        url = "/talks/"
+      [[languages.en.menu.main]]
+        identifier = "teaching"
+        name = "Teaching"
+        url = "/teaching/"
+      [[languages.en.menu.main]]
+        identifier = "projects"
+        name = "Projects"
+        url = "/projects/"
+      [[languages.en.menu.main]]
+        identifier = "news"
+        name = "News"
+        url = "/news/"
+      [[languages.en.menu.main]]
+        identifier = "cv"
+        name = "CV"
+        url = "/cv/"
+      # Menu entries are added as the corresponding pages are migrated
+      # (publications, talks, teaching, projects, news, cv).
