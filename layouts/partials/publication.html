@@ -16,7 +16,7 @@
   <div class="pub__venue">{{ .Params.venue }}{{ with .Params.note }} · {{ . }}{{ end }}</div>
   {{ if or .Params.doi .Params.links }}
     <div class="pub__links">
-      {{ with .Params.doi }}<a href="https://doi.org/{{ . }}" target="_blank" rel="noopener">[doi:{{ . }}]</a> {{ end }}
+      {{ with .Params.doi }}<a href="https://doi.org/{{ . }}" target="_blank" rel="noopener">[DOI]</a> {{ end }}
       {{ range .Params.links }}<a href="{{ .url }}" target="_blank" rel="noopener">[{{ .label }}]</a> {{ end }}
     </div>
   {{ end }}
