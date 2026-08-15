@@ -10,11 +10,12 @@ authors:
   - "Remous-Aris Koutsiamanis"
   - "Sébastien Bolle"
   - "Jean-Marc Menaud"
-venue: "Euro-Par 2026 - European Conference on Parallel and Distributed Computing"
+venue: "Euro-Par 2026 - European Conference on Parallel and Distributed Computing, Lecture Notes in Computer Science, Springer, pp. 135-149"
 venueShort: "Euro-Par"
 year: 2026
 award: "Best Paper Award nominee"
 note: "Acceptance rate: 26.2%"
+doi: "10.1007/978-3-032-35251-4_10"
 links:
   - label: "EUROPAR"
     url: "https://www.easychair.org/smart-program/Euro-Par2026/2026-08-27.html#:~:text=10%3A55-,Romial%20Menra,-(IMT%20Atlantique%2C%20Inria"
