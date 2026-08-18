@@ -50,6 +50,10 @@ pagination.pagerSize = 5
         title = "Medium"
         url = "https://medium.com/@menraromial"
       [[languages.en.params.socials]]
+        name = "scholar"
+        title = "Google Scholar"
+        url = "https://scholar.google.com/citations?user=M2nDshIAAAAJ"
+      [[languages.en.params.socials]]
         name = "orcid"
         title = "ORCID"
         url = "https://orcid.org/0009-0007-0943-8593"
