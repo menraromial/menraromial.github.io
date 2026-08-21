@@ -54,6 +54,10 @@ pagination.pagerSize = 5
         title = "Google Scholar"
         url = "https://scholar.google.com/citations?user=M2nDshIAAAAJ"
       [[languages.en.params.socials]]
+        name = "researchgate"
+        title = "ResearchGate"
+        url = "https://www.researchgate.net/profile/Romial-Menra"
+      [[languages.en.params.socials]]
         name = "orcid"
         title = "ORCID"
         url = "https://orcid.org/0009-0007-0943-8593"

@@ -5,7 +5,7 @@ title: "CV"
 
 **Menra Wedwang Romial** - Cloud & Green IT - Application Deployment and Energy Optimization of Infrastructures
 
-itsme [at] menraromial [dot] com · [GitHub](https://github.com/menraromial) · [LinkedIn](https://www.linkedin.com/in/menraromial) · [ORCID](https://orcid.org/0009-0007-0943-8593) · [Google Scholar](https://scholar.google.com/citations?user=M2nDshIAAAAJ) · [PDF version](/pdf/resume_romial.pdf)
+itsme [at] menraromial [dot] com · [GitHub](https://github.com/menraromial) · [LinkedIn](https://www.linkedin.com/in/menraromial) · [ORCID](https://orcid.org/0009-0007-0943-8593) · [Google Scholar](https://scholar.google.com/citations?user=M2nDshIAAAAJ) · [ResearchGate](https://www.researchgate.net/profile/Romial-Menra) · [PDF version](/pdf/resume_romial.pdf)
 Languages: French, English
 
 PhD student specializing in Cloud Computing and Green IT, with a strong focus on energy-efficient application deployment and infrastructure optimization. My expertise spans from low-level power management (Intel RAPL) to high-level orchestration systems (Kubernetes), with a proven track record in designing scalable, energy-aware solutions for modern cloud infrastructures.
