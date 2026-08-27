@@ -53,17 +53,11 @@ Languages: French, English&lt;/p&gt;
 &lt;code&gt;Research · Kubernetes · RAPL · Grid'5000 · Power Management · Cloud&lt;/code&gt; - &lt;a href="https://menraromial.com/publications/"&gt;publications&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id="powercap"&gt;Powercap&lt;/h3&gt;
 &lt;p&gt;A power-capping tool leveraging Intel RAPL, designed to plug into Kubernetes as a DaemonSet. Enforces per-node power budgets at the package and DRAM domain level, with audit logs and dry-run mode for cautious operators.
-&lt;code&gt;Go · Kubernetes · RAPL · Linux&lt;/code&gt;&lt;/p&gt;</description></item><item><title>Talks</title><link>https://menraromial.com/talks/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://menraromial.com/talks/</guid><description>&lt;h2 id="energy-aware-kubernetes-orchestration-for-grid-responsive-computing"&gt;Energy-Aware Kubernetes Orchestration for Grid-Responsive Computing&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;STACK Team Seminar&lt;/strong&gt; - Arzon, France · October 2025&lt;/p&gt;
-&lt;p&gt;A comprehensive approach to adapting Kubernetes workloads to electricity grid fluctuations through constraint-based scheduling and dynamic scaling, addressing the challenges of electricity price volatility and grid stability in cloud computing environments.&lt;/p&gt;
-&lt;p&gt;Related posts:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://menraromial.com/posts/guide-building-custom-kubernetes-scheduler/"&gt;Building a Custom Kubernetes Scheduler&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://menraromial.com/posts/building-a-kubernetes-controller-with-kubebuilder-from-scratch/"&gt;Building a Kubernetes Controller with Kubebuilder&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;h2 id="integration-of-the-energy-aspect-in-kubernetes"&gt;Integration of the Energy Aspect in Kubernetes&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;ComPAS 2024&lt;/strong&gt; - Faculty of Medicine, Nantes, France · July 2024&lt;/p&gt;</description></item><item><title>Teaching</title><link>https://menraromial.com/teaching/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://menraromial.com/teaching/</guid><description>&lt;h2 id="bases-de-données-databases"&gt;Bases de Données (Databases)&lt;/h2&gt;
+&lt;code&gt;Go · Kubernetes · RAPL · Linux&lt;/code&gt;&lt;/p&gt;</description></item><item><title>Talks</title><link>https://menraromial.com/talks/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://menraromial.com/talks/</guid><description>&lt;h2 id="understanding-power-limiting-mechanisms-in-modern-processors"&gt;Understanding Power Limiting Mechanisms in Modern Processors&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Euro-Par 2026&lt;/strong&gt; - 32nd International European Conference on Parallel and Distributed Computing, Pisa, Italy · August 2026
+Nominated for the &lt;strong&gt;Best Paper Award&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Conference talk presenting a deep dive into Intel RAPL and Turbo Boost dynamics, and how their interaction governs power capping on modern servers. Joint work with Guillaume Rosinosky, Remous-Aris Koutsiamanis, Sébastien Bolle (Orange Research) and Jean-Marc Menaud.&lt;/p&gt;
+&lt;p&gt;The talk answered three questions about the RAPL &amp;ldquo;black box&amp;rdquo;:&lt;/p&gt;</description></item><item><title>Teaching</title><link>https://menraromial.com/teaching/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://menraromial.com/teaching/</guid><description>&lt;h2 id="bases-de-données-databases"&gt;Bases de Données (Databases)&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;IMT Atlantique, Nantes&lt;/strong&gt; · Teaching Assistant (TD/TP) · Spring 2025&lt;/p&gt;
 &lt;p&gt;TD/TP on relational databases for first-year engineering students (FISE 1A, semester S6):&lt;/p&gt;
 &lt;ul&gt;
