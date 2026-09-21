@@ -73,11 +73,11 @@ function Rows({items}: {items: Entry[]}) {
   return (
     <>
       {items.map((e) => (
-        <div key={e.title} className={styles.cvRow}>
-          <div className={styles.cvWhen}>{e.when}</div>
+        <div key={e.title} className={styles.entry}>
+          <div className={styles.entryWhen}>{e.when}</div>
           <div>
-            <h3 className={styles.cvTitle}>{e.title}</h3>
-            <p className={styles.cvWhere}>{e.where}</p>
+            <h3 className={styles.entryTitle}>{e.title}</h3>
+            <p className={styles.entryWhere}>{e.where}</p>
             {e.note && <p>{e.note}</p>}
             {e.points && (
               <ul className={styles.list}>

@@ -139,7 +139,8 @@ const config: Config = {
           blogTitle: 'Blog',
           blogDescription:
             'Technical articles by Menra Romial on Kubernetes, Linux power management and cloud infrastructure.',
-          blogSidebarCount: 0,
+          blogSidebarTitle: 'All posts',
+          blogSidebarCount: 'ALL',
           postsPerPage: 10,
           showReadingTime: true,
           onInlineAuthors: 'throw',

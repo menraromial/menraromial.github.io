@@ -4,23 +4,6 @@ import PageHeader from '@site/src/components/PageHeader';
 import {projects, type Project} from '@site/src/data/site';
 import styles from '@site/src/css/pages.module.css';
 
-function ProjectCard({p}: {p: Project}) {
-  return (
-    <article className={styles.card}>
-      <div className={styles.badges}>
-        <span className={styles.meta}>{p.status}</span>
-      </div>
-      <h3 className={styles.cardTitle}>{p.name}</h3>
-      <p>{p.text}</p>
-      <div className={styles.tags}>
-        {p.tags.map((t) => (
-          <span key={t}>{t}</span>
-        ))}
-      </div>
-    </article>
-  );
-}
-
 export default function Projects(): ReactNode {
   const groups: Project['group'][] = ['Research', 'Community'];
   return (
@@ -41,13 +24,22 @@ export default function Projects(): ReactNode {
             <h2 className={styles.sectionTitle}>
               {g === 'Research' ? 'Research projects' : 'Community initiatives'}
             </h2>
-            <div className={styles.grid2}>
-              {projects
-                .filter((p) => p.group === g)
-                .map((p) => (
-                  <ProjectCard key={p.name} p={p} />
-                ))}
-            </div>
+            {projects
+              .filter((p) => p.group === g)
+              .map((p) => (
+                <article key={p.name} className={styles.entry}>
+                  <div className={styles.entryWhen}>{p.status}</div>
+                  <div>
+                    <h3 className={styles.entryTitle}>{p.name}</h3>
+                    <p>{p.text}</p>
+                    <div className={styles.tags}>
+                      {p.tags.map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
           </section>
         ))}
       </main>

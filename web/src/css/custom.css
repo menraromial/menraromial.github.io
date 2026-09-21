@@ -47,17 +47,10 @@
   --wide: 1120px;
   --text: 720px;
 
-  /* no rounded corners anywhere */
-  --ifm-global-radius: 0;
-  --ifm-code-border-radius: 0;
-  --ifm-button-border-radius: 0;
-  --ifm-badge-border-radius: 0;
-  --ifm-card-border-radius: 0;
-  --ifm-alert-border-radius: 0;
-  --ifm-pagination-nav-border-radius: 0;
-  --ifm-pagination-border-radius: 0;
-  --ifm-dropdown-border-radius: 0;
-  --ifm-tabs-border-radius: 0;
+  /* no drop shadows anywhere (code blocks, dropdowns) */
+  --ifm-global-shadow-lw: none;
+  --ifm-global-shadow-md: none;
+  --ifm-global-shadow-tl: none;
 }
 
 [data-theme='dark'] {
@@ -134,7 +127,7 @@ html {
   margin-left: 0.5rem;
   border: 1.5px solid var(--accent);
   color: var(--accent);
-  border-radius: 0;
+  border-radius: 999px;
   padding: 0.3rem 1.05rem;
 }
 
@@ -150,16 +143,18 @@ article {
   font-size: 1.1rem;
 }
 
-/* ---- Blog: align Docusaurus' blog pages with the editorial theme ---- */
+/* ---- Blog: aligned with the rest of the site ---- */
 
-.blog-wrapper,
-.blog-list-page,
-.blog-post-page {
-  --ifm-container-width-xl: var(--wide);
+.blog-wrapper .container {
+  max-width: var(--wide);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
-.blog-wrapper main {
-  padding-top: 1rem;
+.blog-wrapper main,
+.blog-index,
+.blog-post {
+  padding-top: 0.5rem;
 }
 
 article h1,
@@ -169,10 +164,14 @@ article h3 {
   letter-spacing: -0.01em;
 }
 
-article header h1,
+article header h1 {
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
+  line-height: 1.15;
+}
+
 article header h2 {
-  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
-  line-height: 1.2;
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  line-height: 1.25;
 }
 
 article header h2 a {
@@ -190,27 +189,90 @@ article [class*='authorTitle'] {
   font-family: var(--font-ui);
 }
 
-/* Blog index: an editorial list, no cards */
-.blog-list-page article {
-  background: none;
-  border: none;
+/* Index: one entry per post, separated by a rule (no cards) */
+.blog-index article {
   border-bottom: 1px solid var(--rule);
-  padding: 0 0 2.4rem;
-  margin-bottom: 2.4rem !important;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem !important;
 }
 
-.blog-list-page article header h2 {
-  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
-}
-
-.blog-list-page article .avatar {
+.blog-index article .avatar {
   display: none;
 }
 
-.avatar__photo {
-  border-radius: 0;
+.blog-summary {
+  font-size: 1.08rem;
+  color: var(--ink-soft);
+  margin: 0;
 }
 
+.blog-index footer a,
+.blog-index [class*='readMore'] {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Tags: same chips as the Projects page */
+a[class*='tag_'] {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: var(--band);
+  border: none;
+  border-radius: 6px;
+  padding: 0.15rem 0.55rem;
+}
+
+a[class*='tag_']:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* "All posts" sidebar on post pages */
+aside nav[class*='sidebar_'] {
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  border-right: 1px solid var(--rule);
+  padding-right: 1.2rem;
+}
+
+[class*='sidebarItemTitle'] {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem !important;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 1rem !important;
+}
+
+[class*='yearGroupHeading'] {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin: 1.2rem 0 0.5rem !important;
+}
+
+[class*='sidebarItemLink'] {
+  color: var(--ink-soft);
+  display: block;
+  border-left: 2px solid transparent;
+  padding-left: 0.7rem;
+  line-height: 1.45;
+}
+
+[class*='sidebarItemLink']:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+[class*='sidebarItemLinkActive'] {
+  color: var(--accent) !important;
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+
+/* Post content */
 .markdown {
   --ifm-h2-font-size: 1.75rem;
   --ifm-h3-font-size: 1.35rem;
@@ -228,27 +290,9 @@ article [class*='authorTitle'] {
 }
 
 .markdown img {
-  border-radius: 0;
-}
-
-aside nav {
-  font-family: var(--font-ui);
-  font-size: 0.92rem;
+  border-radius: 10px;
 }
 
 .pagination-nav__link {
-  border-radius: 0;
   border-color: var(--rule);
-}
-
-.theme-tag-link,
-a[class*='tag_'] {
-  font-family: var(--font-ui);
-  font-size: 0.78rem;
-}
-
-.table-of-contents {
-  font-family: var(--font-ui);
-  font-size: 0.84rem;
-  line-height: 1.45;
 }

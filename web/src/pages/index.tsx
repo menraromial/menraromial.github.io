@@ -16,16 +16,16 @@ function ClusterIllustration() {
   ];
   return (
     <svg viewBox="0 0 320 200" className={styles.illustration} role="img" aria-label="Three Kubernetes nodes, each with its own power budget">
-      <rect x="0" y="0" width="320" height="200" className={styles.illuBg} />
+      <rect x="0" y="0" width="320" height="200" rx="10" className={styles.illuBg} />
       <text x="20" y="32" className={styles.illuLabel}>cluster power budget</text>
       <line x1="20" y1="44" x2="300" y2="44" className={styles.illuBudget} />
       {nodes.map((n) => (
         <g key={n.x} transform={`translate(${n.x},60)`}>
-          <rect width="80" height="112" className={styles.illuNode} />
-          <rect x="14" y="14" width="52" height="10" className={styles.illuPod} />
-          <rect x="14" y="30" width="52" height="10" className={styles.illuPod} />
-          <rect x="14" y="94" width="52" height="8" className={styles.illuGaugeBg} />
-          <rect x="14" y="94" width={52 * n.load} height="8" className={styles.illuGauge} />
+          <rect width="80" height="112" rx="8" className={styles.illuNode} />
+          <rect x="14" y="14" width="52" height="10" rx="3" className={styles.illuPod} />
+          <rect x="14" y="30" width="52" height="10" rx="3" className={styles.illuPod} />
+          <rect x="14" y="94" width="52" height="8" rx="4" className={styles.illuGaugeBg} />
+          <rect x="14" y="94" width={52 * n.load} height="8" rx="4" className={styles.illuGauge} />
           <text x="40" y="80" textAnchor="middle" className={styles.illuWatts}>
             {Math.round(n.load * 150)} W
           </text>

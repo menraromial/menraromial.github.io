@@ -216,64 +216,24 @@ export type Course = {
   title: string;
   titleFr?: string;
   role: string;
-  period: string;
-  place: string;
+  period?: string;
+  place?: string;
   audience?: string;
   summary: string;
-  topics: string[];
-};
-
-export type Semester = {
-  name: string;
-  theme: string;
-  text: string;
-  topics: string[];
-  status: string;
-};
-
-// Full course designed and led by Menra Romial, published as its own site.
-export const deploymentCourse = {
-  title: 'Ingénierie du Déploiement et de la Mise en Production',
-  titleEn: 'Deployment and Production Engineering',
-  url: 'https://menraromial.com/ingenierie-deploiement/',
-  role: 'Course designer and lead',
-  audience: 'Engineering cycle, M1 and M2, three semesters',
-  language: 'French',
-  license: 'CC BY-NC-SA 4.0',
-  summary:
-    'A course that retraces the history of deployment, from the hand-configured server to MLOps pipelines. Each tool is introduced as the answer to a problem students have first run into in the lab.',
-  semesters: [
-    {
-      name: 'Semester 1',
-      theme: 'Foundations',
-      text: 'Deploy by hand, struggle with distributed configuration, then automate.',
-      topics: ['Old-school deployment', 'Multi-machine architecture', 'Infrastructure as Code'],
-      status: '13 chapters · 10 labs',
-    },
-    {
-      name: 'Semester 2',
-      theme: 'Containers and orchestration',
-      text: 'Understand the container under the hood, then hand state reconciliation to Kubernetes.',
-      topics: ['Containerisation', 'Orchestration with Kubernetes', 'CI/CD, GitOps, observability'],
-      status: '9 chapters · 8 labs, in progress',
-    },
-    {
-      name: 'Semester 3',
-      theme: 'MLOps and data',
-      text: 'Make data and models reproducible, industrialise training.',
-      topics: ['Reproducibility, DVC', 'MLflow and Airflow', 'Drift, Spark, Kafka'],
-      status: 'In preparation',
-    },
-  ] satisfies Semester[],
-  principles: [
-    {title: 'Theory first, tools second', text: 'Tools die, concepts remain: idempotence, isolation, state reconciliation. Assessment is on concepts.'},
-    {title: 'Learning through friction', text: 'Deploy by hand before automating, to know exactly what each tool abstracts away and where to look when it breaks.'},
-    {title: 'Everything local', text: 'VirtualBox, Vagrant, Podman, kind: no paid cloud account, everything runs on the student’s machine.'},
-    {title: 'One running example', text: 'The Listify application is redeployed at every stage, and the gain of each abstraction is measured, stopwatch in hand.'},
-  ],
+  topics?: string[];
+  url?: string;
 };
 
 export const courses: Course[] = [
+  {
+    title: 'Deployment and Production Engineering',
+    titleFr: 'Ingénierie du Déploiement et de la Mise en Production',
+    role: 'Course designer and lead',
+    audience: 'Engineering cycle, M1 and M2',
+    summary:
+      'A three-semester course that retraces the history of deployment, from the hand-configured server to MLOps pipelines.',
+    url: 'https://menraromial.com/ingenierie-deploiement/',
+  },
   {
     title: 'Databases',
     titleFr: 'Bases de données',
