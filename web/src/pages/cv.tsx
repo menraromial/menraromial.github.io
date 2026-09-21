@@ -22,7 +22,7 @@ const education: Entry[] = [
   },
   {
     when: '2019 to 2021',
-    title: 'Preparatory classes, mathematics and physics',
+    title: 'Preparatory Classes in Mathematics and Physics',
     where: 'ENSPY, Cameroon',
   },
 ];
@@ -30,7 +30,7 @@ const education: Entry[] = [
 const experience: Entry[] = [
   {
     when: 'Nov 2024 to present',
-    title: 'PhD candidate',
+    title: 'PhD Candidate',
     where: 'Inria, IMT Atlantique, LS2N, Nantes',
     points: [
       'Characterised the interaction between Intel RAPL power limits and Turbo Boost on four Intel Xeon microarchitectures, and derived an analytical model of turbo duration.',
@@ -41,7 +41,7 @@ const experience: Entry[] = [
   },
   {
     when: 'Apr 2024 to Aug 2024',
-    title: 'Research intern',
+    title: 'Research Intern',
     where: 'IMT Atlantique, Nantes',
     points: [
       "Implemented server power limitation with Intel RAPL and evaluated it on Grid'5000.",
@@ -50,7 +50,7 @@ const experience: Entry[] = [
   },
   {
     when: 'May 2022 to Mar 2024',
-    title: 'Software developer and team lead',
+    title: 'Software Developer and Team Lead',
     where: 'Forall Founders, Cameroon',
     points: [
       'Led a team of 10 developers building e-learning platforms and school management systems.',

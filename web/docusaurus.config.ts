@@ -45,7 +45,7 @@ const person = {
       alternateName: ['Romial Menra', 'Menra Wedwang Romial', 'Wedwang Romial', 'Menra W. Romial', 'menraromial'],
       url: `${SITE}/`,
       image: `${SITE}/img/profile.jpg`,
-      jobTitle: 'PhD candidate in Computer Science',
+      jobTitle: 'PhD Candidate in Computer Science',
       description:
         'PhD candidate working on power management in cloud infrastructures, from Intel RAPL power limiting to energy-aware Kubernetes orchestration.',
       email: 'mailto:itsme@menraromial.com',

@@ -45,7 +45,7 @@ export default function Home(): ReactNode {
       <header className={styles.heroBand}>
         <div className={styles.hero}>
           <div className={styles.heroText}>
-            <p className={styles.eyebrow}>PhD candidate · Computer science</p>
+            <p className={styles.eyebrow}>PhD Candidate · Computer Science</p>
             <h1 className={styles.name}>Menra Romial</h1>
             <p className={styles.lede}>
               I work on making cloud infrastructures consume less energy, without making them
