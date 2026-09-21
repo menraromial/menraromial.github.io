@@ -1,0 +1,6 @@
+resume_romial.pdf
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk

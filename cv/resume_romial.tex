@@ -1,0 +1,200 @@
+% =====================================================================
+%  CV - Menra Wedwang Romial (published as Romial Menra)
+%  Build:  cd cv && latexmk -pdf resume_romial.tex
+%  Then copy resume_romial.pdf to ../static/pdf/resume_romial.pdf
+% =====================================================================
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[a4paper,margin=1.6cm,top=1.3cm,bottom=1.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage[hidelinks]{hyperref}
+
+% ---- Colours ---------------------------------------------------------
+\definecolor{accent}{HTML}{C8402A}
+\definecolor{muted}{HTML}{5A5048}
+
+\hypersetup{
+  pdftitle={CV - Menra Wedwang Romial},
+  pdfauthor={Menra Wedwang Romial (Romial Menra)},
+  pdfkeywords={Menra Romial, Romial Menra, cloud computing, Kubernetes, energy-aware computing, Intel RAPL, power capping}
+}
+
+% ---- Layout helpers --------------------------------------------------
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+\titleformat{\section}{\large\bfseries\color{accent}}{}{0pt}{\MakeUppercase}[\vspace{-0.4ex}\rule{\linewidth}{0.6pt}]
+\titlespacing*{\section}{0pt}{1.6ex}{1.1ex}
+
+\setlist[itemize]{leftmargin=1.1em, itemsep=0.15ex, topsep=0.3ex, parsep=0pt, label={\color{accent}\small\textbullet}}
+
+% \entry{Title}{Dates}{Organisation, place}
+\newcommand{\entry}[3]{%
+  \textbf{#1}\hfill{\color{muted}#2}\\
+  {\color{muted}\itshape #3}\par\vspace{0.2ex}}
+
+% \pub{Label}{Body}
+\newcommand{\pub}[2]{%
+  \par\hangindent=0.9cm\hangafter=1\noindent
+  \makebox[0.9cm][l]{\color{accent}\bfseries #1}#2\par\vspace{0.8ex}}
+
+\newcommand{\me}{\textbf{Romial Menra}}
+\newcommand{\link}[2]{\href{#1}{{\color{accent}#2}}}
+
+% =====================================================================
+\begin{document}
+
+% ---- Header ----------------------------------------------------------
+\begin{center}
+  {\LARGE\bfseries MENRA WEDWANG ROMIAL}\\[0.4ex]
+  {\color{muted} Published as \emph{Romial Menra}}\\[0.8ex]
+  {\large PhD Candidate in Computer Science, Energy-Aware Cloud Computing}\\[0.3ex]
+  {\color{muted} IMT Atlantique, Inria, LS2N (UMR CNRS 6004), Nantes, France}\\[1ex]
+  \small
+  \faEnvelope\ \link{mailto:itsme@menraromial.com}{itsme@menraromial.com}\quad
+  \faGlobe\ \link{https://menraromial.com}{menraromial.com}\quad
+  \faGithub\ \link{https://github.com/menraromial}{menraromial}\quad
+  \faLinkedin\ \link{https://www.linkedin.com/in/menraromial}{LinkedIn}\\[0.4ex]
+  \faOrcid\ \link{https://orcid.org/0009-0007-0943-8593}{0009-0007-0943-8593}\quad
+  \faGraduationCap\ \link{https://scholar.google.com/citations?user=M2nDshIAAAAJ}{Google Scholar}\quad
+  \faResearchgate\ \link{https://www.researchgate.net/profile/Romial-Menra}{ResearchGate}\quad
+  \faLanguage\ French, English
+\end{center}
+
+% ---- Profile ---------------------------------------------------------
+\section{Research Profile}
+PhD candidate working on power management in cloud infrastructures, from hardware-level
+power limiting (Intel RAPL, Turbo Boost) to energy-aware orchestration in Kubernetes. My
+work combines large-scale experimentation on Grid'5000, analytical modelling of processor
+power behaviour, and the design of open-source tools that make power a first-class resource
+in the cloud. Before the PhD, two years as a full-stack developer and team lead gave me a
+practical, production-oriented view of the systems I now study.
+
+\textbf{Keywords:} power capping, Intel RAPL, energy efficiency, Kubernetes, scheduling,
+distributed systems, green IT.
+
+% ---- Education -------------------------------------------------------
+\section{Education}
+\entry{PhD in Computer Science}{Nov.\ 2024 -- present}{IMT Atlantique, Inria, LS2N, Nantes, France}
+Thesis: \emph{Contribution à la gestion de la puissance dans les infrastructures cloud :
+de la limitation matérielle à l'orchestration adaptative.}
+\vspace{1ex}
+
+\entry{Master of Engineering in Computer Science}{2021 -- 2024}{National Advanced School of Engineering of Yaoundé (ENSPY), Cameroon}
+Specialisation in Distributed Systems and Software Engineering.
+\vspace{1ex}
+
+\entry{Preparatory Classes, Mathematics \& Physics}{2019 -- 2021}{ENSPY, Cameroon}
+
+% ---- Publications ----------------------------------------------------
+\section{Publications}
+\textit{International conferences}\par\vspace{0.6ex}
+\pub{[C2]}{\me, Guillaume Rosinosky, Remous-Aris Koutsiamanis, Sébastien Bolle, Jean-Marc Menaud.
+  \textbf{Understanding Power Limiting Mechanisms in Modern Processors: A Deep Dive Into Intel
+  RAPL and Turbo Boost Dynamics.} \emph{Euro-Par 2026: Parallel Processing}, Lecture Notes in
+  Computer Science, Springer, pp.\ 135--149, 2026.
+  {\color{accent}\bfseries Best Paper Award nominee.} Acceptance rate 26.2\%.\newline
+  \link{https://doi.org/10.1007/978-3-032-35251-4_10}{doi:10.1007/978-3-032-35251-4\_10}
+  \,·\, \link{https://hal.science/hal-05729597}{hal-05729597}}
+
+\textit{National conferences}\par\vspace{0.6ex}
+\pub{[N1]}{\me, Remous-Aris Koutsiamanis, Jean-Marc Menaud.
+  \textbf{Intégration de l'Aspect Énergétique dans Kubernetes.} \emph{COMPAS 2024, Conférence
+  francophone d'informatique en Parallélisme, Architecture et Système}, Nantes, France, 2024.\newline
+  \link{https://hal.science/hal-05638939}{hal-05638939}}
+
+% ---- Talks -----------------------------------------------------------
+\section{Talks}
+\entry{Understanding Power Limiting Mechanisms in Modern Processors}{Aug.\ 2026}{Euro-Par 2026, 32nd International European Conference on Parallel and Distributed Computing, Pisa, Italy}
+\vspace{0.6ex}
+\entry{Energy-Aware Kubernetes Orchestration for Grid-Responsive Computing}{Oct.\ 2025}{STACK team seminar, Arzon, France}
+\vspace{0.6ex}
+\entry{Intégration de l'Aspect Énergétique dans Kubernetes}{Jul.\ 2024}{COMPAS 2024, Nantes, France}
+
+% ---- Experience ------------------------------------------------------
+\section{Professional Experience}
+\entry{PhD Candidate}{Nov.\ 2024 -- present}{Inria, IMT Atlantique, LS2N, Nantes, France}
+\begin{itemize}
+  \item Characterised the interaction between Intel RAPL power limits and Turbo Boost on four
+        Intel Xeon microarchitectures, and derived an analytical model of turbo duration.
+  \item Showed that power capping below about 50\% of TDP systematically degrades energy efficiency.
+  \item Designing Kubernetes components for power-aware operation: node-level power capping,
+        automatic server power profiling and energy-aware scheduling.
+  \item Large-scale experimentation on the Grid'5000 testbed; collaboration with Orange Research.
+\end{itemize}
+
+\entry{Research Intern}{Apr.\ 2024 -- Aug.\ 2024}{IMT Atlantique, Nantes, France}
+\begin{itemize}
+  \item Implemented server power limitation with Intel RAPL and evaluated it on Grid'5000.
+  \item Developed an energy-aware Kubernetes scheduler with custom resource constraints.
+  \item Results published at COMPAS 2024.
+\end{itemize}
+
+\entry{Software Developer \& Team Lead}{May 2022 -- Mar.\ 2024}{Forall Founders, Cameroon}
+\begin{itemize}
+  \item Led a team of 10 developers building e-learning platforms and school management systems
+        (Django, Node.js, React, Next.js, Vue.js).
+  \item Project manager of a mobile e-learning application with 15,000+ active users
+        (\link{https://tefaafrik.com}{TEFAA}); cut latency from 5\,s to 1.2\,s through query
+        optimisation and caching.
+  \item Built an IoT attendance system (PyQt, Raspberry Pi, Arduino) and CI/CD pipelines on Linode.
+\end{itemize}
+
+% ---- Teaching & supervision -----------------------------------------
+\section{Teaching \& Supervision}
+\entry{Teaching Assistant, Databases (TD/TP)}{Spring 2025}{IMT Atlantique, Nantes, first-year engineering students}
+Relational model, SQL, normalisation, UML conceptual modelling, programmatic interfaces.
+\vspace{1ex}
+
+\entry{Teaching Assistant, Cloud Computing with VMware vSphere (TP)}{Spring 2025}{IMT Atlantique, Nantes}
+\vspace{0.6ex}
+
+\entry{Co-supervision, Clement Obama (M2 research intern)}{Apr.\ 2026 -- Sep.\ 2026}{IMT Atlantique, Nantes}
+\emph{Reactive control of energy constraints in Kubernetes clusters: multi-lever
+re-adaptation policy with SLA management.}
+
+% ---- Service & community ---------------------------------------------
+\section{Service \& Community}
+\begin{itemize}
+  \item Student volunteer, UCC \& BDCAT 2025 (Utility and Cloud Computing / Big Data
+        Computing, Applications and Technologies), Nantes, Dec.\ 2025.
+  \item Founder of \textbf{C5IN}, Cameroon Cloud-Edge-IoT Innovation Network.
+  \item Contributor to \textbf{DIBAC}, an open-access institutional repository for Cameroonian
+        research, and \textbf{TupuriHub}, a digital hub for Toupouri culture and heritage.
+  \item Technical blog on Kubernetes and Linux power management at \link{https://menraromial.com}{menraromial.com}.
+\end{itemize}
+
+% ---- Skills ----------------------------------------------------------
+\section{Technical Skills}
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}p{3.4cm}X@{}}
+  Research \& HPC     & Grid'5000, Intel RAPL, powercap, energy profiling, performance benchmarking \\
+  Cloud \& DevOps     & Kubernetes (k8s, k3s, kubeadm, Kubebuilder, scheduler plugins), Docker,
+                        Terraform, Ansible, GitHub Actions, GitLab CI, Jenkins, Prometheus, Grafana \\
+  Languages           & Go, Python, C, Java, JavaScript/TypeScript, Bash \\
+  Web                 & Django, FastAPI, Node.js, React, Next.js, Vue.js, Spring Boot \\
+  Data                & PostgreSQL, MySQL, MongoDB, Redis, Pandas, NumPy \\
+\end{tabularx}
+
+% ---- Certifications & interests --------------------------------------
+\section{Certifications \& Interests}
+\textbf{Certifications:} IBM (Coursera, 2023): Agile Development and Scrum, Applied Data Science
+Capstone, Machine Learning with Python, Data Visualization with Python, Databases and SQL for
+Data Science. EPFL (Coursera, 2021): Programming and Object-Oriented Programming in Java.
+
+\vspace{0.6ex}
+\textbf{Interests:} open source, technical writing, reading (science, leadership, history),
+documentaries, cooking, cinema, nature.
+
+\vfill
+{\centering\footnotesize\color{muted} Last updated: September 2026\par}
+
+\end{document}
