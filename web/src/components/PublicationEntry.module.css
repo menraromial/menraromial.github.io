@@ -1,0 +1,166 @@
+/* Publication entry, venue/award badges and resource buttons.
+   Shared by the home page, the publications page and other listings. */
+
+.pubMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.venueBadge,
+.awardBadge {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+
+.venueBadge {
+  background: var(--accent);
+  color: #fff;
+}
+
+[data-theme='dark'] .venueBadge {
+  color: #1d1916;
+}
+
+.awardBadge {
+  color: var(--tag-award);
+  border: 1.5px solid currentColor;
+}
+
+.pubLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.pubLinks a,
+.pubLinks button {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--rule);
+  border-radius: 8px;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.pubLinks a:hover,
+.pubLinks button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.pub {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 2.2rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--rule);
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
+}
+
+.pubThumb img {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+
+.pubPlaceholder {
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--accent) 7%, transparent) 14px 15px),
+    var(--accent-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.pubPlaceholder span:first-child {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.pubPlaceholder span:last-child {
+  font-size: 1.2rem;
+}
+
+.pubTitle {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.3;
+  margin: 0.9rem 0 0.5rem;
+}
+
+.pubAuthors {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.me {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.pubVenue {
+  margin: 0.15rem 0 0;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.pubTakeaway {
+  margin: 0.9rem 0 0;
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  border-left: 3px solid var(--accent-soft);
+  padding-left: 0.9rem;
+}
+
+.pubTakeaway span {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-right: 0.35rem;
+}
+
+.bibtex {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  border-radius: 10px;
+}
+
+@media (max-width: 980px) {
+  .pub {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .pubThumb {
+    max-width: 320px;
+  }
+}

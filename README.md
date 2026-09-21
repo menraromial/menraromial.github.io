@@ -1,17 +1,28 @@
 # menraromial.com
 
-Personal website of Menra W. Romial — PhD student working on energy-aware cloud computing, Kubernetes, and sustainable distributed systems.
+Personal academic website of Menra Romial (published as Romial Menra), PhD candidate at IMT Atlantique, Inria and LS2N, working on energy-aware cloud computing.
 
-Built with [Hugo](https://gohugo.io/) and the [Terminal](https://github.com/panr/hugo-theme-terminal) theme.
+Built with [Docusaurus](https://docusaurus.io/).
+
+## Layout
+
+- `web/`: the Docusaurus site
+  - `src/data/site.ts`: publications, news, talks, teaching, projects (single source of truth)
+  - `src/pages/`: home and inner pages
+  - `blog/`: blog posts (Markdown, Mermaid supported)
+  - `static/`: PDFs, images, favicons, `CNAME`, `robots.txt`
+- `brand/`: SVG sources of the logo, favicon and Open Graph banner
+- `cv/`: LaTeX source of the CV
 
 ## Local development
 
 ```bash
-hugo server
+cd web
+npm install
+npm start          # dev server with live reload
+npm run build      # production build in web/build
 ```
-
-Site is served at http://localhost:1313/.
 
 ## Deployment
 
-Pushes to `main` trigger the GitHub Actions workflow (`.github/workflows/hugo.yml`), which builds the site and publishes `public/` to the `gh-pages` branch, served by GitHub Pages at https://menraromial.com.
+Pushes to `main` trigger `.github/workflows/deploy.yml`, which builds `web/` and publishes `web/build` to the `gh-pages` branch, served by GitHub Pages at https://menraromial.com.

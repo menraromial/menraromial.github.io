@@ -1,0 +1,228 @@
+/*
+ * Academic editorial theme for menraromial.com.
+ * Display: Fraunces. Reading text: Source Serif 4. Interface and metadata: Inter.
+ * Brick accent shared with the CV and brand assets, plus three category hues.
+ */
+
+:root {
+  --ifm-color-primary: #b23a24;
+  --ifm-color-primary-dark: #a03420;
+  --ifm-color-primary-darker: #97311f;
+  --ifm-color-primary-darkest: #7c2819;
+  --ifm-color-primary-light: #c44028;
+  --ifm-color-primary-lighter: #cc4a31;
+  --ifm-color-primary-lightest: #d8664e;
+
+  --ink: #1d1916;
+  --ink-soft: #3b342e;
+  --muted: #6e645b;
+  --paper: #fbf8f4;
+  --band: #f3ece2;
+  --surface: #ffffff;
+  --rule: #e5ddd1;
+  --accent: var(--ifm-color-primary);
+  --accent-soft: #f5e1db;
+
+  --tag-paper: #b23a24;
+  --tag-award: #a86a12;
+  --tag-talk: #22706a;
+  --tag-team: #3f5487;
+  --tag-service: #6b5a8e;
+
+  --font-display: 'Fraunces', 'Source Serif 4', Georgia, serif;
+  --font-text: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --ifm-background-color: var(--paper);
+  --ifm-font-color-base: var(--ink);
+  --ifm-font-family-base: var(--font-text);
+  --ifm-heading-font-family: var(--font-display);
+  --ifm-heading-font-weight: 600;
+  --ifm-font-size-base: 18px;
+  --ifm-line-height-base: 1.7;
+  --ifm-link-decoration: none;
+  --ifm-navbar-height: 4.25rem;
+  --ifm-navbar-shadow: none;
+
+  --wide: 1120px;
+  --text: 720px;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #ec8a74;
+  --ifm-color-primary-dark: #e8735a;
+  --ifm-color-primary-darker: #e6684d;
+  --ifm-color-primary-darkest: #d94a2b;
+  --ifm-color-primary-light: #f0a18f;
+  --ifm-color-primary-lighter: #f2ac9c;
+  --ifm-color-primary-lightest: #f7cabf;
+
+  --ink: #efe9e2;
+  --ink-soft: #d6cfc6;
+  --muted: #a89d92;
+  --paper: #151311;
+  --band: #1d1a17;
+  --surface: #211e1a;
+  --rule: #34302b;
+  --accent-soft: #3a241e;
+
+  --tag-paper: #ec8a74;
+  --tag-award: #e0b25a;
+  --tag-talk: #6cc2b9;
+  --tag-team: #97a9dd;
+  --tag-service: #b7a6d9;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* ---- Navbar ---- */
+
+.navbar {
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: saturate(160%) blur(10px);
+  border-top: 4px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.navbar__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.navbar__link {
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  position: relative;
+  padding: 0.4rem 0.85rem;
+}
+
+.navbar__link:hover {
+  color: var(--accent);
+}
+
+.navbar__link--active {
+  color: var(--accent);
+}
+
+.navbar__link.nav-cta {
+  margin-left: 0.5rem;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.3rem 1.05rem;
+}
+
+.navbar__link.nav-cta:hover {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+/* ---- Content pages ---- */
+
+.markdown,
+article {
+  font-size: 1.1rem;
+}
+
+/* ---- Blog: align Docusaurus' blog pages with the editorial theme ---- */
+
+.blog-wrapper,
+.blog-list-page,
+.blog-post-page {
+  --ifm-container-width-xl: var(--wide);
+}
+
+.blog-wrapper main {
+  padding-top: 1rem;
+}
+
+article h1,
+article h2,
+article h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+article header h1,
+article header h2 {
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  line-height: 1.2;
+}
+
+article header h2 a {
+  color: var(--ink);
+}
+
+article header h2 a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+article time,
+article [class*='authorName'],
+article [class*='authorTitle'] {
+  font-family: var(--font-ui);
+}
+
+.blog-list-page article {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 1.8rem 2rem;
+}
+
+.markdown {
+  --ifm-h2-font-size: 1.75rem;
+  --ifm-h3-font-size: 1.35rem;
+}
+
+.markdown code,
+.markdown pre {
+  font-size: 0.86rem;
+}
+
+.markdown a {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  text-underline-offset: 3px;
+}
+
+.markdown img {
+  border-radius: 10px;
+}
+
+aside nav {
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+}
+
+.pagination-nav__link {
+  border-radius: 12px;
+  border-color: var(--rule);
+}
+
+.theme-tag-link,
+a[class*='tag_'] {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+}
+
+.table-of-contents {
+  font-family: var(--font-ui);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}

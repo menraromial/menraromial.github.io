@@ -1,8 +1,7 @@
-public/
-resources/
-.hugo_build.lock
 node_modules/
 .DS_Store
 .idea
 .claude/
 .vscode/
+# original, full-resolution portrait (the web-optimised copy lives in web/static/img/)
+/profile.jpg
