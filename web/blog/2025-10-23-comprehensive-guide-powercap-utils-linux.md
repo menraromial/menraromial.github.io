@@ -1,6 +1,6 @@
 ---
 title: "A Comprehensive Guide to powercap-utils on Linux"
-description: "powercap-utils is a suite of user-space command-line tools for Linux that allow you to interact with the kernel's Power Capping Framework. This framework provides a standardized way to monitor and limit the power consumption of hardware devices."
+description: "A practical guide to powercap-utils on Linux: monitor and limit CPU and DRAM power through the kernel Power Capping Framework and Intel RAPL."
 slug: comprehensive-guide-powercap-utils-linux
 authors: [menra]
 tags: [linux, powercap, rapl]

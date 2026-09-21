@@ -157,6 +157,8 @@ const config: Config = {
         sitemap: {
           lastmod: 'date',
           changefreq: 'monthly',
+          // Keep thin listing pages out of the sitemap.
+          ignorePatterns: ['/blog/tags/**', '/blog/archive/**', '/blog/authors/**'],
         },
       } satisfies Preset.Options,
     ],

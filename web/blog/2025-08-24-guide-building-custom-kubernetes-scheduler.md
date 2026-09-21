@@ -1,6 +1,6 @@
 ---
 title: "Guide to Building a Custom Kubernetes Scheduler"
-description: "A complete, step-by-step guide to developing your own Kubernetes scheduler plugin with the Scheduling Framework, from concept to a working deployment on a kubeadm cluster."
+description: "A step-by-step guide to writing a Kubernetes scheduler plugin with the Scheduling Framework, from concept to a working deployment on a kubeadm cluster."
 slug: guide-building-custom-kubernetes-scheduler
 authors: [menra]
 tags: [kubernetes, scheduler, kubeadm, plugin, opensource]

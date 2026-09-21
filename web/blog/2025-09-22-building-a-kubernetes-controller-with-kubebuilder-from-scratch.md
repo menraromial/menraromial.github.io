@@ -1,6 +1,6 @@
 ---
 title: "Building a Kubernetes Controller with Kubebuilder from Scratch"
-description: "In this tutorial, you will learn how to build a custom Kubernetes controller (also known as an Operator) using Kubebuilder. We will create a Custom Resource Definition (CRD) for a simple Website resource."
+description: "Build a Kubernetes controller (Operator) with Kubebuilder: define a Website custom resource and reconcile it into a Deployment and a Service."
 slug: building-a-kubernetes-controller-with-kubebuilder-from-scratch
 authors: [menra]
 tags: [kubernetes, controller, kubebuilder, crd, opensource]

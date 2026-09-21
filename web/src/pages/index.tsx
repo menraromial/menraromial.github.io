@@ -1,4 +1,5 @@
 import type {ReactNode} from 'react';
+import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import {Icon} from '@site/src/components/Icons';
@@ -35,12 +36,19 @@ function ClusterIllustration() {
   );
 }
 
+// Carries both name orders, as they are published and searched.
+const HOME_TITLE = 'Menra Romial (Romial Menra) · PhD Candidate';
+
 export default function Home(): ReactNode {
   const featured = publications[0];
   return (
     <Layout
-      title="Menra Romial, PhD candidate in energy-aware cloud computing"
-      description="Menra Romial (Romial Menra), PhD candidate at IMT Atlantique, Inria and LS2N in Nantes, working on power management from Intel RAPL to energy-aware Kubernetes orchestration.">
+      description="Menra Romial (Romial Menra), PhD Candidate at IMT Atlantique, Inria and LS2N, working on energy-aware cloud computing, from Intel RAPL to Kubernetes.">
+      <Head>
+        <title>{HOME_TITLE}</title>
+        <meta property="og:title" content={HOME_TITLE} />
+        <meta name="twitter:title" content={HOME_TITLE} />
+      </Head>
       {/* ---------------- Hero ---------------- */}
       <header className={styles.heroBand}>
         <div className={styles.hero}>

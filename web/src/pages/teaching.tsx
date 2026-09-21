@@ -9,7 +9,7 @@ export default function Teaching(): ReactNode {
   return (
     <Layout
       title="Teaching"
-      description="Teaching by Menra Romial: the Deployment and Production Engineering course (Ingénierie du Déploiement), databases and cloud computing at IMT Atlantique, and M2 supervision.">
+      description="Teaching by Menra Romial: Deployment and Production Engineering, databases and cloud computing at IMT Atlantique, and M2 research supervision.">
       <PageHeader kicker="Teaching & mentoring" title="Teaching">
         <p>
           Courses and lab sessions on deployment, cloud and databases, and supervision of research

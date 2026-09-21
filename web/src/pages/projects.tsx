@@ -9,7 +9,7 @@ export default function Projects(): ReactNode {
   return (
     <Layout
       title="Projects"
-      description="Research and community projects by Menra Romial: Kubernetes power capping with RAPL, power profiling, energy-aware scheduling, and open science initiatives in Cameroon.">
+      description="Research and community projects by Menra Romial: RAPL power capping and energy-aware scheduling in Kubernetes, and open science in Cameroon.">
       <PageHeader kicker="What I build" title="Projects">
         <p>
           Research software that makes power a first-class resource in Kubernetes, and community

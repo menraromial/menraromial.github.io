@@ -1,6 +1,6 @@
 ---
 title: "Setting Up a K3s Cluster with a Hello-World Deployment"
-description: "A comprehensive guide to setting up a lightweight Kubernetes cluster using K3s, deploying a 'Hello-World' application, and exploring Kubernetes concepts like namespaces, deployments, services, and scaling with Horizontal Pod Autoscalers."
+description: "Set up a lightweight Kubernetes cluster with K3s, deploy a Hello-World application, and explore namespaces, deployments, services and autoscaling."
 slug: setup-k3s-cluster
 authors: [menra]
 tags: [kubernetes, k3s, beginners]
@@ -382,7 +382,7 @@ You've successfully set up a K3s cluster, deployed a simple application, and use
 
 
 
-# Bonus
+## Bonus
 ## Scaling and Deploying a Horizontal Pod Autoscaler in Kubernetes
 
 ### Step 1: Scaling Up/Down Manually
