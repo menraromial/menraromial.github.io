@@ -66,7 +66,7 @@
   font-family: var(--font-ui);
   font-weight: 600;
   font-size: 0.98rem;
-  border-radius: 999px;
+  border-radius: 0;
   padding: 0.7rem 1.4rem;
   display: inline-flex;
   align-items: center;
@@ -139,7 +139,7 @@
   position: absolute;
   inset: 18px -18px -18px 18px;
   border: 2px solid var(--accent);
-  border-radius: 14px;
+  border-radius: 0;
   z-index: 0;
 }
 
@@ -149,7 +149,7 @@
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 14px;
+  border-radius: 0;
   box-shadow: 0 20px 40px -18px rgba(29, 25, 22, 0.45);
 }
 
@@ -157,7 +157,7 @@
   margin: 2.6rem 0 0;
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 14px;
+  border-radius: 0;
   padding: 0.4rem 1.2rem;
   font-family: var(--font-ui);
   font-size: 0.92rem;
@@ -223,7 +223,7 @@
   width: auto;
   background: #fff;
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: 0;
 }
 
 /* ================= Sections ================= */
@@ -253,7 +253,7 @@
 .featured {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 18px;
+  border-radius: 0;
   overflow: hidden;
   box-shadow: 0 30px 60px -40px rgba(29, 25, 22, 0.35);
 }
@@ -338,7 +338,7 @@
 .theme {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 16px;
+  border-radius: 0;
   padding: 1.4rem 1.4rem 1.8rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -350,7 +350,7 @@
 
 .themeMedia {
   height: 200px;
-  border-radius: 10px;
+  border-radius: 0;
   background: #fff;
   border: 1px solid var(--rule);
   display: flex;
@@ -458,7 +458,7 @@
 .talk {
   border-top: 3px solid var(--accent);
   background: var(--surface);
-  border-radius: 0 0 14px 14px;
+  border-radius: 0;
   padding: 1.4rem 1.4rem 1.6rem;
   border-left: 1px solid var(--rule);
   border-right: 1px solid var(--rule);

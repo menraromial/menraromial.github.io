@@ -9,7 +9,6 @@ const SITE = 'https://menraromial.com';
 const posts: [year: number, slug: string][] = [
   [2024, 'setup-k3s-cluster'],
   [2025, 'kubernetes-with-kubeadm-and-cri.io'],
-  [2025, 'master-ci-ci-pipeline-locally'],
   [2025, 'guide-building-custom-kubernetes-scheduler'],
   [2025, 'building-a-kubernetes-controller-with-kubebuilder-from-scratch'],
   [2025, 'comprehensive-guide-powercap-utils-linux'],
@@ -20,7 +19,11 @@ const legacyRedirects = [
     to: `/blog/${slug}`,
     from: [`/posts/${slug}`, `/blog/${year}/${slug}`],
   })),
-  {to: '/blog', from: ['/posts']},
+  // Removed post: send its old URLs to the blog index.
+  {
+    to: '/blog',
+    from: ['/posts', '/posts/master-ci-ci-pipeline-locally', '/blog/2025/master-ci-ci-pipeline-locally'],
+  },
   {
     to: '/news',
     from: [
@@ -136,8 +139,7 @@ const config: Config = {
           blogTitle: 'Blog',
           blogDescription:
             'Technical articles by Menra Romial on Kubernetes, Linux power management and cloud infrastructure.',
-          blogSidebarTitle: 'All posts',
-          blogSidebarCount: 'ALL',
+          blogSidebarCount: 0,
           postsPerPage: 10,
           showReadingTime: true,
           onInlineAuthors: 'throw',

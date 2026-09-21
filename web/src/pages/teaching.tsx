@@ -1,22 +1,71 @@
 import type {ReactNode} from 'react';
+import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import PageHeader from '@site/src/components/PageHeader';
-import {courses, supervision} from '@site/src/data/site';
+import {courses, deploymentCourse as dc, supervision} from '@site/src/data/site';
 import styles from '@site/src/css/pages.module.css';
 
 export default function Teaching(): ReactNode {
   return (
     <Layout
       title="Teaching"
-      description="Teaching and supervision by Menra Romial at IMT Atlantique: databases, cloud computing with VMware vSphere, and M2 research internships.">
+      description="Teaching by Menra Romial: the Deployment and Production Engineering course (Ingénierie du Déploiement), databases and cloud computing at IMT Atlantique, and M2 supervision.">
       <PageHeader kicker="Teaching & mentoring" title="Teaching">
         <p>
-          Tutorials and lab sessions at IMT Atlantique, and supervision of research interns working
-          on energy-aware systems.
+          A full course on deployment engineering, tutorials and lab sessions at IMT Atlantique, and
+          supervision of research interns working on energy-aware systems.
         </p>
       </PageHeader>
 
       <main className={styles.container}>
+        <section className={styles.section}>
+          <p className={styles.kicker}>Course I designed</p>
+          <article className={styles.courseFeature}>
+            <div className={styles.badges}>
+              <span className={styles.badge}>{dc.role}</span>
+              <span className={styles.meta}>
+                {dc.audience} · taught in {dc.language}
+              </span>
+            </div>
+            <h2 className={styles.courseTitle}>{dc.title}</h2>
+            <p className={styles.courseSubtitle}>{dc.titleEn}</p>
+            <p className={styles.courseSummary}>{dc.summary}</p>
+
+            <div className={styles.semesters}>
+              {dc.semesters.map((s) => (
+                <div key={s.name} className={styles.semester}>
+                  <p className={styles.kicker}>{s.name}</p>
+                  <h3>{s.theme}</h3>
+                  <p>{s.text}</p>
+                  <ul className={styles.list}>
+                    {s.topics.map((tp) => (
+                      <li key={tp}>{tp}</li>
+                    ))}
+                  </ul>
+                  <p className={styles.semesterStatus}>{s.status}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className={styles.principles}>
+              {dc.principles.map((pr, i) => (
+                <div key={pr.title}>
+                  <span className={styles.principleIndex}>0{i + 1}</span>
+                  <h4>{pr.title}</h4>
+                  <p>{pr.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className={styles.courseFooter}>
+              <Link className={styles.button} href={dc.url}>
+                Open the course →
+              </Link>
+              <span className={styles.meta}>Content under {dc.license}</span>
+            </div>
+          </article>
+        </section>
+
         <section className={styles.section}>
           <p className={styles.kicker}>Courses</p>
           <h2 className={styles.sectionTitle}>IMT Atlantique</h2>

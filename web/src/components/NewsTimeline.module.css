@@ -19,7 +19,7 @@
   top: 0.35rem;
   width: 14px;
   height: 14px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--paper);
   border: 3px solid var(--accent);
 }
@@ -54,7 +54,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  border-radius: 999px;
+  border-radius: 0;
   padding: 0.15rem 0.6rem;
   border: 1.5px solid currentColor;
 }
