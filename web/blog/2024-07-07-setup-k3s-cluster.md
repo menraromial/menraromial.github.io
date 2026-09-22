@@ -100,7 +100,7 @@ Create a simple pod to ensure everything is working correctly.
 
 1. **Create a YAML file named `hello-world-pod.yaml`:**
 
-    ```yaml
+    ```yaml title="hello-world-pod.yaml"
     apiVersion: v1
     kind: Pod
     metadata:
@@ -174,7 +174,7 @@ A deployment in Kubernetes is a controller that manages the creation, scaling, a
 
 Create a file named `hello-world-deployment.yaml` with the following content:
 
-```yaml
+```yaml title="hello-world-deployment.yaml"
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -425,7 +425,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 
    Create the file `hello-world-hpa.yaml`
 
-   ```yaml
+   ```yaml title="hello-world-hpa.yaml"
     apiVersion: autoscaling/v2
     kind: HorizontalPodAutoscaler
     metadata:
@@ -494,7 +494,7 @@ To test the HPA, you can simulate a load on the `hello-world` pods to observe th
 
    Create a pod that continuously sends requests to the `hello-world` service. Create a file named `load-generator.yaml` with the following content:
 
-   ```yaml
+   ```yaml title="load-generator.yaml"
    apiVersion: v1
    kind: Pod
    metadata:

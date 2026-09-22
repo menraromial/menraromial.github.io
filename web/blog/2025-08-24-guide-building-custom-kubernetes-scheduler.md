@@ -91,9 +91,7 @@ touch pkg/networkspeed/networkspeed.go
 Place the same Go code from the previous guide into `pkg/networkspeed/networkspeed.go`. This code implements the `Filter` and `Score` extension points.
 
 
-```go
-// pkg/networkspeed/networkspeed.go
-
+```go title="pkg/networkspeed/networkspeed.go"
 package networkspeed
 
 import (
@@ -219,9 +217,7 @@ This step is also the same. We must tell the main binary about our new plugin.
 
 Edit `cmd/scheduler/main.go` and add our plugin to the registry.
 
-```go
-// cmd/scheduler/main.go
-
+```go title="cmd/scheduler/main.go"
 import (
     // ... other imports
 	"k8s.io/component-base/cli"
@@ -295,8 +291,7 @@ We will provision two Virtual Machines (one control-plane, one worker) and boots
 
 We'll use a `Vagrantfile` to define our two-node cluster. Create a file named `Vagrantfile` with the following content:
 
-```ruby
-# Vagrantfile
+```ruby title="Vagrantfile"
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/jammy64"
   config.vm.provider "virtualbox" do |v|
@@ -462,7 +457,7 @@ vagrant ssh k8s-worker-01 -- "sudo ctr -n=k8s.io images import /home/vagrant/sch
 Create the final `deploy-kubeadm.yaml` manifest on your local machine. This file is identical to the previous "correct" version, as it's designed to run in a real cluster environment.
 
 `deploy-kubeadm.yaml`:
-```yaml
+```yaml title="deploy-kubeadm.yaml"
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -552,8 +547,7 @@ The testing process is identical, but you will run the commands from your `k8s-c
         kubectl label node k8s-worker-01 network-topology=high-speed
     ```
 2.  **Create and apply `test-pod.yaml`:**
-    ```yaml
-        # test-pod.yaml
+    ```yaml title="test-pod.yaml"
         apiVersion: v1
         kind: Pod
         metadata:

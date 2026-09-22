@@ -208,8 +208,7 @@ Because the tools can output clean numbers, they are perfect for scripts.
 
 **Example: A script to toggle a "low power" mode (25W) and a "high power" mode (80W).**
 
-**`power-mode.sh`**
-```bash
+```bash title="power-mode.sh"
 #!/bin/bash
 
 # Check for root privileges

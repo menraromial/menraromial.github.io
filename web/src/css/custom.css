@@ -295,6 +295,15 @@ code {
   border: 0;
 }
 
+/* File name header above a code block: ```lang title="path/to/file" */
+[class*='codeBlockTitle'] {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--rule) !important;
+}
+
 .markdown a {
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);

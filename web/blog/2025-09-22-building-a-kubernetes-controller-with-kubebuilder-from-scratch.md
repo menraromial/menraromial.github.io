@@ -16,8 +16,7 @@ This is a powerful pattern that allows you to extend the Kubernetes API to manag
 
 We will define a `Website` custom resource that looks like this:
 
-```yaml
-# config/samples/website_v1alpha1_website.yaml
+```yaml title="config/samples/website_v1alpha1_website.yaml"
 apiVersion: website.my.domain/v1alpha1
 kind: Website
 metadata:
@@ -92,9 +91,7 @@ Open `api/v1alpha1/website_types.go`. We need to define the fields for our resou
 
 Find the `WebsiteSpec` and `WebsiteStatus` structs and modify them as follows.
 
-```go
-// api/v1alpha1/website_types.go
-
+```go title="api/v1alpha1/website_types.go"
 // ... (other imports)
 
 // WebsiteSpec defines the desired state of Website
@@ -159,10 +156,7 @@ Let's implement the logic.
 
 Replace the contents of `internal/controllers/website_controller.go` with the following code. Read the comments carefully to understand each step.
 
-{% raw %}
-```go
-// internal/controllers/website_controller.go
-
+```go title="internal/controllers/website_controller.go"
 package controllers
 
 import (
@@ -350,7 +344,6 @@ func (r *WebsiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 ```
-{% endraw %}
 
 **Key changes and explanations:**
 
@@ -391,8 +384,7 @@ You will see logs from the controller manager starting up. It is now waiting for
 
 In a **new terminal**, apply the sample `Website` resource. Kubebuilder has already created a sample for you in `config/samples/website_v1alpha1_website.yaml`. Let's modify it to match our `Spec`.
 
-```yaml
-# config/samples/website_v1alpha1_website.yaml
+```yaml title="config/samples/website_v1alpha1_website.yaml"
 apiVersion: website.my.domain/v1alpha1
 kind: Website
 metadata:
