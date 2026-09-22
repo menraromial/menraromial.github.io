@@ -118,7 +118,7 @@ const config: Config = {
   themes: ['@docusaurus/theme-mermaid'],
 
   stylesheets: [
-    'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap',
+    'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap',
   ],
 
   headTags: [
@@ -197,8 +197,9 @@ const config: Config = {
       theme: {light: 'neutral', dark: 'dark'},
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      // Same code styling as the course site (menraromial.com/ingenierie-deploiement).
+      theme: prismThemes.oneLight,
+      darkTheme: prismThemes.oneDark,
       additionalLanguages: ['bash', 'yaml', 'go', 'docker', 'hcl', 'groovy', 'ini', 'json'],
     },
   } satisfies Preset.ThemeConfig,

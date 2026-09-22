@@ -33,6 +33,11 @@
   --font-text: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
+  /* code: same look as the course site */
+  --ifm-font-family-monospace: 'JetBrains Mono', ui-monospace, monospace;
+  --ifm-code-font-size: 88%;
+  --ifm-code-background: #eef0f4;
+
   --ifm-background-color: var(--paper);
   --ifm-font-color-base: var(--ink);
   --ifm-font-family-base: var(--font-text);
@@ -70,6 +75,8 @@
   --surface: #211e1a;
   --rule: #34302b;
   --accent-soft: #3a241e;
+
+  --ifm-code-background: #222733;
 
   --tag-paper: #ec8a74;
   --tag-award: #e0b25a;
@@ -278,9 +285,14 @@ aside nav[class*='sidebar_'] {
   --ifm-h3-font-size: 1.35rem;
 }
 
-.markdown code,
-.markdown pre {
-  font-size: 0.86rem;
+/* Code blocks: thin frame, no shadow; inline code without border */
+.theme-code-block {
+  border: 1px solid var(--rule);
+  box-shadow: none;
+}
+
+code {
+  border: 0;
 }
 
 .markdown a {
