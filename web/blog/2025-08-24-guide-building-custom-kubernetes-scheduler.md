@@ -34,74 +34,9 @@ The Scheduling Framework is a pluggable architecture for the `kube-scheduler` th
 
 **Visualizing the Extension Points:**
 
-Here is the flow of the scheduling process and where the main extension points fit in.
+Here is the flow of the scheduling process and where the main extension points fit in. The scheduling cycle handles one pod at a time and ends with **Reserve** and **Permit**; the binding cycle that follows can run asynchronously, so the scheduler can already move on to the next pod.
 
-```
-                  (A Pod is created without a node)
-                                  |
-                                  v
-+-------------------------------------------------------------------------+
-|                        SCHEDULING CYCLE (for one Pod)                     |
-+-------------------------------------------------------------------------+
-                                  |
-                                  v
-[ QueueSort ] <--- Your plugin can sort pods in the scheduling queue.
-                                  |
-                                  v
-+-------------------------------------------------------------------------+
-|                      SCHEDULING ATTEMPT (for one Pod)                     |
-+-------------------------------------------------------------------------+
-|                                 |                                       |
-|                                 v                                       |
-| [ PreFilter ] <--- Pre-process info about the Pod before filtering.     |
-|                                 |                                       |
-|          --------------------- FOR EACH NODE ----------------------     |
-|          |                                                        |     |
-|          |    [ Filter ] <--- Can this Pod run on this Node? (Yes/No) |   |
-|          |          (If No, Node is discarded for this Pod)        |     |
-|          |                                                        |     |
-|          ----------------------------------------------------------     |
-|                                 |                                       |
-|                                 v                                       |
-| [ PostFilter ] <- If no nodes are viable, your plugin can take action.  |
-|                                 |                                       |
-|                                 v                                       |
-| [ PreScore ] <--- Pre-process info before scoring viable nodes.         |
-|                                 |                                       |
-|          --------------------- FOR EACH VIABLE NODE ---------------     |
-|          |                                                        |     |
-|          |    [ Score ] <--- Give this Node a score (e.g., 0-100).  |   |
-|          |                                                        |     |
-|          ----------------------------------------------------------     |
-|                                 |                                       |
-|                                 v                                       |
-| [ NormalizeScore ] <- Modify all scores to fit a common scale.          |
-|                                 |                                       |
-|                                 v                                       |
-|                          (Scheduler picks Node with highest score)        |
-|                                 |                                       |
-|                                 v                                       |
-+-------------------------------------------------------------------------+
-|                           BINDING CYCLE                                 |
-+-------------------------------------------------------------------------+
-|                                 |                                       |
-|                                 v                                       |
-| [ Reserve ] <--- Mark resources as "reserved" on the chosen node.       |
-|                                 |                                       |
-|                                 v                                       |
-| [ Permit ] <--- Approve or deny the binding. Can delay binding.         |
-|                                 |                                       |
-|                                 v                                       |
-| [ PreBind ] <--- Actions to take right before the Pod is bound.         |
-|                                 |                                       |
-|                                 v                                       |
-| [ Bind ] <--- The actual binding of the Pod to the Node.                |
-|                                 |                                       |
-|                                 v                                       |
-| [ PostBind ] <--- Actions to take after the binding is successful.      |
-|                                 |                                       |
-+-------------------------------------------------------------------------+
-```
+![The Kubernetes Scheduling Framework: QueueSort in the scheduling queue; PreFilter, Filter, PostFilter, PreScore, Score, NormalizeScore, Reserve and Permit in the scheduling cycle; PreBind, Bind and PostBind in the binding cycle. Filter and Score are highlighted.](/img/blog/scheduling-framework.svg)
 
 Our plugin will focus on the **`Filter`** and **`Score`** extension points.
 
