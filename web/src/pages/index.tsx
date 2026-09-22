@@ -120,7 +120,7 @@ export default function Home(): ReactNode {
               </div>
               <div>
                 <dt>Languages</dt>
-                <dd>French, English</dd>
+                <dd>French, English, Toupouri</dd>
               </div>
               <div>
                 <dt>Also published as</dt>
