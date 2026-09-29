@@ -235,6 +235,16 @@ export const courses: Course[] = [
     url: 'https://menraromial.com/ingenierie-deploiement/',
   },
   {
+    title: 'Containers and Kubernetes',
+    titleFr: 'Conteneurs et Kubernetes : du premier conteneur à l’expertise Kubernetes',
+    role: 'Course designer and lead',
+    period: 'Ongoing',
+    summary:
+      'A course that goes from the first container command to writing your own Kubernetes operator, taking apart kernel namespaces, the API server, the scheduler and pod networking along the way. Everything runs on a laptop with minikube, and every command was executed before being published.',
+    topics: ['9 parts, 63 chapters', 'Containers', 'Kubernetes', 'minikube', 'Taught in French'],
+    url: 'https://menraromial.com/container-k8s/',
+  },
+  {
     title: 'Databases',
     titleFr: 'Bases de données',
     role: 'Teaching assistant (TD/TP)',
