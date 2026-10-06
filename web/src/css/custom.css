@@ -97,12 +97,47 @@ html {
 /* ---- Navbar ---- */
 
 .navbar {
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  backdrop-filter: saturate(160%) blur(10px);
+  background: var(--paper);
   border-top: 4px solid var(--accent);
   border-bottom: 1px solid var(--rule);
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/*
+ * The blurred, translucent bar is desktop only: backdrop-filter makes the
+ * navbar a containing block for fixed children, which would trap the mobile
+ * menu panel inside the bar's own height and hide it.
+ */
+@media (min-width: 997px) {
+  .navbar {
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(160%) blur(10px);
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Mobile menu panel */
+.navbar-sidebar {
+  background: var(--paper);
+}
+
+.navbar-sidebar__brand {
+  border-bottom: 1px solid var(--rule);
+  box-shadow: none;
+}
+
+.navbar-sidebar .menu__link {
+  font-family: var(--font-ui);
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.navbar-sidebar .menu__link:hover,
+.navbar-sidebar .menu__link--active {
+  color: var(--accent);
+  background: transparent;
 }
 
 .navbar__title {
